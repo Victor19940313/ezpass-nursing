@@ -1389,7 +1389,7 @@
         border-color: #dc2626;
         color: #dc2626;
       }
-      /* 章節上方資訊列 (考點 / 作者 / 讚 / 收藏) */
+      /* 章節上方資訊列 (單元 / 作者 / 讚 / 收藏) */
       .ch-meta {
         display: flex;
         gap: 0.5rem;
@@ -1761,12 +1761,12 @@
           >
             🔗 複製連結
           </button>
-          <!-- v574: 公開開關 / 改考點 / 讚 / 收藏 / 複製到我的 / 檢舉 / 下架 -->
-          <label class="pub-switch" id="pub-toggle" style="display: none" title="公開分享給大家 (需先選考點)">
+          <!-- v574: 公開開關 / 改單元 / 讚 / 收藏 / 複製到我的 / 檢舉 / 下架 -->
+          <label class="pub-switch" id="pub-toggle" style="display: none" title="公開分享給大家 (需先選單元)">
             <input type="checkbox" id="pub-check" onchange="togglePublish(this.checked)" />
             <i></i><span id="pub-label">只給自己看</span>
           </label>
-          <button class="topic-btn" id="topic-btn" onclick="changeTopic()" style="display: none" title="設定這章屬於哪個考點">🏷 考點</button>
+          <button class="topic-btn" id="topic-btn" onclick="changeTopic()" style="display: none" title="設定這章屬於哪個單元">🏷 單元</button>
           <button class="hasmn-btn" id="hasmn-btn" onclick="toggleHasMn()" style="display: none" title="這章已經寫好口訣了嗎?(有口訣的章節標題會是綠色字)">☐ 已有口訣</button>
           <button class="like-btn" id="like-btn" onclick="toggleLike()" style="display: none">👍 <span id="like-n">0</span></button>
           <button class="fav-btn" id="fav-btn" onclick="toggleFav()" style="display: none">⭐ 收藏</button>
@@ -2254,7 +2254,7 @@
         if (localStorage.getItem(BANNER_DISMISS_KEY)) {
           slot.style.display = "none";
         } else {
-          slot.innerHTML = `<div class="info-banner editor">💡 這是<strong>你自己的口訣與重點分享區</strong>,寫的東西預設只有你看得到。想分享給大家,先幫章節選「考點」再打開「公開」;別人的好章節可以 ⭐ 收藏、👍 讚 (付費會員)、📋 複製一份自己改 (複製品不能再公開)。<button class="banner-close" onclick="dismissBanner()" title="不再顯示">✕</button></div>`;
+          slot.innerHTML = `<div class="info-banner editor">💡 這是<strong>你自己的口訣與重點分享區</strong>,寫的東西預設只有你看得到。想分享給大家,先幫章節選「單元」再打開「公開」;別人的好章節可以 ⭐ 收藏、👍 讚 (付費會員)、📋 複製一份自己改 (複製品不能再公開)。<button class="banner-close" onclick="dismissBanner()" title="不再顯示">✕</button></div>`;
         }
       }
       function dismissBanner() {
@@ -2559,7 +2559,7 @@
       let _pubRefs = {}; // subj → firebase ref (value listener)
       let _favs = {}; // key → {ns, subj, ch, ts, title}
       let _favRef = null;
-      let _pubTopic = null; // 大家分享的:目前選的考點
+      let _pubTopic = null; // 大家分享的:目前選的單元
       let _pubSort = "likes"; // likes | new | favs
       let _myLikeCache = {}; // key → true/false (這個帳號按過沒)
       let _takedown = {}; // key → ts
@@ -2964,7 +2964,7 @@
         const key = pubKey(ns, ch.id);
         const idx = (_pubIndex[_curSubject] || {})[key] || {};
         const parts = [];
-        parts.push(`<span class="crumb">${escapeHtml(SUBJECT_LABEL[_curSubject])} · ${escapeHtml(ch.topic || "還沒分考點")}</span>`);
+        parts.push(`<span class="crumb">${escapeHtml(SUBJECT_LABEL[_curSubject])} · ${escapeHtml(ch.topic || "還沒分單元")}</span>`);
         if (!canEditCurrent()) parts.push(`<span>使用者 ${escapeHtml(idx.author || ch.updatedBy || "")}</span>`);
         if (isChPublic(ns, ch)) parts.push(`<span>👍 ${idx.likes || ch.likes || 0}</span><span>⭐ ${idx.favs || 0} 人收藏</span>`);
         if (ch.hasMn) parts.push(`<span style="color:#16a34a;font-weight:800">✅ 已有口訣</span>`);
@@ -3004,7 +3004,7 @@
         const inp = document.getElementById("ch-search");
         if (inp) {
           inp.value = "";
-          inp.placeholder = mode === "mine" ? "🔍 搜我的口訣與重點 (標題 / 考點 / 關鍵字)" : mode === "pub" ? "🔍 搜大家分享的重點 (標題 / 考點 / 關鍵字)" : "🔍 搜我的最愛";
+          inp.placeholder = mode === "mine" ? "🔍 搜我的口訣與重點 (標題 / 單元 / 關鍵字)" : mode === "pub" ? "🔍 搜大家分享的重點 (標題 / 單元 / 關鍵字)" : "🔍 搜我的最愛";
         }
         const rw = document.getElementById("mn-reward");
         if (rw) rw.style.display = mode === "mine" ? "" : "none";
@@ -3124,7 +3124,7 @@
           renderRewardCard();
           return;
         }
-        // 要公開:一定要有考點 + 勾同意
+        // 要公開:一定要有單元 + 勾同意
         const res = await publishDialog(ch);
         if (!res) {
           chk.checked = false;
@@ -3162,10 +3162,10 @@
             <button class="close-x" onclick="this.closest('.modal-overlay').remove()">✕</button>
             <h2>🌐 把「${escapeHtml(ch.title || "")}」公開分享</h2>
             <div class="fld"><label>科目</label><div style="font-weight:800">${escapeHtml(SUBJECT_LABEL[_curSubject])}</div></div>
-            <div class="fld"><label>考點 <span class="req">*</span></label>
+            <div class="fld"><label>單元 <span class="req">*</span></label>
               <select id="pubd-topic"><option value="">請選擇…</option>${topics.map((t) => `<option value="${escapeHtml(t)}" ${t === ch.topic ? "selected" : ""}>${escapeHtml(t)}</option>`).join("")}</select>
-              <div style="font-size:.74rem;color:var(--text-sub);margin-top:.25rem">和練習本同一份考點清單,大家會在這個考點底下看到它</div></div>
-            <div class="warn" id="pubd-warn">⚠️ 還沒選考點,不能公開。</div>
+              <div style="font-size:.74rem;color:var(--text-sub);margin-top:.25rem">和練習本同一份單元清單,大家會在這個單元底下看到它</div></div>
+            <div class="warn" id="pubd-warn">⚠️ 還沒選單元,不能公開。</div>
             <label class="consent hasmn"><input type="checkbox" id="pubd-hasmn" ${ch.hasMn ? "checked" : ""} style="margin-top:.2rem"><span>這章已有口訣 (列表會用綠色字顯示)</span></label>
             <label class="consent"><input type="checkbox" id="pubd-consent" style="margin-top:.2rem"><span>內容是我自己整理的,或已取得授權;若有侵權由我自行負責,與網站無關 (見訂閱條款第八條)</span></label>
             <div class="acts"><button type="button" id="pubd-cancel">取消</button><button type="button" class="go" id="pubd-go" disabled>🌐 公開</button></div>
@@ -3193,15 +3193,15 @@
           go.onclick = () => done({ topic: sel.value, hasMn: !!overlay.querySelector("#pubd-hasmn").checked });
         });
       }
-      // 選考點 (新增章節 / 改考點 共用)
+      // 選單元 (新增章節 / 改單元 共用)
       function pickTopicDialog(current, msg, allowSkip) {
         return new Promise((resolve) => {
           const topics = (window.TOPICS && window.TOPICS[_curSubject]) || []; // v581: 固定分類 (含「其他」)
           const overlay = document.createElement("div");
           overlay.className = "modal-overlay";
           overlay.innerHTML = `<div class="modal pub-dialog" style="max-width:420px">
-            <h2>🏷 ${escapeHtml(msg || "這章屬於哪個考點?")}</h2>
-            <div class="fld"><select id="tpd-sel"><option value="">${allowSkip ? "先不選 (放「還沒分考點」)" : "請選擇…"}</option>${topics.map((t) => `<option value="${escapeHtml(t)}" ${t === current ? "selected" : ""}>${escapeHtml(t)}</option>`).join("")}</select></div>
+            <h2>🏷 ${escapeHtml(msg || "這章屬於哪個單元?")}</h2>
+            <div class="fld"><select id="tpd-sel"><option value="">${allowSkip ? "先不選 (放「還沒分單元」)" : "請選擇…"}</option>${topics.map((t) => `<option value="${escapeHtml(t)}" ${t === current ? "selected" : ""}>${escapeHtml(t)}</option>`).join("")}</select></div>
             <label class="consent hasmn"><input type="checkbox" id="tpd-hasmn" ${window._tpdHasMn ? "checked" : ""} style="margin-top:.2rem"><span>這章已有口訣 (列表會用綠色字顯示)</span></label>
             <div class="acts"><button type="button" id="tpd-cancel">取消</button><button type="button" class="go" id="tpd-go">確定</button></div>
           </div>`;
@@ -3233,18 +3233,18 @@
         if (!ch || !canEditCurrent()) return;
         window._tpdHasMn = !!ch.hasMn;
         window._tpdHasMnResult = !!ch.hasMn;
-        const t = await pickTopicDialog(ch.topic || "", "「" + (ch.title || "") + "」屬於哪個考點?", false);
+        const t = await pickTopicDialog(ch.topic || "", "「" + (ch.title || "") + "」屬於哪個單元?", false);
         if (t === null || t === undefined) return;
         ch.hasMn = !!window._tpdHasMnResult;
         if (!t && ch.pub) {
-          showToast("公開中的章節一定要有考點");
+          showToast("公開中的章節一定要有單元");
           return;
         }
         ch.topic = t;
         ch.ts = Date.now();
-        await _persistChapterMeta(ch, `改考點「${ch.title}」→ ${t || "未分類"}`);
+        await _persistChapterMeta(ch, `改單元「${ch.title}」→ ${t || "未分類"}`);
         if (ch.pub) await upsertPubIndex(_curUser, _curSubject, ch);
-        showToast(t ? "🏷 已歸到「" + t + "」" : "已移到「還沒分考點」");
+        showToast(t ? "🏷 已歸到「" + t + "」" : "已移到「還沒分單元」");
         renderChapterList();
         pickChapter(ch.id);
       }
@@ -3295,7 +3295,7 @@
         let title;
         if (_mode === "pub") {
           items = _pubEntries(_curSubject).filter((e) => !_pubTopic || (e.topic || "未分類") === _pubTopic).map((e) => ({ ...e, subj: _curSubject }));
-          title = `${SUBJECT_LABEL[_curSubject]} · ${_pubTopic || "全部考點"}`;
+          title = `${SUBJECT_LABEL[_curSubject]} · ${_pubTopic || "全部單元"}`;
         } else {
           items = Object.entries(_favs)
             .map(([key, fv]) => ({ key, ...fv }))
@@ -3328,7 +3328,7 @@
             </div>`;
                   })
                   .join("")
-              : `<div class="pub-empty">${_mode === "pub" ? "這個考點還沒有人分享" : "還沒有收藏。去「大家分享的」看到喜歡的按 ⭐"}</div>`
+              : `<div class="pub-empty">${_mode === "pub" ? "這個單元還沒有人分享" : "還沒有收藏。去「大家分享的」看到喜歡的按 ⭐"}</div>`
           }
         </div>`;
       }
@@ -3673,7 +3673,7 @@
           : "";
         const body = collapsed
           ? ""
-          : `<div class="rw-body">${rows || `<div class="rw-row" style="color:var(--text-sub)">${SUBJECT_LABEL[_curSubject]} 還沒有公開的章節。選好考點、打開「公開」就開始累積 👍</div>`}${more}</div>`;
+          : `<div class="rw-body">${rows || `<div class="rw-row" style="color:var(--text-sub)">${SUBJECT_LABEL[_curSubject]} 還沒有公開的章節。選好單元、打開「公開」就開始累積 👍</div>`}${more}</div>`;
         el.classList.toggle("collapsed", collapsed);
         el.innerHTML = `<div class="rw-head" role="button" tabindex="0" onclick="localStorage.setItem('mn_reward_collapsed', localStorage.getItem('mn_reward_collapsed') === '1' ? '0' : '1');renderRewardCard()" title="${collapsed ? "點開" : "收合"}">🎁 分享獎勵 <span class="rw-count">${all.length ? `公開 ${all.length} 章` : ""}</span><span class="rw-caret">${collapsed ? "▸" : "▾"}</span>${collapsed ? "" : `<span class="rule">同一章 ${c.likes1} 讚 → ${c.days1} 天序號、${c.likes2} 讚 → 再 ${c.days2} 天、${c.likes3} 讚 → 再 ${c.days3} 天 (門檻隨會員人數調整;只有付費會員的讚算;自動發到「我的獎勵」)</span>`}</div>${body}`;
       }
@@ -3844,7 +3844,7 @@
             });
           }
         } else if (_mode === "pub") {
-          // v579: 大家分享的也要搜得到「內容」— 把索引裡出現的作者/科目內容拉進來 (有快取),再搜標題/考點/內文
+          // v579: 大家分享的也要搜得到「內容」— 把索引裡出現的作者/科目內容拉進來 (有快取),再搜標題/單元/內文
           await Promise.all(SUBJECTS.map((sub) => ensurePubIndex(sub)));
           const need = [];
           for (const sub of SUBJECTS) {
@@ -3947,7 +3947,7 @@
           container.innerHTML = `<div class="empty">還沒有章節<br>${canEditCurrent() ? "按上方「+ 新增」開始" : "這裡是空的"}</div>`;
           return;
         }
-        // 依考點分組;沒選考點的放最後「還沒分考點」
+        // 依單元分組;沒選單元的放最後「還沒分單元」
         const groups = new Map();
         subj.chapters.forEach((ch) => {
           const key = ch.topic || "";
@@ -3965,7 +3965,7 @@
           .map((key) => {
             const list = groups.get(key);
             const isOpen = openSet.has(key) || keys.length <= 3 || list.some((c) => c.id === _curChapterId);
-            const label = key || "還沒分考點";
+            const label = key || "還沒分單元";
             return `<details class="topic-group ${key ? "" : "untagged"}" ${isOpen ? "open" : ""} ontoggle="_onTopicToggle(this,'${escapeHtml(key).replace(/'/g, "&#39;")}')">
           <summary><span class="arr">▶</span>${key ? "" : "⚠️ "}${escapeHtml(label)}<span class="n">${list.length}</span></summary>
           ${list
@@ -4265,9 +4265,9 @@
           chk.checked = !!ch.pub && !forked;
           chk.disabled = forked || down;
           pubT.classList.toggle("disabled", forked || down);
-          pubT.title = forked ? "複製來的章節不能公開" : down ? "已被管理者下架" : ch.pub ? "點一下改回只給自己看" : "公開分享給大家 (需先選考點)";
+          pubT.title = forked ? "複製來的章節不能公開" : down ? "已被管理者下架" : ch.pub ? "點一下改回只給自己看" : "公開分享給大家 (需先選單元)";
           lab.textContent = forked ? "複製品 · 不能公開" : down ? "已下架" : ch.pub ? "公開分享中" : "只給自己看";
-          topicBtn.textContent = ch.topic ? "🏷 " + ch.topic : "🏷 選考點";
+          topicBtn.textContent = ch.topic ? "🏷 " + ch.topic : "🏷 選單元";
         }
         const chAdd = $("btn-add-ch");
         if (chAdd) chAdd.classList.toggle("hidden", !(_mode === "mine" && canEditCurrent()));
@@ -4523,7 +4523,7 @@
         if (!title || !title.trim()) return;
         window._tpdHasMn = false;
         window._tpdHasMnResult = false;
-        const topic = await pickTopicDialog(null, "這章屬於哪個考點? (之後也能改;不選就先放「還沒分考點」)", true);
+        const topic = await pickTopicDialog(null, "這章屬於哪個單元? (之後也能改;不選就先放「還沒分單元」)", true);
         let subj = curState();
         if (!subj) {
           subj = { chapters: [], ts: 0, updatedBy: "" };

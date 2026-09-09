@@ -338,7 +338,7 @@
 
       <div class="hint rw-pane" data-pane="mnemonic" style="display: none; background: #fdf2f8; border-color: #f9a8d4; color: #831843">
         🧠 <b>口訣分享獎勵</b><br />
-        在「口訣與重點分享區」把自己寫的章節選好考點、打開「公開」，大家可以按 👍。同一章的有效讚達到門檻，系統<b>自動</b>把序號發到這裡。
+        在「口訣與重點分享區」把自己寫的章節選好單元、打開「公開」，大家可以按 👍。同一章的有效讚達到門檻，系統<b>自動</b>把序號發到這裡。
         <hr style="border: 0; border-top: 1px solid #f9a8d4; margin: 0.7rem 0" />
         <b>📌 規則</b>
         <ul style="margin: 0.3rem 0 0 1.2rem; line-height: 1.8" id="rw-mn-rules">
@@ -512,7 +512,7 @@
           const mine = [];
           for (const subj of Object.keys(pub)) for (const [key, e] of Object.entries(pub[subj] || {})) if (e && e.authorUid === uid && !e.hidden) mine.push({ key, subj, ...e });
           const th = [cfg.mnemonic.likes1, cfg.mnemonic.likes2, cfg.mnemonic.likes3];
-          if (!mine.length) mnEl.innerHTML = `<div class="rw-prog"><span class="t" style="color:#9ca3af;font-weight:400">你還沒有公開的口訣章節。去口訣與重點分享區選好考點、打開「公開」就開始累積。</span></div>`;
+          if (!mine.length) mnEl.innerHTML = `<div class="rw-prog"><span class="t" style="color:#9ca3af;font-weight:400">你還沒有公開的口訣章節。去口訣與重點分享區選好單元、打開「公開」就開始累積。</span></div>`;
           else
             mnEl.innerHTML =
               `<b style="font-size:.85rem">我的公開章節（${mine.length}）</b>` +
