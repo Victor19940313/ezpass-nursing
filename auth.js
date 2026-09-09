@@ -407,6 +407,57 @@
   }
   handleEmailLink();
 
+  // v656: 從入口網站帶著身份進來 — 網址 # 後面帶一張 5 分鐘有效的通行證,直接登入,不用再登一次。
+  //   (# 後面的東西不會送到伺服器;用完立刻從網址清掉)
+  function handleSsoHash() {
+    try {
+      var m = /[#&]sso=([^&]+)/.exec(location.hash || "");
+      if (!m) return;
+      var token = decodeURIComponent(m[1]);
+      var rest = (location.hash || "")
+        .replace(/[#&]sso=[^&]+/, "")
+        .replace(/^#?&?/, "");
+      history.replaceState(
+        null,
+        "",
+        location.pathname + location.search + (rest ? "#" + rest : ""),
+      );
+      auth.signInWithCustomToken(token).catch(function (e) {
+        console.warn("[Auth] sso 通行證失效:", e && (e.code || e.message));
+      });
+    } catch (e) {}
+  }
+  handleSsoHash();
+
+  // 給入口網站用:換一張「去某一站」的通行證,回傳可以直接跳的網址
+  var SSO_WORKER = "https://island-watch.seat-watch.workers.dev";
+  async function ssoLink(targetSite, url) {
+    var u = currentUser;
+    if (!u) return url;
+    try {
+      var idToken = await u.getIdToken();
+      var r = await fetch(SSO_WORKER + "/api/sso/mint", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          from: "dental",
+          to: targetSite,
+          idToken: idToken,
+        }),
+      });
+      var j = await r.json();
+      if (!j || !j.ok || !j.token) return url;
+      return (
+        url +
+        (url.indexOf("#") >= 0 ? "&" : "#") +
+        "sso=" +
+        encodeURIComponent(j.token)
+      );
+    } catch (e) {
+      return url;
+    }
+  }
+
   async function signOutFn() {
     // v598: 登出後回首頁 (HUA: 用到一半按登出,頁面不會跳轉)
     const depth = (location.pathname.match(/\//g) || []).length - 1;
@@ -478,6 +529,7 @@
   // export
   window.Auth = {
     signIn: signIn,
+    ssoLink: ssoLink, // v656: 入口網站帶身份跳到各站
     signInWithEmail: signInWithEmail, // v651
     renderEmailForm: renderEmailForm, // v651
     signOut: signOutFn,

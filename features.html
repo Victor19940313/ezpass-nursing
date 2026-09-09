@@ -270,6 +270,84 @@
         color: #7a7060;
         line-height: 1.4;
       }
+      /* v656: 加到手機主畫面 */
+      .a2h-lead {
+        margin: 0 0 1rem;
+        font-size: 0.94rem;
+        color: #4b4636;
+      }
+      .a2h {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.9rem;
+      }
+      .a2h-card {
+        background: #fff;
+        border: 1.5px solid #e4e0d4;
+        border-radius: 16px;
+        padding: 1rem 1.1rem 1.1rem;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+      }
+      .a2h-h {
+        font-weight: 900;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        margin-bottom: 0.7rem;
+      }
+      .a2h-h small {
+        font-weight: 500;
+        font-size: 0.78rem;
+        color: #7a7060;
+        margin-left: auto;
+      }
+      .a2h-steps {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        counter-reset: a2h;
+        display: grid;
+        gap: 0.7rem;
+      }
+      .a2h-steps li {
+        position: relative;
+        padding-left: 1.9rem;
+      }
+      .a2h-steps li::before {
+        counter-increment: a2h;
+        content: counter(a2h);
+        position: absolute;
+        left: 0;
+        top: 0.1rem;
+        width: 1.4rem;
+        height: 1.4rem;
+        border-radius: 50%;
+        background: #7c3aed;
+        color: #fff;
+        font-weight: 900;
+        font-size: 0.78rem;
+        display: grid;
+        place-items: center;
+      }
+      .a2h-t {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: #4b4636;
+      }
+      .a2h-fig {
+        display: block;
+        width: 100%;
+        height: auto;
+        margin-top: 0.45rem;
+        border-radius: 10px;
+        background: #faf9f4;
+      }
+      @media (max-width: 620px) {
+        .a2h {
+          grid-template-columns: 1fr;
+        }
+      }
       /* 六件事:收合卡,內容改成短句條列 */
       .hl-list {
         display: grid;
@@ -585,6 +663,98 @@
             >
           </p>
           <div class="sig">— ezpass 作者</div>
+        </div>
+      </section>
+
+      <!-- v656: 加到手機主畫面 (HUA: 第一次使用那邊做幾張圖,iPhone / Android 都要) -->
+      <section class="sec">
+        <div class="sec-h">
+          <span class="ic">📱</span>
+          <h2>把它加到手機主畫面</h2>
+          <span class="sub">像 App 一樣一點就開</span>
+        </div>
+        <p class="a2h-lead">
+          加到主畫面之後，桌面會多一個圖示，點下去直接進網站，不用每次開瀏覽器打網址。<b>資料還是同一份</b>，換手機登入同一個帳號就都在。
+        </p>
+        <div class="a2h">
+          <div class="a2h-card">
+            <div class="a2h-h">🍎 iPhone / iPad<small>用 Safari 開</small></div>
+            <ol class="a2h-steps">
+              <li>
+                <div class="a2h-t">用 <b>Safari</b> 打開這個網站</div>
+                <svg class="a2h-fig" viewBox="0 0 240 120" role="img" aria-label="Safari 下方工具列中間的分享鍵">
+                  <rect x="8" y="8" width="224" height="104" rx="14" fill="#fff" stroke="#d9d4c4" stroke-width="2"/>
+                  <rect x="24" y="24" width="192" height="22" rx="11" fill="#f1efe6"/>
+                  <text x="120" y="39" text-anchor="middle" font-size="11" fill="#7a7060" font-family="sans-serif">ezpass-exam.com</text>
+                  <rect x="24" y="80" width="192" height="24" rx="12" fill="#f6f4ec"/>
+                  <circle cx="120" cy="92" r="19" fill="none" stroke="#7c3aed" stroke-width="2" stroke-dasharray="4 4"/>
+                  <g transform="translate(120 92)" stroke="#7c3aed" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M0 6V-8"/>
+                    <path d="M-5 -3l5-5 5 5"/>
+                    <path d="M-7 1v7h14V1"/>
+                  </g>
+                </svg>
+              </li>
+              <li>
+                <div class="a2h-t">點下面正中間的<b>分享</b>（往上的箭頭）</div>
+              </li>
+              <li>
+                <div class="a2h-t">往下滑，選<b>加入主畫面</b></div>
+                <svg class="a2h-fig" viewBox="0 0 240 120" role="img" aria-label="分享選單裡的加入主畫面">
+                  <rect x="8" y="8" width="224" height="104" rx="14" fill="#fff" stroke="#d9d4c4" stroke-width="2"/>
+                  <rect x="22" y="22" width="196" height="24" rx="8" fill="#f6f4ec"/>
+                  <text x="36" y="38" font-size="11" fill="#9a927e" font-family="sans-serif">加入書籤</text>
+                  <rect x="22" y="52" width="196" height="32" rx="8" fill="#f5f0ff" stroke="#7c3aed" stroke-width="2"/>
+                  <g transform="translate(36 61)">
+                    <rect x="0" y="0" width="15" height="15" rx="4" fill="none" stroke="#7c3aed" stroke-width="2"/>
+                    <path d="M7.5 4v7M4 7.5h7" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"/>
+                  </g>
+                  <text x="60" y="73" font-size="12" fill="#4c1d95" font-weight="bold" font-family="sans-serif">加入主畫面</text>
+                  <rect x="22" y="90" width="196" height="14" rx="7" fill="#f6f4ec"/>
+                </svg>
+              </li>
+              <li><div class="a2h-t">右上角按<b>新增</b>，桌面就出現圖示了</div></li>
+            </ol>
+          </div>
+
+          <div class="a2h-card">
+            <div class="a2h-h">🤖 Android<small>用 Chrome 開</small></div>
+            <ol class="a2h-steps">
+              <li>
+                <div class="a2h-t">用 <b>Chrome</b> 打開這個網站</div>
+                <svg class="a2h-fig" viewBox="0 0 240 120" role="img" aria-label="Chrome 右上角的三個點">
+                  <rect x="8" y="8" width="224" height="104" rx="14" fill="#fff" stroke="#d9d4c4" stroke-width="2"/>
+                  <rect x="24" y="24" width="156" height="22" rx="11" fill="#f1efe6"/>
+                  <text x="102" y="39" text-anchor="middle" font-size="11" fill="#7a7060" font-family="sans-serif">ezpass-exam.com</text>
+                  <g fill="#7c3aed">
+                    <circle cx="204" cy="28" r="3"/><circle cx="204" cy="35" r="3"/><circle cx="204" cy="42" r="3"/>
+                  </g>
+                  <circle cx="204" cy="35" r="16" fill="none" stroke="#7c3aed" stroke-width="2" stroke-dasharray="4 4"/>
+                  <rect x="24" y="62" width="192" height="42" rx="10" fill="#f6f4ec"/>
+                </svg>
+              </li>
+              <li>
+                <div class="a2h-t">點右上角<b>三個點</b></div>
+              </li>
+              <li>
+                <div class="a2h-t">選<b>加到主畫面</b>（有的手機寫「安裝應用程式」）</div>
+                <svg class="a2h-fig" viewBox="0 0 240 120" role="img" aria-label="Chrome 選單裡的加到主畫面">
+                  <rect x="8" y="8" width="224" height="104" rx="14" fill="#fff" stroke="#d9d4c4" stroke-width="2"/>
+                  <rect x="22" y="20" width="196" height="20" rx="7" fill="#f6f4ec"/>
+                  <text x="36" y="34" font-size="10" fill="#9a927e" font-family="sans-serif">新分頁</text>
+                  <rect x="22" y="46" width="196" height="32" rx="8" fill="#f5f0ff" stroke="#7c3aed" stroke-width="2"/>
+                  <g transform="translate(36 55)">
+                    <rect x="0" y="0" width="15" height="15" rx="4" fill="none" stroke="#7c3aed" stroke-width="2"/>
+                    <path d="M7.5 4v7M4 7.5h7" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"/>
+                  </g>
+                  <text x="60" y="67" font-size="12" fill="#4c1d95" font-weight="bold" font-family="sans-serif">加到主畫面</text>
+                  <rect x="22" y="84" width="196" height="20" rx="7" fill="#f6f4ec"/>
+                  <text x="36" y="98" font-size="10" fill="#9a927e" font-family="sans-serif">設定</text>
+                </svg>
+              </li>
+              <li><div class="a2h-t">按<b>安裝</b>／<b>新增</b>，桌面就出現圖示了</div></li>
+            </ol>
+          </div>
         </div>
       </section>
 
