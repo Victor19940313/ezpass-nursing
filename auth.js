@@ -345,26 +345,64 @@
     const input = el.querySelector(".auth-e-input");
     const btn = el.querySelector(".auth-e-btn");
     const msg = el.querySelector(".auth-e-msg");
+    // v655: 寄出後留一個「重新寄一次」(HUA);30 秒冷卻,避免連按被 Firebase 擋。
+    //   改信箱 (打錯字) 的話立刻可以再寄,不用等。
+    let sentTo = "";
+    let timer = null;
+    function cooldown(sec) {
+      if (timer) clearInterval(timer);
+      let left = sec;
+      btn.disabled = true;
+      btn.textContent = "重新寄一次（" + left + "）";
+      timer = setInterval(function () {
+        left--;
+        if (left <= 0) {
+          clearInterval(timer);
+          timer = null;
+          btn.disabled = false;
+          btn.textContent = "重新寄一次";
+        } else {
+          btn.textContent = "重新寄一次（" + left + "）";
+        }
+      }, 1000);
+    }
     async function go() {
       btn.disabled = true;
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
       msg.style.color = "#6b7280";
       msg.textContent = "寄送中…";
       try {
         await signInWithEmail(input.value);
+        sentTo = input.value.trim().toLowerCase();
         msg.style.color = "#16a34a";
         msg.innerHTML =
           "✅ 已寄到 <b>" +
           escapeHtml(input.value.trim()) +
-          "</b>，打開信裡的連結就會登入（沒收到請看垃圾郵件）。";
+          "</b>，打開信裡的連結就會登入（沒收到請看垃圾郵件，或按「重新寄一次」）。";
+        cooldown(30);
       } catch (e) {
         msg.style.color = "#b91c1c";
         msg.textContent = "❌ " + (e.message || e.code);
         btn.disabled = false;
+        btn.textContent = sentTo ? "重新寄一次" : "寄登入連結";
       }
     }
     btn.addEventListener("click", go);
     input.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") go();
+      if (e.key === "Enter" && !btn.disabled) go();
+    });
+    // 改成別的信箱 → 不用等冷卻
+    input.addEventListener("input", function () {
+      if (!sentTo || input.value.trim().toLowerCase() === sentTo) return;
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+      btn.disabled = false;
+      btn.textContent = "寄登入連結";
     });
   }
   handleEmailLink();
