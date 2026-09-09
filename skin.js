@@ -6,23 +6,69 @@
     if (!uid) return;
     var pend = localStorage.getItem(uid + "__wipe_pending");
     if (!pend) return;
-    var KEYS = ["wrongbook_state", "daily_log", "wrongbook_lastpos", "notebook", "notebook_pending", "gemini_api_key", "gemini_api_keys", "github_token", "github_repo", "examHistory", "exam_reviewed", "nb_theme", "nb_theme_sat", "nb_theme_opa", "nb_theme_gstr", "nb_toc_mono", "nb_bg_style", "nb_font_style", "opt_marks", "_ts"];
+    var KEYS = [
+      "wrongbook_state",
+      "daily_log",
+      "wrongbook_lastpos",
+      "notebook",
+      "notebook_pending",
+      "gemini_api_key",
+      "gemini_api_keys",
+      "github_token",
+      "github_repo",
+      "examHistory",
+      "exam_reviewed",
+      "nb_theme",
+      "nb_theme_sat",
+      "nb_theme_opa",
+      "nb_theme_gstr",
+      "nb_toc_mono",
+      "nb_bg_style",
+      "nb_font_style",
+      "opt_marks",
+      "_ts",
+    ];
     KEYS.forEach(function (k) {
-      try { localStorage.removeItem(uid + "_" + k); } catch (e) {}
+      try {
+        localStorage.removeItem(uid + "_" + k);
+      } catch (e) {}
     });
     localStorage.setItem(uid + "__wiped", pend);
     window._syncWipePending = pend;
     try {
       var req = indexedDB.open("dental_notebooks_v1", 1);
-      req.onupgradeneeded = function (e) { var db = e.target.result; if (!db.objectStoreNames.contains("notebooks")) db.createObjectStore("notebooks"); };
+      req.onupgradeneeded = function (e) {
+        var db = e.target.result;
+        if (!db.objectStoreNames.contains("notebooks"))
+          db.createObjectStore("notebooks");
+      };
       req.onsuccess = function () {
         var db = req.result;
         try {
           var tx = db.transaction("notebooks", "readwrite");
           var st = tx.objectStore("notebooks");
-          ["notebook", "examHistory", "wrongbook_state", "notebook_pending", "wrongbook_lastpos", "opt_marks"].forEach(function (k) { try { st.delete(uid + "_" + k); } catch (e) {} });
-          tx.oncomplete = function () { db.close(); try { localStorage.removeItem(uid + "__wipe_pending"); } catch (e) {} window._syncWipePending = null; };
-          tx.onerror = function () { db.close(); };
+          [
+            "notebook",
+            "examHistory",
+            "wrongbook_state",
+            "notebook_pending",
+            "wrongbook_lastpos",
+            "opt_marks",
+          ].forEach(function (k) {
+            try {
+              st.delete(uid + "_" + k);
+            } catch (e) {}
+          });
+          tx.oncomplete = function () {
+            db.close();
+            try {
+              localStorage.removeItem(uid + "__wipe_pending");
+            } catch (e) {}
+            window._syncWipePending = null;
+          };
+          tx.onerror = function () {
+            db.close();
+          };
         } catch (e) {}
       };
     } catch (e) {}
@@ -89,7 +135,8 @@
   function saveRemote(id) {
     try {
       var u = uid();
-      if (!u || !window.firebase || !firebase.apps || !firebase.apps.length) return;
+      if (!u || !window.firebase || !firebase.apps || !firebase.apps.length)
+        return;
       var user = firebase.auth && firebase.auth().currentUser;
       if (!user || user.uid !== u) return;
       firebase
@@ -102,7 +149,8 @@
   function loadRemote() {
     try {
       var u = uid();
-      if (!u || !window.firebase || !firebase.apps || !firebase.apps.length) return;
+      if (!u || !window.firebase || !firebase.apps || !firebase.apps.length)
+        return;
       firebase
         .database()
         .ref("users/" + u + "/profile/skin")
@@ -173,7 +221,7 @@
   };
   // 手帳風不畫吉祥物,畫一張便條紙
   var NOTE_ART =
-    "<svg viewBox=\"0 0 120 120\"><g transform=\"rotate(6 60 60)\"><rect x=\"18\" y=\"22\" width=\"84\" height=\"80\" fill=\"#fff3a3\"/><rect x=\"40\" y=\"12\" width=\"40\" height=\"16\" fill=\"rgba(200,220,240,.8)\" transform=\"rotate(-6 60 20)\"/><text x=\"60\" y=\"56\" text-anchor=\"middle\" font-family=\"LXGW WenKai TC, Noto Sans TC, sans-serif\" font-size=\"17\" fill=\"#5b4a00\">今天也要</text><text x=\"60\" y=\"82\" text-anchor=\"middle\" font-family=\"LXGW WenKai TC, Noto Sans TC, sans-serif\" font-size=\"17\" fill=\"#5b4a00\">念一點！</text></g></svg>";
+    '<svg viewBox="0 0 120 120"><g transform="rotate(6 60 60)"><rect x="18" y="22" width="84" height="80" fill="#fff3a3"/><rect x="40" y="12" width="40" height="16" fill="rgba(200,220,240,.8)" transform="rotate(-6 60 20)"/><text x="60" y="56" text-anchor="middle" font-family="LXGW WenKai TC, Noto Sans TC, sans-serif" font-size="17" fill="#5b4a00">今天也要</text><text x="60" y="82" text-anchor="middle" font-family="LXGW WenKai TC, Noto Sans TC, sans-serif" font-size="17" fill="#5b4a00">念一點！</text></g></svg>';
   function siteShape() {
     try {
       var k = window.SITE && window.SITE.heroArt;
@@ -268,6 +316,26 @@
     if (wrap) wrap.hidden = false;
   }
 
+  // v651: 跨網域帶風格 — 入口網站 (ezpass-exam.com) 和各站是不同網域,localStorage 不共用,
+  //   連結帶 ?skin=xxx 過來就先存起來套上 (HUA: 在主頁選了風格,按首頁卻變回預設)。
+  //   登入後另外還有雲端 users/{uid}/profile/skin 同步,這裡是沒登入 / 剛跳過來那一瞬間也要一致。
+  try {
+    var qs = new URLSearchParams(location.search);
+    var qSkin = qs.get("skin");
+    if (qSkin && byId[qSkin]) {
+      try {
+        localStorage.setItem(KEY, qSkin);
+        localStorage.setItem(storageKey(), qSkin);
+      } catch (e) {}
+      qs.delete("skin");
+      var rest = qs.toString();
+      history.replaceState(
+        null,
+        "",
+        location.pathname + (rest ? "?" + rest : "") + location.hash,
+      );
+    }
+  } catch (e) {}
   // 1. 先套 data-skin (head 階段，避免閃)
   apply(read(), false);
   // 2. body 好了再放選單 + 裝飾

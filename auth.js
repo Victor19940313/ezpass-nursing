@@ -50,7 +50,12 @@
         email: user.email || "",
         name: user.displayName || "",
         avatar: user.photoURL || "",
-        provider: "google",
+        provider:
+          user.providerData &&
+          user.providerData[0] &&
+          user.providerData[0].providerId === "password"
+            ? "email"
+            : "google",
         last_login_ts: now,
       };
       if (!existing.created_ts) {
@@ -81,8 +86,9 @@
   auth.onAuthStateChanged(async function (user) {
     // 過濾: 只認 Google provider (匿名的照舊，不影響)
     if (user && user.providerData && user.providerData.length > 0) {
+      // v651: Google 或「Email 收登入連結」(providerId = password) 都算登入
       const isGoogle = user.providerData.some(function (p) {
-        return p.providerId === "google.com";
+        return p.providerId === "google.com" || p.providerId === "password";
       });
       if (isGoogle) {
         currentUser = user;
@@ -170,8 +176,13 @@
   //        iOS Safari 留 popup (Safari 的 ITP 反而會擋 redirect);popup 失敗一律退回 redirect;
   //        LINE / FB / IG 內建瀏覽器 Google 根本不給登,直接引導用外部瀏覽器開 (LINE 可用 openExternalBrowser=1)。
   const UA = navigator.userAgent || "";
-  const IN_APP = /Line\/|FBAN|FBAV|FB_IAB|Instagram|Messenger|MicroMessenger|Twitter/i.test(UA);
-  const IS_IOS = /iPhone|iPad|iPod/i.test(UA) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(UA));
+  const IN_APP =
+    /Line\/|FBAN|FBAV|FB_IAB|Instagram|Messenger|MicroMessenger|Twitter/i.test(
+      UA,
+    );
+  const IS_IOS =
+    /iPhone|iPad|iPod/i.test(UA) ||
+    (navigator.maxTouchPoints > 1 && /Macintosh/.test(UA));
   const IS_ANDROID = /Android/i.test(UA);
   const IS_MOBILE = IS_IOS || IS_ANDROID;
   function loginMethod() {
@@ -183,7 +194,8 @@
   function openExternal() {
     const url = location.href.split("#")[0];
     if (/Line\//i.test(UA)) {
-      location.href = url + (url.includes("?") ? "&" : "?") + "openExternalBrowser=1";
+      location.href =
+        url + (url.includes("?") ? "&" : "?") + "openExternalBrowser=1";
       return;
     }
     try {
@@ -213,7 +225,11 @@
     try {
       await auth.signInWithPopup(provider);
     } catch (e) {
-      if (e.code === "auth/popup-closed-by-user" || e.code === "auth/cancelled-popup-request") return;
+      if (
+        e.code === "auth/popup-closed-by-user" ||
+        e.code === "auth/cancelled-popup-request"
+      )
+        return;
       // popup 被擋 / 這個環境不支援 → 退回 redirect
       if (
         e.code === "auth/popup-blocked" ||
@@ -249,9 +265,109 @@
           sessionStorage.removeItem("auth_redirect_pending");
         } catch (e2) {}
         if (e && e.code && e.code !== "auth/no-auth-event")
-          alert("登入失敗: " + (e.message || e.code) + "\n\n請再試一次;若一直失敗,換用 Chrome 或 Safari 開啟。");
+          alert(
+            "登入失敗: " +
+              (e.message || e.code) +
+              "\n\n請再試一次;若一直失敗,換用 Chrome 或 Safari 開啟。",
+          );
       });
   } catch (e) {}
+
+  // v651: 「用 Email 收登入連結」— 任何信箱都能登 (HUA: 不只 Gmail)。
+  //   寄信是 Firebase 做的;點信裡的連結回到這個網址,下面 handleEmailLink 會把人登進來。
+  const EMAIL_KEY = "auth_email_for_link";
+  function emailLinkTarget() {
+    // 回到「這個站」的主頁 (必須是 Firebase 授權網域);帶 emailLink=1 讓落地時認得出
+    return location.origin + "/index.html?emailLink=1";
+  }
+  async function signInWithEmail(email) {
+    email = String(email || "")
+      .trim()
+      .toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      throw new Error("信箱格式不對");
+    await auth.sendSignInLinkToEmail(email, {
+      url: emailLinkTarget(),
+      handleCodeInApp: true,
+    });
+    try {
+      localStorage.setItem(EMAIL_KEY, email);
+    } catch (e) {}
+    return true;
+  }
+  async function handleEmailLink() {
+    try {
+      if (!auth.isSignInWithEmailLink(location.href)) return false;
+    } catch (e) {
+      return false;
+    }
+    let email = "";
+    try {
+      email = localStorage.getItem(EMAIL_KEY) || "";
+    } catch (e) {}
+    if (!email)
+      email = (window.prompt("請輸入你收登入信的信箱,確認是本人:") || "")
+        .trim()
+        .toLowerCase();
+    if (!email) return false;
+    try {
+      await auth.signInWithEmailLink(email, location.href);
+      try {
+        localStorage.removeItem(EMAIL_KEY);
+      } catch (e) {}
+      // 把網址上的 oobCode 等參數清掉,重新整理不會再登一次
+      try {
+        history.replaceState(null, "", location.pathname);
+      } catch (e) {}
+      return true;
+    } catch (e) {
+      alert(
+        "登入連結失效或信箱不符: " +
+          (e.message || e.code) +
+          "\n\n請回到登入頁再寄一次。",
+      );
+      return false;
+    }
+  }
+  // 小表單:放在登入畫面 (index.html 的 #email-login) 或入口網站
+  function renderEmailForm(container) {
+    const el =
+      typeof container === "string"
+        ? document.getElementById(container)
+        : container;
+    if (!el) return;
+    el.innerHTML =
+      '<div class="auth-e-wrap">' +
+      '<div class="auth-e-title">或用 Email 登入（任何信箱都可以）</div>' +
+      '<div class="auth-e-row"><input class="auth-e-input" type="email" inputmode="email" autocomplete="email" placeholder="輸入你的信箱" />' +
+      '<button class="auth-e-btn" type="button">寄登入連結</button></div>' +
+      '<div class="auth-e-msg"></div></div>';
+    const input = el.querySelector(".auth-e-input");
+    const btn = el.querySelector(".auth-e-btn");
+    const msg = el.querySelector(".auth-e-msg");
+    async function go() {
+      btn.disabled = true;
+      msg.style.color = "#6b7280";
+      msg.textContent = "寄送中…";
+      try {
+        await signInWithEmail(input.value);
+        msg.style.color = "#16a34a";
+        msg.innerHTML =
+          "✅ 已寄到 <b>" +
+          escapeHtml(input.value.trim()) +
+          "</b>，打開信裡的連結就會登入（沒收到請看垃圾郵件）。";
+      } catch (e) {
+        msg.style.color = "#b91c1c";
+        msg.textContent = "❌ " + (e.message || e.code);
+        btn.disabled = false;
+      }
+    }
+    btn.addEventListener("click", go);
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") go();
+    });
+  }
+  handleEmailLink();
 
   async function signOutFn() {
     // v598: 登出後回首頁 (HUA: 用到一半按登出,頁面不會跳轉)
@@ -324,6 +440,8 @@
   // export
   window.Auth = {
     signIn: signIn,
+    signInWithEmail: signInWithEmail, // v651
+    renderEmailForm: renderEmailForm, // v651
     signOut: signOutFn,
     getUser: function () {
       return currentUser;
@@ -372,6 +490,14 @@
 .auth-w-menu-email { font-size: .78rem; color: #6b7280; padding: .4rem .5rem; border-bottom: 1px solid #f3f4f6; margin-bottom: .3rem; word-break: break-all; }
 .auth-w-menu-btn { display: block; width: 100%; padding: .5rem; background: none; border: none; text-align: left; cursor: pointer; font-size: .85rem; color: #dc2626; border-radius: 4px; }
 .auth-w-menu-btn:hover { background: #fef2f2; }
+.auth-e-wrap { max-width: 360px; margin: 1rem auto 0; text-align: center; }
+.auth-e-title { font-size: .8rem; color: #6b7280; margin-bottom: .4rem; }
+.auth-e-row { display: flex; gap: .4rem; }
+.auth-e-input { flex: 1; min-width: 0; padding: .5rem .7rem; border: 1.5px solid #e5e7eb; border-radius: 999px; font-size: .9rem; font-family: inherit; }
+.auth-e-input:focus { outline: none; border-color: #7c3aed; }
+.auth-e-btn { padding: .5rem .9rem; border: 0; border-radius: 999px; background: #7c3aed; color: #fff; font-weight: 800; font-size: .85rem; cursor: pointer; white-space: nowrap; font-family: inherit; }
+.auth-e-btn:disabled { opacity: .6; cursor: default; }
+.auth-e-msg { font-size: .8rem; margin-top: .45rem; min-height: 1.2em; line-height: 1.5; }
 `;
   if (!document.getElementById("auth-css")) {
     const s = document.createElement("style");

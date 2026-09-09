@@ -219,7 +219,9 @@
         border-radius: 999px;
         text-decoration: none;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-        transition: transform 0.15s, box-shadow 0.15s;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
       }
       .hero-cta:hover {
         transform: translateY(-2px);
@@ -481,16 +483,34 @@
         color: var(--text);
       }
     </style>
-      <link rel="stylesheet" href="skin.css" />
+    <link rel="stylesheet" href="skin.css" />
   </head>
   <body>
     <!-- User selection overlay (v507: 只留 Google 登入，移除訪客模式) -->
     <div class="user-overlay" id="user-overlay">
       <h2>歡迎回來</h2>
-      <p class="sub2">用 Google 帳號登入，資料跨裝置同步</p>
-      <div style="margin: 2rem 0 1rem; display: flex; justify-content: center">
+      <p class="sub2">用 Google 帳號或 Email 登入，資料跨裝置同步</p>
+      <div
+        style="margin: 2rem 0 0.6rem; display: flex; justify-content: center"
+      >
         <span id="auth-widget"></span>
       </div>
+      <!-- v651: 任何信箱都能登 (收登入連結),auth.js 的 renderEmailForm 會把表單畫進來 -->
+      <div id="email-login"></div>
+      <script>
+        // v651: auth.js 載好後把 Email 登入表單畫進來 (auth.js 在頁尾載,所以等 DOMContentLoaded)
+        (function () {
+          var tries = 0;
+          function draw() {
+            if (window.Auth && Auth.renderEmailForm)
+              return Auth.renderEmailForm("email-login");
+            if (++tries < 40) setTimeout(draw, 250);
+          }
+          if (document.readyState === "loading")
+            document.addEventListener("DOMContentLoaded", draw);
+          else draw();
+        })();
+      </script>
       <p
         style="
           text-align: center;
@@ -503,13 +523,7 @@
         首次登入自動搬舊資料 · 免費 7 天體驗
       </p>
       <!-- v642: 沒登入也要能看到賣什麼 (綠界收款審核退件:販售網址需登入才可查看) -->
-      <p
-        style="
-          text-align: center;
-          margin-top: 0.9rem;
-          font-size: 0.86rem;
-        "
-      >
+      <p style="text-align: center; margin-top: 0.9rem; font-size: 0.86rem">
         <a
           href="subscribe.html"
           style="color: #7c3aed; font-weight: 800; text-decoration: underline"
@@ -519,7 +533,7 @@
         <a
           href="https://ezpass-exam.com/preview.html"
           style="color: #7c3aed; font-weight: 800; text-decoration: underline"
-          >🖼 先看看網站裡面長什麼樣（不用登入）</a
+          >🖼 網站重要功能預覽（不用登入）</a
         >
       </p>
       <!-- v639: 支援的瀏覽器 (HUA: 朋友登入出現 Google 400,多半是從 LINE/IG/FB 內建瀏覽器點進來) -->
@@ -539,9 +553,17 @@
           margin-right: auto;
         "
       >
-        <span style="display: block"><b style="color: #374151">支援的瀏覽器：</b>Chrome、Safari、Edge、Firefox</span>
-        <span style="display: block; margin-top: 0.25rem">從 <b>LINE、Instagram、Facebook</b> 點連結進來的，Google 不給登入：</span>
-        <span style="display: block">請點右上角「⋯」→「<b>用瀏覽器開啟</b>」，或直接在瀏覽器輸入網址。</span>
+        <span style="display: block"
+          ><b style="color: #374151">支援的瀏覽器：</b
+          >Chrome、Safari、Edge、Firefox</span
+        >
+        <span style="display: block; margin-top: 0.25rem"
+          >從 <b>LINE、Instagram、Facebook</b> 點連結進來的，Google
+          不給登入：</span
+        >
+        <span style="display: block"
+          >請點右上角「⋯」→「<b>用瀏覽器開啟</b>」，或直接在瀏覽器輸入網址。</span
+        >
       </p>
       <p
         style="
@@ -571,8 +593,27 @@
           <span id="sub-badge" style="margin-left: 0.5rem"></span>
         </div>
         <span style="display: inline-flex; gap: 0.4rem">
-          <a class="user-switch" href="https://ezpass-exam.com/" title="ezpass 入口網站:選擇考試、方案與價格" style="text-decoration: none">🏠 首頁</a>
-          <button class="user-switch" onclick="if (window.Skin && Skin.open) Skin.open()" title="換網站風格">🎨 風格</button>
+          <a
+            class="user-switch"
+            href="https://ezpass-exam.com/"
+            title="ezpass 入口網站:選擇考試、方案與價格"
+            style="text-decoration: none"
+            onclick="
+              try {
+                var k = window.Skin && Skin.current();
+                if (k && k !== 'classic')
+                  this.href = 'https://ezpass-exam.com/?skin=' + k;
+              } catch (e) {}
+            "
+            >🏠 首頁</a
+          >
+          <button
+            class="user-switch"
+            onclick="if (window.Skin && Skin.open) Skin.open();"
+            title="換網站風格"
+          >
+            🎨 風格
+          </button>
           <button class="user-switch" onclick="switchUser()">切換</button>
         </span>
       </div>
@@ -626,9 +667,7 @@
           <span class="emoji">🧠</span>
           <div class="info">
             <span class="name">口訣與重點分享區</span>
-            <span class="topics"
-              >分科 · 大家一起寫 · 有版本歷史</span
-            >
+            <span class="topics">分科 · 大家一起寫 · 有版本歷史</span>
           </div>
         </a>
         <a
@@ -678,7 +717,9 @@
                 "
               ></span
             ></span>
-            <span class="topics">推薦朋友、分享口訣、寫詳解 · 自動收到序號</span>
+            <span class="topics"
+              >推薦朋友、分享口訣、寫詳解 · 自動收到序號</span
+            >
           </div>
         </a>
         <a
@@ -1031,9 +1072,14 @@
       // Service Worker — v607: 不再自動切新版 + reload (寫到一半被踢回首頁);
       //   新版裝好由 update.js 問使用者「立即更新 / 稍後」
       if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).then((reg) => {
-          setInterval(() => reg.update(), 30 * 60 * 1000 + Math.floor(Math.random() * 5 * 60 * 1000));
-        });
+        navigator.serviceWorker
+          .register("sw.js", { updateViaCache: "none" })
+          .then((reg) => {
+            setInterval(
+              () => reg.update(),
+              30 * 60 * 1000 + Math.floor(Math.random() * 5 * 60 * 1000),
+            );
+          });
       }
 
       // Sync UI
@@ -1101,8 +1147,8 @@
       © 2026 <span data-site="fullName"></span> · <strong>版權所有翻印必究</strong> ·
       未經授權禁止轉載、複製、爬取內容
     </footer>
-      <script src="tour.js" defer></script>
+    <script src="tour.js" defer></script>
     <script src="update.js" defer></script>
     <script src="update.js" defer></script>
-</body>
+  </body>
 </html>

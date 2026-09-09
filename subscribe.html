@@ -12,6 +12,14 @@
     <script src="site.js"></script>
     <link rel="icon" href="icons/icon-192.png" />
     <script src="version.js"></script>
+    <script src="site-config.js" onerror="this.remove()"></script>
+    <script>
+      // v651: 訂閱集中化 — 牙醫以外的站,付款 / 序號都在入口網站做 (同一個帳號),這頁只做轉址
+      if (window.SITE && window.SITE.id && window.SITE.id !== "dental")
+        location.replace(
+          "https://ezpass-exam.com/subscribe.html" + location.search,
+        );
+    </script>
     <script src="skin.js"></script>
     <style>
       * {
@@ -305,23 +313,66 @@
         background: #9ca3af;
       }
       /* v549: 付款前免責聲明 */
-      .terms-wrap { margin: 0.4rem 0 1rem; }
-      .terms-title { font-size: 0.9rem; font-weight: 700; color: #374151; margin-bottom: 0.4rem; }
+      .terms-wrap {
+        margin: 0.4rem 0 1rem;
+      }
+      .terms-title {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 0.4rem;
+      }
       .terms-box {
-        max-height: 220px; overflow-y: auto; border: 1.5px solid #e5e7eb; border-radius: 8px;
-        padding: 0.8rem 0.95rem; background: #fafafa; font-size: 0.78rem; line-height: 1.75; color: #4b5563;
+        max-height: 220px;
+        overflow-y: auto;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 0.8rem 0.95rem;
+        background: #fafafa;
+        font-size: 0.78rem;
+        line-height: 1.75;
+        color: #4b5563;
       }
-      .terms-box h4 { margin: 0.7rem 0 0.2rem; font-size: 0.8rem; color: #111827; }
-      .terms-box h4:first-child { margin-top: 0; }
-      .terms-box p { margin: 0 0 0.35rem; }
-      .terms-box ol { margin: 0 0 0.35rem 1.1rem; padding: 0; }
-      .terms-box li { margin-bottom: 0.15rem; }
+      .terms-box h4 {
+        margin: 0.7rem 0 0.2rem;
+        font-size: 0.8rem;
+        color: #111827;
+      }
+      .terms-box h4:first-child {
+        margin-top: 0;
+      }
+      .terms-box p {
+        margin: 0 0 0.35rem;
+      }
+      .terms-box ol {
+        margin: 0 0 0.35rem 1.1rem;
+        padding: 0;
+      }
+      .terms-box li {
+        margin-bottom: 0.15rem;
+      }
       .terms-agree {
-        display: flex; align-items: flex-start; gap: 0.55rem; margin-top: 0.6rem;
-        font-size: 0.86rem; color: #111827; cursor: pointer; user-select: none;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.55rem;
+        margin-top: 0.6rem;
+        font-size: 0.86rem;
+        color: #111827;
+        cursor: pointer;
+        user-select: none;
       }
-      .terms-agree input { margin-top: 0.2rem; width: 17px; height: 17px; accent-color: #7c3aed; flex: none; }
-      .terms-hint { font-size: 0.74rem; color: #9ca3af; margin-top: 0.35rem; }
+      .terms-agree input {
+        margin-top: 0.2rem;
+        width: 17px;
+        height: 17px;
+        accent-color: #7c3aed;
+        flex: none;
+      }
+      .terms-hint {
+        font-size: 0.74rem;
+        color: #9ca3af;
+        margin-top: 0.35rem;
+      }
 
       /* Success */
       .success {
@@ -589,12 +640,14 @@
         }
       }
     </style>
-      <link rel="stylesheet" href="skin.css" />
+    <link rel="stylesheet" href="skin.css" />
   </head>
   <body>
     <div class="wrap">
       <div class="top">
-        <a class="back" href="./">← <span data-site="homeLabel">牙醫主頁</span></a>
+        <a class="back" href="./"
+          >← <span data-site="homeLabel">牙醫主頁</span></a
+        >
         <span id="auth-widget"></span>
       </div>
 
@@ -625,10 +678,22 @@
           <li>🎨 七種閱讀風格，含夜讀暗色</li>
         </ul>
         <p style="margin: 0.9rem 0 0">
-          <a href="https://ezpass-exam.com/preview.html" style="display: inline-block; background: #7c3aed; color: #fff; font-weight: 800; text-decoration: none; border-radius: 999px; padding: 0.5rem 1.1rem; font-size: 0.9rem">🖼 看實際畫面（不用登入）</a>
+          <a
+            href="https://ezpass-exam.com/preview.html"
+            style="
+              display: inline-block;
+              background: #7c3aed;
+              color: #fff;
+              font-weight: 800;
+              text-decoration: none;
+              border-radius: 999px;
+              padding: 0.5rem 1.1rem;
+              font-size: 0.9rem;
+            "
+            >🖼 網站重要功能預覽（不用登入）</a
+          >
         </p>
       </section>
-
 
       <div id="status-card"></div>
 
@@ -714,11 +779,19 @@
 
       <div class="ec-box" id="ec-box">
         <h3>💳 線上付款 (付完自動開通)</h3>
-        <p>信用卡付完馬上開通;ATM、超商繳完款後幾分鐘內自動開通,不用填對帳。要先勾選下方的服務條款。</p>
+        <p>
+          信用卡付完馬上開通;ATM、超商繳完款後幾分鐘內自動開通,不用填對帳。要先勾選下方的服務條款。
+        </p>
         <div class="ec-btns">
-          <button class="ec-btn" type="button" onclick="payEcpay('credit')">💳 信用卡<small>立即開通</small></button>
-          <button class="ec-btn" type="button" onclick="payEcpay('atm')">🏧 ATM 轉帳<small>取得虛擬帳號</small></button>
-          <button class="ec-btn" type="button" onclick="payEcpay('cvs')">🏪 超商代碼<small>7-11 / 全家</small></button>
+          <button class="ec-btn" type="button" onclick="payEcpay('credit')">
+            💳 信用卡<small>立即開通</small>
+          </button>
+          <button class="ec-btn" type="button" onclick="payEcpay('atm')">
+            🏧 ATM 轉帳<small>取得虛擬帳號</small>
+          </button>
+          <button class="ec-btn" type="button" onclick="payEcpay('cvs')">
+            🏪 超商代碼<small>7-11 / 全家</small>
+          </button>
         </div>
         <div class="ec-or">— 或是用下面的方式 —</div>
       </div>
@@ -785,106 +858,206 @@
         <div class="terms-wrap" id="terms-wrap">
           <div class="terms-title">📄 服務條款與免責聲明</div>
           <div class="terms-box" id="terms-box">
-            <p>請於送出對帳前詳閱以下條款。您勾選「我已閱讀並同意」並送出對帳，即表示您已充分理解並同意受本條款拘束。</p>
+            <p>
+              請於送出對帳前詳閱以下條款。您勾選「我已閱讀並同意」並送出對帳，即表示您已充分理解並同意受本條款拘束。
+            </p>
 
             <h4>一、服務性質</h4>
-            <p>本網站（<span data-site="fullName"></span>，以下簡稱「本服務」）為個人製作之數位學習輔助工具，提供歷屆考題整理、練習紀錄、AI 生成之詳解、筆記與口訣等功能。本服務為線上數位內容，不含任何實體商品、課程、教材或考試輔導承諾。本服務與考選部、任何學校、醫療機構或補習機構均無關聯，亦非其授權或合作單位。</p>
+            <p>
+              本網站（<span data-site="fullName"></span>，以下簡稱「本服務」）為個人製作之數位學習輔助工具，提供歷屆考題整理、練習紀錄、AI
+              生成之詳解、筆記與口訣等功能。本服務為線上數位內容，不含任何實體商品、課程、教材或考試輔導承諾。本服務與考選部、任何學校、醫療機構或補習機構均無關聯，亦非其授權或合作單位。
+            </p>
 
             <h4>二、帳號與登入</h4>
             <ol>
-              <li>本服務以 Google 帳號登入，所有訂閱、練習紀錄與獎勵均綁定於該 Google 帳號，無法轉移至其他帳號。</li>
-              <li>您應妥善保管帳號，因帳號遭他人使用所生之一切結果由您自行承擔。</li>
-              <li>每一帳號同時最多可於三台裝置使用，超出時系統得自動登出較早之裝置。</li>
+              <li>
+                本服務以 Google 帳號登入，所有訂閱、練習紀錄與獎勵均綁定於該
+                Google 帳號，無法轉移至其他帳號。
+              </li>
+              <li>
+                您應妥善保管帳號，因帳號遭他人使用所生之一切結果由您自行承擔。
+              </li>
+              <li>
+                每一帳號同時最多可於三台裝置使用，超出時系統得自動登出較早之裝置。
+              </li>
             </ol>
 
             <h4>三、付款與開通</h4>
             <ol>
-              <li>本服務採銀行轉帳／ATM 匯款之人工對帳方式，並非即時自動開通。送出對帳資料後，作者將於收到款項並確認後儘速開通，開通時間依對帳作業狀況而定，恕無法保證特定時限。</li>
-              <li>您填寫之匯款人姓名與帳號末五碼僅供對帳使用。因資料填寫錯誤、金額不符或匯款未入帳導致無法對帳者，開通將延後，並可能需要您另行提供匯款證明。</li>
+              <li>
+                本服務採銀行轉帳／ATM
+                匯款之人工對帳方式，並非即時自動開通。送出對帳資料後，作者將於收到款項並確認後儘速開通，開通時間依對帳作業狀況而定，恕無法保證特定時限。
+              </li>
+              <li>
+                您填寫之匯款人姓名與帳號末五碼僅供對帳使用。因資料填寫錯誤、金額不符或匯款未入帳導致無法對帳者，開通將延後，並可能需要您另行提供匯款證明。
+              </li>
               <li>訂閱期間自實際開通日起算，非自匯款日起算。</li>
-              <li>本服務之價格、方案內容與優惠得隨時調整，調整前已開通之訂閱不受影響。</li>
+              <li>
+                本服務之價格、方案內容與優惠得隨時調整，調整前已開通之訂閱不受影響。
+              </li>
             </ol>
 
             <h4>四、退費政策</h4>
             <ol>
-              <li>本服務為數位內容，依《通訊交易解除權合理例外情事適用準則》第二條規定，非以有形媒介提供之數位內容一經提供即為完成，不適用七日猶豫期。</li>
-              <li>訂閱一經開通，除本服務因可歸責於作者之事由而完全無法提供且無法於合理期間內修復者外，恕不接受任何理由之退費、部分退費或轉讓。</li>
-              <li>您因個人因素（含但不限於考試日期變更、放棄應考、已錄取、不再需要、誤購方案、未使用）而請求退費者，恕無法受理。</li>
+              <li>
+                本服務為數位內容，依《通訊交易解除權合理例外情事適用準則》第二條規定，非以有形媒介提供之數位內容一經提供即為完成，不適用七日猶豫期。
+              </li>
+              <li>
+                訂閱一經開通，除本服務因可歸責於作者之事由而完全無法提供且無法於合理期間內修復者外，恕不接受任何理由之退費、部分退費或轉讓。
+              </li>
+              <li>
+                您因個人因素（含但不限於考試日期變更、放棄應考、已錄取、不再需要、誤購方案、未使用）而請求退費者，恕無法受理。
+              </li>
               <li>訂閱期滿後不會自動續扣款；如需繼續使用，請重新購買。</li>
             </ol>
 
             <h4>五、內容正確性免責</h4>
             <ol>
-              <li>本服務之考題整理、詳解、解題思路、筆記、口訣及統計資料，部分由人工智慧（含 Google Gemini 等模型）自動生成或協助整理，可能存在錯誤、遺漏、過時或與官方標準答案不一致之情形。</li>
-              <li>本服務所載內容僅供學習參考，不構成任何專業醫療、學術或法律意見，亦不代表考選部之官方立場或標準答案。</li>
-              <li>作者不保證內容之正確性、完整性、即時性或適用於任何特定考試。您應自行核對官方公告與教科書，並對自身之學習與應考結果負完全責任。</li>
-              <li>本服務不保證、亦不暗示使用者將因使用本服務而通過任何考試或取得任何成績。</li>
+              <li>
+                本服務之考題整理、詳解、解題思路、筆記、口訣及統計資料，部分由人工智慧（含
+                Google Gemini
+                等模型）自動生成或協助整理，可能存在錯誤、遺漏、過時或與官方標準答案不一致之情形。
+              </li>
+              <li>
+                本服務所載內容僅供學習參考，不構成任何專業醫療、學術或法律意見，亦不代表考選部之官方立場或標準答案。
+              </li>
+              <li>
+                作者不保證內容之正確性、完整性、即時性或適用於任何特定考試。您應自行核對官方公告與教科書，並對自身之學習與應考結果負完全責任。
+              </li>
+              <li>
+                本服務不保證、亦不暗示使用者將因使用本服務而通過任何考試或取得任何成績。
+              </li>
             </ol>
 
             <h4>六、智慧財產與使用限制</h4>
             <ol>
-              <li>歷屆考題之著作權屬考選部或原權利人所有；本服務之整理方式、版面設計、程式碼、詳解文字、筆記、口訣與圖像之著作權屬作者或原作者所有。</li>
-              <li>訂閱僅授予您個人、非專屬、不可轉讓之使用權，用於您本人之學習。</li>
-              <li>未經作者書面同意，您不得複製、擷取、下載、爬取、轉載、公開傳輸、出租、販售、轉授權本服務之全部或部分內容，亦不得以自動化程式大量存取本服務。</li>
-              <li>您不得將帳號出借、共用、轉售，或以任何方式使非訂閱者使用付費內容。經發現者，作者得立即終止訂閱且不予退費，並保留法律追訴之權利。</li>
+              <li>
+                歷屆考題之著作權屬考選部或原權利人所有；本服務之整理方式、版面設計、程式碼、詳解文字、筆記、口訣與圖像之著作權屬作者或原作者所有。
+              </li>
+              <li>
+                訂閱僅授予您個人、非專屬、不可轉讓之使用權，用於您本人之學習。
+              </li>
+              <li>
+                未經作者書面同意，您不得複製、擷取、下載、爬取、轉載、公開傳輸、出租、販售、轉授權本服務之全部或部分內容，亦不得以自動化程式大量存取本服務。
+              </li>
+              <li>
+                您不得將帳號出借、共用、轉售，或以任何方式使非訂閱者使用付費內容。經發現者，作者得立即終止訂閱且不予退費，並保留法律追訴之權利。
+              </li>
             </ol>
 
             <h4>七、序號、獎勵與推薦制度</h4>
             <ol>
-              <li>推薦獎勵序號與各類優惠序號均有使用期限，逾期自動失效，不予補發。</li>
-              <li>序號僅供延長本服務之訂閱期間，不得兌換現金、不得折抵其他費用、不得要求退還。</li>
-              <li>推薦制度之細則以「我的獎勵」頁面之說明為準；經查有虛假帳號、自我推薦或其他濫用情事者，作者得取消相關獎勵並終止帳號。</li>
-              <li>作者得隨時調整、暫停或終止推薦與獎勵制度，已發放之序號於其效期內仍可使用。</li>
+              <li>
+                推薦獎勵序號與各類優惠序號均有使用期限，逾期自動失效，不予補發。
+              </li>
+              <li>
+                序號僅供延長本服務之訂閱期間，不得兌換現金、不得折抵其他費用、不得要求退還。
+              </li>
+              <li>
+                推薦制度之細則以「我的獎勵」頁面之說明為準；經查有虛假帳號、自我推薦或其他濫用情事者，作者得取消相關獎勵並終止帳號。
+              </li>
+              <li>
+                作者得隨時調整、暫停或終止推薦與獎勵制度，已發放之序號於其效期內仍可使用。
+              </li>
             </ol>
 
             <h4>八、使用者內容</h4>
             <ol>
-              <li>您於口訣與重點分享區、留言、回饋等處發布之內容，應確保不侵害他人權利、不含違法或不當資訊。</li>
-              <li>您同意授權作者於本服務範圍內無償使用、修改、展示您所發布之內容，以利其他使用者學習。</li>
+              <li>
+                您於口訣與重點分享區、留言、回饋等處發布之內容，應確保不侵害他人權利、不含違法或不當資訊。
+              </li>
+              <li>
+                您同意授權作者於本服務範圍內無償使用、修改、展示您所發布之內容，以利其他使用者學習。
+              </li>
               <li>作者得自行判斷移除任何不當內容，毋須事先通知。</li>
-              <li>本服務之試題留言區、口訣與重點分享區等使用者發布內容，均由使用者自行上傳並自負其責。若有侵害他人著作權、智慧財產權或其他權利之情事，<b>皆與作者無關</b>，作者不負任何法律責任；權利人得透過「許願 / Bug 回報」通知作者，作者將於知悉後儘速移除。</li>
+              <li>
+                本服務之試題留言區、口訣與重點分享區等使用者發布內容，均由使用者自行上傳並自負其責。若有侵害他人著作權、智慧財產權或其他權利之情事，<b>皆與作者無關</b>，作者不負任何法律責任；權利人得透過「許願
+                / Bug 回報」通知作者，作者將於知悉後儘速移除。
+              </li>
             </ol>
 
             <h4>九、個人資料</h4>
             <ol>
-              <li>本服務蒐集之個人資料包括：Google 帳號之電子郵件與顯示名稱、匯款人姓名、匯款帳號末五碼、練習與訂閱紀錄、裝置資訊，用途限於提供服務、對帳、防止濫用與必要之聯繫。</li>
-              <li>資料儲存於第三方雲端服務（如 Google Firebase、Cloudflare），其安全性依各該服務商之政策。作者將採取合理措施保護資料，但無法保證絕對安全。</li>
-              <li>除法令要求或為提供服務所必要外，作者不會將您的個人資料提供予第三人。</li>
-              <li>您得隨時請求查詢、更正或刪除您的個人資料；刪除帳號資料後，訂閱與紀錄將無法回復，亦不退費。</li>
+              <li>
+                本服務蒐集之個人資料包括：Google
+                帳號之電子郵件與顯示名稱、匯款人姓名、匯款帳號末五碼、練習與訂閱紀錄、裝置資訊，用途限於提供服務、對帳、防止濫用與必要之聯繫。
+              </li>
+              <li>
+                資料儲存於第三方雲端服務（如 Google
+                Firebase、Cloudflare），其安全性依各該服務商之政策。作者將採取合理措施保護資料，但無法保證絕對安全。
+              </li>
+              <li>
+                除法令要求或為提供服務所必要外，作者不會將您的個人資料提供予第三人。
+              </li>
+              <li>
+                您得隨時請求查詢、更正或刪除您的個人資料；刪除帳號資料後，訂閱與紀錄將無法回復，亦不退費。
+              </li>
             </ol>
 
             <h4>十、服務變更、中斷與終止</h4>
             <ol>
-              <li>本服務為個人維護之專案，功能與介面將持續更新。作者得隨時新增、修改、暫停或移除任何功能，且不負任何補償責任。</li>
-              <li>因系統維護、第三方服務（含網域、主機、資料庫、AI 模型供應商）中斷、不可抗力、網路問題或其他非可歸責於作者之事由，致本服務暫時無法使用者，作者不負賠償責任，亦不延長訂閱期間。</li>
-              <li>作者得於合理預告後終止本服務之全部或一部。若因作者之因素終止整體服務，將依剩餘訂閱期間比例退還已付費用，此為作者之唯一責任。</li>
+              <li>
+                本服務為個人維護之專案，功能與介面將持續更新。作者得隨時新增、修改、暫停或移除任何功能，且不負任何補償責任。
+              </li>
+              <li>
+                因系統維護、第三方服務（含網域、主機、資料庫、AI
+                模型供應商）中斷、不可抗力、網路問題或其他非可歸責於作者之事由，致本服務暫時無法使用者，作者不負賠償責任，亦不延長訂閱期間。
+              </li>
+              <li>
+                作者得於合理預告後終止本服務之全部或一部。若因作者之因素終止整體服務，將依剩餘訂閱期間比例退還已付費用，此為作者之唯一責任。
+              </li>
             </ol>
 
             <h4>十一、責任限制</h4>
             <ol>
-              <li>本服務依「現狀」及「現有」基礎提供，不附帶任何明示或默示之擔保，包括但不限於適售性、特定用途適用性、無錯誤或不中斷之擔保。</li>
-              <li>於法律許可之最大範圍內，作者對於因使用或無法使用本服務所生之任何直接、間接、附隨、衍生、懲罰性損害（包括但不限於考試成績、資料遺失、營業損失、精神損害），均不負賠償責任。</li>
-              <li>無論如何，作者對您之全部賠償責任，以您於爭議發生前十二個月內實際支付予本服務之費用總額為上限。</li>
+              <li>
+                本服務依「現狀」及「現有」基礎提供，不附帶任何明示或默示之擔保，包括但不限於適售性、特定用途適用性、無錯誤或不中斷之擔保。
+              </li>
+              <li>
+                於法律許可之最大範圍內，作者對於因使用或無法使用本服務所生之任何直接、間接、附隨、衍生、懲罰性損害（包括但不限於考試成績、資料遺失、營業損失、精神損害），均不負賠償責任。
+              </li>
+              <li>
+                無論如何，作者對您之全部賠償責任，以您於爭議發生前十二個月內實際支付予本服務之費用總額為上限。
+              </li>
             </ol>
 
             <h4>十二、條款之修改</h4>
-            <p>作者得隨時修改本條款，修改後之條款將公告於本頁面，並自公告時起生效。您於修改後繼續使用本服務，視為同意修改後之條款。若您不同意，應停止使用本服務；已付費用不因此退還。</p>
+            <p>
+              作者得隨時修改本條款，修改後之條款將公告於本頁面，並自公告時起生效。您於修改後繼續使用本服務，視為同意修改後之條款。若您不同意，應停止使用本服務；已付費用不因此退還。
+            </p>
 
             <h4>十三、準據法與管轄</h4>
-            <p>本條款之解釋與適用，以中華民國法律為準據法。因本條款所生之爭議，雙方同意先以誠信協商解決；協商不成時，以臺灣臺中地方法院為第一審管轄法院。</p>
+            <p>
+              本條款之解釋與適用，以中華民國法律為準據法。因本條款所生之爭議，雙方同意先以誠信協商解決；協商不成時，以臺灣臺中地方法院為第一審管轄法院。
+            </p>
 
             <h4>十四、聯絡方式</h4>
-            <p>對本條款或本服務有任何疑問，請透過本網站「許願 / Bug 回報」頁面與作者聯繫。</p>
+            <p>
+              對本條款或本服務有任何疑問，請透過本網站「許願 / Bug
+              回報」頁面與作者聯繫。
+            </p>
 
-            <p style="margin-top: 0.6rem; color: #9ca3af">條款版本：2026-09-03b</p>
+            <p style="margin-top: 0.6rem; color: #9ca3af">
+              條款版本：2026-09-03b
+            </p>
           </div>
           <label class="terms-agree" for="terms-agree">
-            <input type="checkbox" id="terms-agree" onchange="onTermsChange()" />
-            <span>我已閱讀並同意上述服務條款與免責聲明，了解本服務為數位內容，開通後不接受退費。</span>
+            <input
+              type="checkbox"
+              id="terms-agree"
+              onchange="onTermsChange()"
+            />
+            <span
+              >我已閱讀並同意上述服務條款與免責聲明，了解本服務為數位內容，開通後不接受退費。</span
+            >
           </label>
           <div class="terms-hint" id="terms-hint">勾選同意後才能送出對帳</div>
         </div>
-        <button class="submit-btn locked" id="submit-btn" onclick="submitOrder()">
+        <button
+          class="submit-btn locked"
+          id="submit-btn"
+          onclick="submitOrder()"
+        >
           ✓ 我已匯款，送出對帳
         </button>
       </div>
@@ -904,26 +1077,32 @@
         <dl>
           <dt>商品內容</dt>
           <dd>
-            ezpass 國考互動筆記的使用權限，期間依你選擇的方案為 1 個月、3 個月或 6 個月。
+            ezpass 國考互動筆記的使用權限，期間依你選擇的方案為 1 個月、3 個月或
+            6 個月。
             價格為新臺幣，已含稅。服務期間內功能全部開放，沒有額外費用。
-            <b>一份訂閱可使用本服務當時已開放的所有科目</b>（目前為牙醫師二階；日後開放的科目在訂閱期間內一併開放，不另外加價）。
+            <b>一份訂閱可使用本服務當時已開放的所有科目</b
+            >（目前為牙醫師二階；日後開放的科目在訂閱期間內一併開放，不另外加價）。
           </dd>
 
           <dt>付款方式</dt>
-          <dd>信用卡、ATM 虛擬帳號轉帳、超商代碼繳費（皆由綠界科技提供），或銀行匯款。</dd>
+          <dd>
+            信用卡、ATM
+            虛擬帳號轉帳、超商代碼繳費（皆由綠界科技提供），或銀行匯款。
+          </dd>
 
           <dt>開通時間與交付方式</dt>
           <dd>
             本服務為線上服務，沒有實體商品，不需要寄送。
-            使用信用卡付款完成後系統會自動開通，通常一分鐘內生效；
-            ATM 與超商繳費在收到款項後自動開通；
-            銀行匯款需人工核對，我們會在一個工作天內開通。
-            開通後直接用原本的 Google 帳號登入網站即可使用。
+            使用信用卡付款完成後系統會自動開通，通常一分鐘內生效； ATM
+            與超商繳費在收到款項後自動開通；
+            銀行匯款需人工核對，我們會在一個工作天內開通。 開通後直接用原本的
+            Google 帳號登入網站即可使用。
           </dd>
 
           <dt>免費試用</dt>
           <dd>
-            第一次登入即享 7 天免費試用，期間功能全部開放、不需要付款、也不會自動扣款。
+            第一次登入即享 7
+            天免費試用，期間功能全部開放、不需要付款、也不會自動扣款。
             試用期滿後需要訂閱才能繼續使用。
           </dd>
 
@@ -931,21 +1110,25 @@
           <dd>
             本服務屬於「非以有形媒介提供之數位內容」與「一經提供即完成之線上服務」，
             依《通訊交易解除權合理例外情事適用準則》第二條規定，不適用七日猶豫期。
-            為保障你的權益，我們提供上述 7 天免費試用，請在試用期間確認合用再付款。
+            為保障你的權益，我們提供上述 7
+            天免費試用，請在試用期間確認合用再付款。
             完成付款、權限開通後恕不退費。
             若因系統問題導致無法正常使用，請來信告知，我們會協助排除或補償等值的使用天數。
           </dd>
 
           <dt>客服聯絡方式</dt>
           <dd>
-            客服信箱：<a href="mailto:ezpassdental@gmail.com">ezpassdental@gmail.com</a>
+            客服信箱：<a href="mailto:ezpassdental@gmail.com"
+              >ezpassdental@gmail.com</a
+            >
             （服務時間為週一至週五，我們會在一至兩個工作天內回覆）<br />
             也可以直接在網站上<a href="feedback.html">回報問題或許願</a>。
           </dd>
 
           <dt>隱私權</dt>
           <dd>
-            登入時我們只會取得你 Google 帳號的電子郵件與顯示名稱，用於識別身分與跨裝置同步你的作答紀錄與筆記。
+            登入時我們只會取得你 Google
+            帳號的電子郵件與顯示名稱，用於識別身分與跨裝置同步你的作答紀錄與筆記。
             我們不會將你的資料提供給第三方，也不會用於行銷。
           </dd>
 
@@ -1026,7 +1209,8 @@
         .then((r) => r.json())
         .then((j) => {
           lpEnabled = !!(j && j.enabled);
-          if (lpEnabled && selectedPlan) document.getElementById("lp-box").classList.add("show");
+          if (lpEnabled && selectedPlan)
+            document.getElementById("lp-box").classList.add("show");
         })
         .catch(() => {});
       function lpSync() {
@@ -1048,7 +1232,9 @@
         if (!termsCb || !termsCb.checked) {
           alert("請先閱讀並勾選同意服務條款與免責聲明");
           try {
-            document.getElementById("terms-wrap").scrollIntoView({ behavior: "smooth", block: "center" });
+            document
+              .getElementById("terms-wrap")
+              .scrollIntoView({ behavior: "smooth", block: "center" });
           } catch (e) {}
           return;
         }
@@ -1059,7 +1245,9 @@
         const referrerEmail =
           _refField && _refField.style.display === "none"
             ? ""
-            : (document.getElementById("referrer-email").value || "").trim().toLowerCase();
+            : (document.getElementById("referrer-email").value || "")
+                .trim()
+                .toLowerCase();
         try {
           const r = await fetch(LP_WORKER + "/linepay/request", {
             method: "POST",
@@ -1074,12 +1262,18 @@
             }),
           });
           const j = await r.json();
-          if (!j.ok || !j.paymentUrl) throw new Error(j.error || "LINE Pay 沒回應");
+          if (!j.ok || !j.paymentUrl)
+            throw new Error(j.error || "LINE Pay 沒回應");
           location.href = j.paymentUrl;
         } catch (e) {
-          alert("LINE Pay 付款啟動失敗:" + e.message + "\n可以改用匯款,或稍後再試");
+          alert(
+            "LINE Pay 付款啟動失敗:" + e.message + "\n可以改用匯款,或稍後再試",
+          );
           btn.disabled = false;
-          btn.innerHTML = '用 LINE Pay 付 <span id="lp-amount">$' + selectedAmount + "</span>";
+          btn.innerHTML =
+            '用 LINE Pay 付 <span id="lp-amount">$' +
+            selectedAmount +
+            "</span>";
         }
       }
       window.payLinepay = payLinepay;
@@ -1092,15 +1286,23 @@
           document.getElementById("plans").style.display = "none";
           const sc = document.getElementById("success");
           sc.querySelector("h2").textContent = "LINE Pay 付款成功,已自動開通!";
-          sc.querySelector("p").innerHTML = "徽章會變成金色「✨會員」<br />如果沒有馬上變,重新整理一次就好";
-          document.getElementById("order-id").textContent = q.get("oid") ? "訂單編號: " + q.get("oid") : "";
+          sc.querySelector("p").innerHTML =
+            "徽章會變成金色「✨會員」<br />如果沒有馬上變,重新整理一次就好";
+          document.getElementById("order-id").textContent = q.get("oid")
+            ? "訂單編號: " + q.get("oid")
+            : "";
           sc.classList.add("show");
-          if (window.Subscription && window.Subscription.refresh) setTimeout(() => window.Subscription.refresh(), 800);
+          if (window.Subscription && window.Subscription.refresh)
+            setTimeout(() => window.Subscription.refresh(), 800);
           window.scrollTo({ top: 0, behavior: "smooth" });
         } else if (st === "cancel") {
           alert("已取消 LINE Pay 付款,沒有扣款。");
         } else {
-          alert("LINE Pay 付款沒有完成 (" + (q.get("why") || "未知") + ")。沒有開通也沒有扣款的話可以再試一次,或改用匯款。");
+          alert(
+            "LINE Pay 付款沒有完成 (" +
+              (q.get("why") || "未知") +
+              ")。沒有開通也沒有扣款的話可以再試一次,或改用匯款。",
+          );
         }
       })();
 
@@ -1111,7 +1313,9 @@
         .then((j) => {
           // 測試模式 (官方測試商店) 只有網址帶 ?ecpaytest=1 才顯示,避免一般人走到測試站
           window._ecStage = !!(j && j.stage);
-          ecEnabled = !!(j && j.enabled) && (!j.stage || /ecpaytest=1/.test(location.search));
+          ecEnabled =
+            !!(j && j.enabled) &&
+            (!j.stage || /ecpaytest=1/.test(location.search));
           ecSync();
         })
         .catch(() => {});
@@ -1131,7 +1335,9 @@
         if (!termsCb || !termsCb.checked) {
           alert("請先閱讀並勾選同意服務條款與免責聲明");
           try {
-            document.getElementById("terms-wrap").scrollIntoView({ behavior: "smooth", block: "center" });
+            document
+              .getElementById("terms-wrap")
+              .scrollIntoView({ behavior: "smooth", block: "center" });
           } catch (e) {}
           return;
         }
@@ -1141,7 +1347,9 @@
         const referrerEmail =
           _refField && _refField.style.display === "none"
             ? ""
-            : (document.getElementById("referrer-email").value || "").trim().toLowerCase();
+            : (document.getElementById("referrer-email").value || "")
+                .trim()
+                .toLowerCase();
         try {
           const r = await fetch(LP_WORKER + "/ecpay/checkout", {
             method: "POST",
@@ -1187,22 +1395,35 @@
         if (st === "ok") {
           document.getElementById("plans").style.display = "none";
           sc.querySelector("h2").textContent = "付款成功,已自動開通!";
-          sc.querySelector("p").innerHTML = "徽章會變成金色「✨會員」<br />如果沒有馬上變,重新整理一次就好";
-          document.getElementById("order-id").textContent = q.get("oid") ? "訂單編號: " + q.get("oid") : "";
+          sc.querySelector("p").innerHTML =
+            "徽章會變成金色「✨會員」<br />如果沒有馬上變,重新整理一次就好";
+          document.getElementById("order-id").textContent = q.get("oid")
+            ? "訂單編號: " + q.get("oid")
+            : "";
           sc.classList.add("show");
-          if (window.Subscription && window.Subscription.refresh) setTimeout(() => window.Subscription.refresh(), 800);
+          if (window.Subscription && window.Subscription.refresh)
+            setTimeout(() => window.Subscription.refresh(), 800);
           window.scrollTo({ top: 0, behavior: "smooth" });
         } else if (st === "pending") {
           document.getElementById("plans").style.display = "none";
           sc.querySelector("h2").textContent = "已取得繳費資訊";
-          sc.querySelector("p").innerHTML = "請依綠界頁面上的 ATM 帳號或超商代碼繳款,<b>繳完款後幾分鐘內會自動開通</b>,不用再回來對帳。";
-          document.getElementById("order-id").textContent = q.get("oid") ? "訂單編號: " + q.get("oid") : "";
+          sc.querySelector("p").innerHTML =
+            "請依綠界頁面上的 ATM 帳號或超商代碼繳款,<b>繳完款後幾分鐘內會自動開通</b>,不用再回來對帳。";
+          document.getElementById("order-id").textContent = q.get("oid")
+            ? "訂單編號: " + q.get("oid")
+            : "";
           sc.classList.add("show");
           window.scrollTo({ top: 0, behavior: "smooth" });
         } else if (st === "back") {
-          alert("你回到了訂閱頁。如果已經付款,幾分鐘內會自動開通;沒付款的話可以再選一次。");
+          alert(
+            "你回到了訂閱頁。如果已經付款,幾分鐘內會自動開通;沒付款的話可以再選一次。",
+          );
         } else {
-          alert("線上付款沒有完成 (" + (q.get("why") || "未知") + ")。沒有扣款的話可以再試一次,或改用匯款。");
+          alert(
+            "線上付款沒有完成 (" +
+              (q.get("why") || "未知") +
+              ")。沒有扣款的話可以再試一次,或改用匯款。",
+          );
         }
       })();
 
@@ -1441,7 +1662,9 @@
             redeem_code: code,
           });
           // v576: 付費會員索引 (獎勵「有效讚」用)
-          db.ref("users/__stats/paid/" + user.uid).set(expires).catch(() => {});
+          db.ref("users/__stats/paid/" + user.uid)
+            .set(expires)
+            .catch(() => {});
           msgEl.innerHTML = `✅ 兌換成功! 開通 ${days} 天，到期 ${new Date(expires).toISOString().slice(0, 10)}`;
           msgEl.style.color = "#16a34a";
           btn.textContent = "已兌換";
@@ -1471,6 +1694,6 @@
       © 2026 <span data-site="fullName"></span> · <strong>版權所有翻印必究</strong> ·
       未經授權禁止轉載、複製、爬取內容
     </footer>
-      <script src="tour.js" defer></script>
-</body>
+    <script src="tour.js" defer></script>
+  </body>
 </html>

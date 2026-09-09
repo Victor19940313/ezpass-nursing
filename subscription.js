@@ -52,7 +52,28 @@
   }
 
   // v553: 只讀 profile + subscription 兩個小欄位 (萬人審計 #4: 以前整個 users/{uid} 幾 MB 抓下來只為看到期日)
-  async function loadUserData(uid) {
+  // v651: 訂閱集中化 — 牙醫以外的站,訂閱紀錄不在自己的 Firebase,
+  //   拿自己的 ID token 去問中間層 (Worker 用 email 到牙醫 DB / KV 找),回傳形狀跟下面 Firebase 讀到的一樣。
+  const CENTRAL_WORKER = "https://island-watch.seat-watch.workers.dev";
+  const CENTRAL_SITE =
+    window.SITE && window.SITE.id && window.SITE.id !== "dental"
+      ? window.SITE.id
+      : "";
+  async function loadCentral(user) {
+    const idToken = await user.getIdToken();
+    const r = await fetch(CENTRAL_WORKER + "/api/sub/status", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ site: CENTRAL_SITE, idToken: idToken }),
+    });
+    const j = await r.json();
+    if (!j || !j.ok) throw new Error((j && j.error) || "central " + r.status);
+    if (typeof j.server_now === "number")
+      _srvOffset = j.server_now - Date.now(); // 以中間層的時間為準
+    return { profile: j.profile || {}, subscription: j.subscription || null };
+  }
+  async function loadUserData(uid, user) {
+    if (CENTRAL_SITE && user) return loadCentral(user);
     if (!db) throw new Error("offline");
     // v573b: 第一次先等伺服器時間差回來 (最多 1.5 秒),不然時鐘被撥過的裝置第一次會算錯
     await Promise.race([_offsetReady, new Promise((r) => setTimeout(r, 1500))]);
@@ -123,7 +144,7 @@
       return s;
     }
     try {
-      const data = await loadUserData(user.uid);
+      const data = await loadUserData(user.uid, user);
       const s = computeStatus(user, data);
       cachedStatus = s;
       // v538: 記住這個 uid 的狀態，下次進站 0 秒先套用 (過期的人不會有空窗可以點進去)
@@ -420,7 +441,12 @@
   }
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState !== "visible") return;
-    if (_expiryAt && serverNow() >= _expiryAt && cachedStatus && cachedStatus.ok)
+    if (
+      _expiryAt &&
+      serverNow() >= _expiryAt &&
+      cachedStatus &&
+      cachedStatus.ok
+    )
       refreshAndRender();
   });
 
@@ -468,7 +494,8 @@
       if (c.until && Date.now() >= c.until) {
         cachedStatus = {
           ok: false,
-          reason: c.reason === "trial" ? "trial_expired" : "subscription_expired",
+          reason:
+            c.reason === "trial" ? "trial_expired" : "subscription_expired",
           _optimistic: true,
         };
         applyBodyClass();
