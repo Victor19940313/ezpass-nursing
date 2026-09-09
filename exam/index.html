@@ -6292,13 +6292,13 @@
           <span class="hm-em">📄</span><span><b>照試卷練</b><span class="hm-desc">選一份年度試卷，完整走一遍。適合模擬考、抓手感。</span></span>
         </button>
         <button class="home-mode" role="tab" id="hm-topic" aria-selected="false" onclick="setHomeMode('topic')">
-          <span class="hm-em">🎯</span><span><b>照單元練</b><span class="hm-desc"><span data-site="questionCount"></span> 題已全部分門別類，挑一個單元集中火力。看得到每個單元做過幾題、錯誤率多少。</span></span>
+          <span class="hm-em">🎯</span><span><b>照分類練</b><span class="hm-desc"><span data-site="questionCount"></span> 題已全部分門別類，挑一個分類集中火力。看得到每個分類做過幾題、錯誤率多少。</span></span>
         </button>
       </div>
       <div class="home-layout mode-paper" id="home-layout">
-        <!-- Topic sidebar (照單元練) -->
+        <!-- Topic sidebar (照分類練) -->
         <div class="topic-sidebar" id="topic-sidebar">
-          <div class="topic-sidebar-title">🏷 單元分類</div>
+          <div class="topic-sidebar-title">🏷 分類</div>
           <div class="ts-status-bar">
             <div
               class="ts-chip sel"
@@ -6414,11 +6414,11 @@
           <details class="ts-errhelp" id="ts-errhelp">
             <summary>❔ 錯誤率怎麼算？</summary>
             <div class="ts-errhelp-body">
-              <p><b>錯誤率 ＝ 這個單元裡「現在還會錯」的題數 ÷ 你做過的題數</b></p>
+              <p><b>錯誤率 ＝ 這個分類裡「現在還會錯」的題數 ÷ 你做過的題數</b></p>
               <ul>
                 <li>每答一題就會記，<b>不用等交卷</b>；做幾題就離開也算。</li>
                 <li>每一題只看<b>最近一次</b>：上次錯、這次對，就不算錯了。練會了數字就會降。</li>
-                <li>只算上面年份篩選有勾的年份。還沒做過的單元顯示「—」。</li>
+                <li>只算上面年份篩選有勾的年份。還沒做過的分類顯示「—」。</li>
                 <li>顏色：<span style="color:#dc2626;font-weight:700">40% 以上紅</span>、<span style="color:#ea580c;font-weight:700">25～40% 橘</span>、<span style="color:#059669;font-weight:700">25% 以下綠</span>。紅的就是你的弱點，先補它。</li>
               </ul>
             </div>
@@ -7238,9 +7238,9 @@
         <div class="bf-divider"></div>
         <script>Site.here(Site.subjectButtons((s) => `<div class="bf-chip sel" data-bf="${s.code}" onclick="setBF(this, 'subj', '${s.code}')">${s.name}</div>`))</script>
       </div>
-      <!-- v391:單元篩選列(從卡片上的 🏷 topic 點過來會顯示) -->
+      <!-- v391:分類篩選列(從卡片上的 🏷 topic 點過來會顯示) -->
       <div class="db-topic-bar" id="bf-topic-bar" style="display: none">
-        🏷 單元篩選：<span id="bf-topic-label"></span>
+        🏷 分類篩選：<span id="bf-topic-label"></span>
         <button class="db-topic-bar-clear" onclick="clearBrowseTopicFilter()">
           ✕ 清除
         </button>
@@ -7284,7 +7284,7 @@
             cursor: pointer;
             user-select: none;
           "
-          title="勾起來:只比對題目跟選項，不掃詳解、單元、題號(關鍵字命中更精準)"
+          title="勾起來:只比對題目跟選項，不掃詳解、分類、題號(關鍵字命中更精準)"
         >
           <input
             type="checkbox"
@@ -7336,7 +7336,7 @@
 
     <!-- ═══════════════ WRONGBOOK SCREEN ═══════════════ -->
     <div id="screen-wrongbook" style="display: none">
-      <!-- v571: 錯題本改版 — 先看單元、點開才看題,一題一行;撐得住幾百題 -->
+      <!-- v571: 錯題本改版 — 先看分類、點開才看題,一題一行;撐得住幾百題 -->
       <div class="wb2-head">
         <h2 class="wb-title" style="margin: 0">🚩 錯題本</h2>
         <span class="wb2-count" id="wb-stats"></span>
@@ -7375,13 +7375,13 @@
               <option value="recent">最近加入</option>
               <option value="wrong">還沒答對的優先</option>
               <option value="fewest">做過次數少的優先</option>
-              <option value="topic">依科目・單元</option>
+              <option value="topic">依科目・分類</option>
             </select>
           </label>
         </div>
       </div>
       <div class="wb2-search"><input type="search" id="wb2-search" placeholder="🔍 搜題目關鍵字、題號（例如 111-1-3）" oninput="setWBQuery(this.value)" /></div>
-      <div class="wb2-lab" style="margin: 0.2rem 0 0.4rem">單元（點單元展開題目列表；點題目展開詳解）</div>
+      <div class="wb2-lab" style="margin: 0.2rem 0 0.4rem">分類（點分類展開題目列表；點題目展開詳解）</div>
       <div class="wb-list" id="wb-list"></div>
       <div class="wb2-pager" id="wb2-pager"></div>
       <input type="file" id="wb-import-file" accept=".json" style="display: none" onchange="handleWBImport(event)" />
@@ -8307,7 +8307,7 @@
     </div>
 
     <!-- ONBOARDING WIZARD -->
-    <!-- v381: 單元進度 modal -->
+    <!-- v381: 分類進度 modal -->
     <div
       id="topic-progress-overlay"
       style="
@@ -9179,8 +9179,8 @@
       window.selectAllSidebarYears = selectAllSidebarYears;
       window.clearSidebarYears = clearSidebarYears;
 
-      // v381: 單元進度 modal — 顯示某 topic 在 105~115 各年-次的完成度
-      // v383: 分類進度只看 classCount(只有從「單元分類→開始練習」入口才會加)
+      // v381: 分類進度 modal — 顯示某 topic 在 105~115 各年-次的完成度
+      // v383: 分類進度只看 classCount(只有從「分類→開始練習」入口才會加)
       //   主畫面練習模式 / 試卷模式 / 昨日錯題 / topic-tag 都不影響 classCount
       //   手動標 🟢/🤔/🟡/🔴 也不算做過(標記跟做題分開)
       // v444: revert v443 — 使用者原本要的就是「用分類練習」的專屬進度，不要混其他模式
@@ -9311,7 +9311,7 @@
 
       function goFromSidebar() {
         if (!activeKey) {
-          showToast("請先選擇一個單元分類");
+          showToast("請先選擇一個分類");
           return;
         }
         const [subj, cat] = activeKey.split("|");
@@ -9386,7 +9386,7 @@
         // Aggregate: subj → cat → total count AND filtered count
         const data = {}; // {subj: {cat: totalCount}}
         const filtered = {}; // {subj: {cat: filteredCount}}
-        const doneCnt = {}; // v548: {subj: {cat: 做過題數}} (classCount>0, 與單元進度 modal 同定義)
+        const doneCnt = {}; // v548: {subj: {cat: 做過題數}} (classCount>0, 與分類進度 modal 同定義)
         QS.forEach((q) => {
           if (!q.topic) return;
           // v380: 年份篩選(空集合 = 不篩)
@@ -9453,7 +9453,7 @@
                   pct >= 40 ? "#dc2626" : pct >= 25 ? "#ea580c" : "#059669";
                 wrongPctHtml = `<span class="ti-err" title="做過 ${st.done} 題,目前還會錯 ${st.wrong} 題（每題只看最近一次）" style="color:${col}">錯 ${pct}%</span>`;
               } else {
-                wrongPctHtml = `<span class="ti-err ti-na" title="這個單元還沒做過題">—</span>`;
+                wrongPctHtml = `<span class="ti-err ti-na" title="這個分類還沒做過題">—</span>`;
               }
             }
             // v548: 做過幾題 (分類練習進度) 進度條
@@ -9475,10 +9475,10 @@
 
         list.innerHTML =
           html ||
-          '<div style="padding:.6rem .85rem;font-size:.78rem;color:#94a3b8">（無單元資料）</div>';
+          '<div style="padding:.6rem .85rem;font-size:.78rem;color:#94a3b8">（無分類資料）</div>';
         updateGoBtn();
         try {
-          updateMatchCount(); // v548: 開始列的「已選單元 · N 題」
+          updateMatchCount(); // v548: 開始列的「已選分類 · N 題」
         } catch (e) {}
         // v443:錯誤率開關按鈕視覺狀態 (v548 按鈕已移除，保留無害)
         const btn = document.getElementById("btn-wrong-pct");
@@ -9509,7 +9509,7 @@
           openTopicProgress(subj, cat);
       }
 
-      // v548: 單元 + sidebar 年份/標記篩選後的題目 (startCatPractice 與開始列計數共用)
+      // v548: 分類 + sidebar 年份/標記篩選後的題目 (startCatPractice 與開始列計數共用)
       function _catFilteredList(subj, cat) {
         let list = QS.filter(
           (q) => q.subject === subj && getTopicCat(q.topic) === cat,
@@ -9545,7 +9545,7 @@
         return true;
       }
 
-      // ── v548: 首頁兩種模式 (照試卷練 / 照單元練) + 共用作答方式 ──
+      // ── v548: 首頁兩種模式 (照試卷練 / 照分類練) + 共用作答方式 ──
       window._homeMode = "paper";
       try {
         if (localStorage.getItem(uKey("home_mode")) === "topic")
@@ -9583,7 +9583,7 @@
         const howExam = document.getElementById("how-exam");
         if (howExam) howExam.style.display = topic ? "none" : "";
         if (topic && _homeHow() === "exam") {
-          // 單元模式目前只有「邊做邊看答案」
+          // 分類模式目前只有「邊做邊看答案」
           const rp = document.querySelector(
             'input[name="home-how"][value="practice"]',
           );
@@ -9605,7 +9605,7 @@
       function homeStart() {
         if (window._homeMode === "topic") {
           if (!activeKey) {
-            showToast("請先在上面選一個單元");
+            showToast("請先在上面選一個分類");
             return;
           }
           const [subj, cat] = activeKey.split("|");
@@ -9706,7 +9706,7 @@
         renderTopicSidebar();
         const list = QS.filter((q) => q.topic === topic);
         if (!list.length) {
-          showToast("此單元暫無題目");
+          showToast("此分類暫無題目");
           return;
         }
         practiceList = _applyPracticeSort(list);
@@ -10347,9 +10347,9 @@ ${SITE.ai.explExamples}
 
       最後一句:「最後留 **(${correctTxt})**」。
 
-      **【關鍵記憶】** > 💡 一句金句(≤ 30 字),讓學生下次看到關鍵字就想到單元。
+      **【關鍵記憶】** > 💡 一句金句(≤ 30 字),讓學生下次看到關鍵字就想到分類。
 
-      **【臨床直覺】** > 🏥 一句話(≤ 40 字),講此單元在臨床實務怎麼用。
+      **【臨床直覺】** > 🏥 一句話(≤ 40 字),講此分類在臨床實務怎麼用。
 
       【複選 ①②③④⑤ 題型】
       如果選項是「僅②③④」這種組合，【作答思路】改成逐項寫每個 ①②③④⑤ 的對錯，不是比較 (A)(B)(C)(D)。
@@ -11250,7 +11250,7 @@ ${SITE.ai.explExamples}
         stopTimer();
         updateHomeStats();
         try {
-          renderTopicSidebar(); // v548: 單元樹上的「做過 / 錯誤率」回首頁要重算
+          renderTopicSidebar(); // v548: 分類樹上的「做過 / 錯誤率」回首頁要重算
         } catch (e) {}
         updateMatchCount();
         checkLastPos();
@@ -11398,10 +11398,10 @@ ${SITE.ai.explExamples}
       function updateMatchCount() {
         const el = document.getElementById("match-count");
         if (!el) return;
-        // v548: 單元模式 → 顯示已選單元 + 題數
+        // v548: 分類模式 → 顯示已選分類 + 題數
         if (window._homeMode === "topic") {
           if (!activeKey) {
-            el.textContent = "請先在上面選一個單元";
+            el.textContent = "請先在上面選一個分類";
             return;
           }
           const [subj, cat] = activeKey.split("|");
@@ -12192,7 +12192,7 @@ ${SITE.ai.explExamples}
           trackDailyCount(q);
           // ── 紀錄本輪分數 + 使用者實際選的選項（題號總覽要用）──
           practiceResults[q.id] = isCorrect;
-          // v636: 每答一題就記「最近一次對/錯」(單元錯誤率用),不用等交卷;隨 qState 同步
+          // v636: 每答一題就記「最近一次對/錯」(分類錯誤率用),不用等交卷;隨 qState 同步
           qState[q.id].lc = isCorrect ? 1 : 0;
           qState[q.id].la = Date.now();
           // v572: 默默記錄全站「第一次作答」統計 (還沒開放顯示)
@@ -14317,7 +14317,7 @@ ${sBtn("learning", "❓", "一知半解", "#eab308")}
         renderBrowse();
       }
 
-      // v402:「只搜題目跟選項」開關 — 縮小搜尋範圍，不掃詳解/單元/題號
+      // v402:「只搜題目跟選項」開關 — 縮小搜尋範圍，不掃詳解/分類/題號
       let bfQAOnly = false;
       function setBrowseQAOnly(on) {
         bfQAOnly = !!on;
@@ -14393,7 +14393,7 @@ ${sBtn("learning", "❓", "一知半解", "#eab308")}
         }
       }
 
-      // v391:瀏覽用的單元篩選(取代舊 db 的 dbTopicFilter)
+      // v391:瀏覽用的分類篩選(取代舊 db 的 dbTopicFilter)
       let bfTopicFilter = null;
       function clearBrowseTopicFilter() {
         bfTopicFilter = null;
@@ -14418,7 +14418,7 @@ ${sBtn("learning", "❓", "一知半解", "#eab308")}
           if (bfTopicFilter && topic !== bfTopicFilter) return false;
           if (_q) {
             const opts = (q.options || []).join(" ");
-            // v402:bfQAOnly 開了 → 只比對題目+選項，排除詳解/單元/題號
+            // v402:bfQAOnly 開了 → 只比對題目+選項，排除詳解/分類/題號
             let hay;
             if (bfQAOnly) {
               hay = [q.question, opts].join(" ").toLowerCase();
@@ -28133,7 +28133,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
       // ════════════════════════════════════════════
       //  Database screen — v391:已併入瀏覽。底下保留薄殼，讓舊呼叫不會炸
       // ════════════════════════════════════════════
-      // 把單元 tag 點擊轉導到 browse 的單元篩選
+      // 把分類 tag 點擊轉導到 browse 的分類篩選
       function filterByTopic(topic) {
         bfTopicFilter = topic;
         const bar = document.getElementById("bf-topic-bar");
@@ -28675,7 +28675,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
           return a.year - b.year || a.session - b.session || a.number - b.number;
         };
 
-        // v633: 要回到的那題 → 翻到它的單元那一頁、展開單元與題目、列要畫到它
+        // v633: 要回到的那題 → 翻到它的分類那一頁、展開分類與題目、列要畫到它
         if (_wbReturnQid) {
           const rq = QS.find((x) => x.id === _wbReturnQid);
           const rkey = rq ? rq.subject + "||" + (getS(rq.id).topic || rq.topic || "未分類") : null;
@@ -28688,7 +28688,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
             if (ri >= (wbShown[rkey] || WB_ROWS_PER_CHUNK)) wbShown[rkey] = ri + 1;
           } else _wbReturnQid = null;
         }
-        statsEl.textContent = `共 ${allFlagged.length} 題 · ${Object.keys(groups).length} 個單元` + (list.length !== allFlagged.length ? ` · 篩選後 ${list.length} 題` : "");
+        statsEl.textContent = `共 ${allFlagged.length} 題 · ${Object.keys(groups).length} 個分類` + (list.length !== allFlagged.length ? ` · 篩選後 ${list.length} 題` : "");
 
         if (!list.length) {
           listEl.innerHTML = allFlagged.length
@@ -28699,7 +28699,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
           return;
         }
 
-        // 分頁 (單元)
+        // 分頁 (分類)
         const pages = Math.max(1, Math.ceil(garr.length / WB_GROUPS_PER_PAGE));
         if (wbPage > pages) wbPage = pages;
         const pageGroups = garr.slice((wbPage - 1) * WB_GROUPS_PER_PAGE, wbPage * WB_GROUPS_PER_PAGE);
@@ -28761,9 +28761,9 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
         if (pages > 1) {
           let ph = "";
           for (let i = 1; i <= pages; i++) ph += `<button type="button" class="${i === wbPage ? "on" : ""}" onclick="wbGoPage(${i})">${i}</button>`;
-          ph += `<span>單元 ${(wbPage - 1) * WB_GROUPS_PER_PAGE + 1}–${Math.min(wbPage * WB_GROUPS_PER_PAGE, garr.length)} / ${garr.length}</span>`;
+          ph += `<span>分類 ${(wbPage - 1) * WB_GROUPS_PER_PAGE + 1}–${Math.min(wbPage * WB_GROUPS_PER_PAGE, garr.length)} / ${garr.length}</span>`;
           pg.innerHTML = ph;
-        } else pg.innerHTML = garr.length > 1 ? `<span>共 ${garr.length} 個單元</span>` : "";
+        } else pg.innerHTML = garr.length > 1 ? `<span>共 ${garr.length} 個分類</span>` : "";
         _wbUpdateStartBar(list, hist);
       }
 
