@@ -6116,19 +6116,19 @@
         <span id="auth-widget" style="margin-right: 0.5rem"></span>
         <!-- v613: 手機版導覽收合 — 只在 ≤760px 顯示;點開才展開下面那排分頁 -->
         <button class="nav-toggle" id="nav-toggle" type="button" onclick="toggleHeaderNav()" aria-expanded="false">
-          <span class="nav-cur" id="nav-cur">考試首頁</span><span class="nav-caret">▾</span>
+          <span class="nav-cur" id="nav-cur">考題區</span><span class="nav-caret">▾</span>
         </button>
         <i class="nav-break" aria-hidden="true"></i>
         <button
           class="btn-mode"
           id="btn-notes"
           onclick="location.href = '../index.html'"
-          title="回到主頁"
+          title="回到這個國考的主頁"
         >
-          回到主頁
+          <span data-site="homeLabel">牙醫主頁</span>
         </button>
         <button class="btn-mode active" id="btn-home" onclick="showHome()">
-          考試首頁
+          考題區
         </button>
         <button
           class="btn-mode"
@@ -6765,7 +6765,7 @@
           onclick="showHome()"
           style="font-size: 0.82rem"
         >
-          ← 考試首頁
+          ← 考題區
         </button>
         <button
           class="btn-prev"
@@ -6895,7 +6895,7 @@
       <div id="exam-res-history"></div>
       <div class="exam-res-actions">
         <button class="start-btn secondary" onclick="showHome()">
-          ← 返回考試首頁
+          ← 返回考題區
         </button>
         <button class="start-btn" id="exam-res-retry" onclick="retryWrong()">
           🔁 只練錯題
@@ -11581,7 +11581,7 @@ ${SITE.ai.explExamples}
             }
           }
           if (!raw) {
-            showToast("沒有上次的進度，請從「考試首頁」開始");
+            showToast("沒有上次的進度，請從「考題區」開始");
             return;
           }
           // v422:等 QS load 完(從口訣與重點分享區回來時 QS 還在載)
@@ -25354,7 +25354,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
                         </div>
                         <h3 style="font-size:.95rem;color:#7c3aed;margin-top:1rem">📚 接下來怎麼用</h3>
                         <ol style="font-size:.88rem;line-height:1.8;margin-left:1.2rem">
-                          <li>回到考試首頁，開始做題</li>
+                          <li>回到考題區，開始做題</li>
                           <li>看到值得記下的題目 → 答完後按 <strong>📒 加入筆記</strong></li>
                           <li>AI 自動分類、整理進「我的筆記本」</li>
                           <li>之後做題時隨時按 <strong>📖 偷看筆記</strong> 找相關章節</li>

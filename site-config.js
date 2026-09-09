@@ -3,6 +3,7 @@ window.SITE = {
   "id": "nursing",
   "name": "護理師國考互動筆記",
   "shortName": "護理師國考",
+  "homeLabel": "護理師主頁",
   "description": "護理師國家考試互動筆記與歷屆試題練習",
   "brand": "ezpass",
   "examName": "護理師國考",
