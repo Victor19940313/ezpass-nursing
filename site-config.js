@@ -24,7 +24,7 @@ window.SITE = {
   },
   "firebase": {
     "apiKey": "AIzaSyApomsj_lJxKaxW5gscsCMtJjowRBzZbgQ",
-    "authDomain": "ezpass-nursing.firebaseapp.com",
+    "authDomain": "nursing.ezpass-exam.com",
     "databaseURL": "https://ezpass-nursing-default-rtdb.asia-southeast1.firebasedatabase.app",
     "projectId": "ezpass-nursing",
     "storageBucket": "ezpass-nursing.firebasestorage.app",

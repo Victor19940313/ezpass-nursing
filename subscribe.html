@@ -15,8 +15,8 @@
     <script src="site-config.js" onerror="this.remove()"></script>
     <script>
       // v651: 訂閱集中化 — 牙醫以外的站,付款 / 序號都在入口網站做 (同一個帳號),這頁只做轉址
-      if (window.SITE && window.SITE.id && window.SITE.id !== "dental")
-        location.replace(
+      // v652: 付款 / 序號一律在入口網站做 (一份訂閱通全站),各站訂閱頁只做轉址
+      location.replace(
           "https://ezpass-exam.com/subscribe.html" + location.search,
         );
     </script>
