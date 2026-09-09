@@ -1,0 +1,1 @@
+const REVIEW_IMAGES = [];

@@ -1,0 +1,316 @@
+      body.theme-warm {
+        --purple: #c97a52; --purple-light: #fceadb; --purple-dark: #9d5a35; --purple-soft: #e09a78;
+        --strong-bg: #fcd97b; --strong-color: #9d5a35;
+        --em-color: #6e8a3a;
+        --tag-bg: #f5e3b0; --tag-color: #7d5026;
+      }
+      /* === 大地:caramel === */
+      body.theme-earth {
+        --purple: #a3814f; --purple-light: #fbf6ec; --purple-dark: #7d5e35; --purple-soft: #c4a070;
+        --strong-bg: #f4cb70; --strong-color: #7d5e35;
+        --em-color: #5d7a4a;
+        --tag-bg: #dec39a; --tag-color: #7d5e35;
+      }
+      /* === 海洋:slate sky === */
+      body.theme-ocean {
+        --purple: #5a85a8; --purple-light: #f5fafd; --purple-dark: #3f6584; --purple-soft: #86abc5;
+        --strong-bg: #fcd97b; --strong-color: #3f6584;
+        --em-color: #5d8275;
+        --tag-bg: #c0d5e2; --tag-color: #3f6584;
+      }
+      /* === 森林:moss === */
+      body.theme-forest {
+        --purple: #6b9560; --purple-light: #f6faf3; --purple-dark: #4f7547; --purple-soft: #92b387;
+        --strong-bg: #fcd97b; --strong-color: #4f7547;
+        --em-color: #7d5a8a;
+        --tag-bg: #c0d5b0; --tag-color: #4f7547;
+      }
+      /* === 深色:warm dark === */
+      body.theme-dark {
+        --purple: #b094e0; --purple-light: #3a3445; --purple-dark: #9576d0; --purple-soft: #c9b5ee;
+        --strong-bg: rgba(232, 200, 112, .2); --strong-color: #e8c870;
+        --em-color: #95b8d6;
+        --tag-bg: #534570; --tag-color: #d4c4f0;
+        --bg: #1c1a23;
+      }
+      /* === HappyHues 1: 海軍藍 + 珊瑚 + 天空藍 === */
+      body.theme-hh1 {
+        --purple: #3da9fc; --purple-light: #d8eefe; --purple-dark: #094067; --purple-soft: #90b4ce;
+        --strong-bg: #ffd803; --strong-color: #094067; --em-color: #5f6c7b;
+        --tag-bg: #d8eefe; --tag-color: #094067;
+      }
+      body.theme-hh1 { background: #fffffe; }
+
+      /* === HappyHues 3: 簡潔藍灰 === */
+      body.theme-hh3 {
+        --purple: #3da9fc; --purple-light: #d8eefe; --purple-dark: #094067; --purple-soft: #94d2e7;
+        --strong-bg: #ffd803; --strong-color: #094067; --em-color: #5f6c7b;
+        --tag-bg: #d8eefe; --tag-color: #094067;
+      }
+      body.theme-hh3 { background-color: #fffffe; background-image: linear-gradient(135deg, #fffffe, rgba(216,238,254,var(--g-strength,1))); background-attachment: fixed; }
+
+      /* === HappyHues 4: 靛藍 + 嫩珊瑚 === */
+      body.theme-hh4 {
+        --purple: #6246ea; --purple-light: #d1d1e9; --purple-dark: #4631b8; --purple-soft: #a78bfa;
+        --strong-bg: #fde047; --strong-color: #4631b8; --em-color: #2b2c34;
+        --tag-bg: #d1d1e9; --tag-color: #2b2c34;
+      }
+      body.theme-hh4 { background: #fffffe; }
+
+      /* === HappyHues 5: 純白靛 === */
+      body.theme-hh5 {
+        --purple: #6246ea; --purple-light: #d1d1e9; --purple-dark: #4631b8; --purple-soft: #a3a1de;
+        --strong-bg: #d1d1e9; --strong-color: #6246ea; --em-color: #2b2c34;
+        --tag-bg: #d1d1e9; --tag-color: #6246ea;
+      }
+      body.theme-hh5 { background: #fffffe; }
+
+      /* === HappyHues 7: 暖橙 + 焦糖 === */
+      body.theme-hh7 {
+        --purple: #ff8e3c; --purple-light: #fef6e4; --purple-dark: #d96f1c; --purple-soft: #d9376e;
+        --strong-bg: #ffd803; --strong-color: #20272f; --em-color: #5e503f;
+        --tag-bg: #fef6e4; --tag-color: #d9376e;
+      }
+      body.theme-hh7 { background-color: #fffffe; background-image: linear-gradient(135deg, #fffffe, rgba(254,246,228,var(--g-strength,1))); background-attachment: fixed; }
+
+      /* === HappyHues 8: 大地系 === */
+      body.theme-hh8 {
+        --purple: #ff8e3c; --purple-light: #fef6e4; --purple-dark: #d96f1c; --purple-soft: #ffc6ac;
+        --strong-bg: #ffc6ac; --strong-color: #20272f; --em-color: #5e503f;
+        --tag-bg: #ffc6ac; --tag-color: #20272f;
+      }
+      body.theme-hh8 { background: #fffffe; }
+
+      /* === HappyHues 9: 活力珊瑚橙 === */
+      body.theme-hh9 {
+        --purple: #f25f4c; --purple-light: #fcfcfc; --purple-dark: #c54430; --purple-soft: #ff8906;
+        --strong-bg: #ff8906; --strong-color: #fffffe; --em-color: #e53170;
+        --tag-bg: #fcfcfc; --tag-color: #00214d;
+      }
+      body.theme-hh9 { background-color: #fcfcfc; background-image: linear-gradient(135deg, #fcfcfc, rgba(255,233,212,var(--g-strength,1))); background-attachment: fixed; }
+
+      /* === HappyHues 11: 檸檬亮粉 === */
+      body.theme-hh11 {
+        --purple: #d9376e; --purple-light: #fcfaf9; --purple-dark: #a82754; --purple-soft: #ffd803;
+        --strong-bg: #ffd803; --strong-color: #1b1c1e; --em-color: #d9376e;
+        --tag-bg: #ffd803; --tag-color: #1b1c1e;
+      }
+      body.theme-hh11 { background: #fffffe; }
+
+      /* === HappyHues 13: 金黃深紫(深色) === */
+      body.theme-hh13 {
+        --purple: #e2c044; --purple-light: #2a2c3e; --purple-dark: #c4a532; --purple-soft: #aaabb8;
+        --strong-bg: rgba(226,192,68,.25); --strong-color: #e2c044; --em-color: #aaabb8;
+        --tag-bg: #e2c044; --tag-color: #1f2235;
+      }
+      body.theme-hh13 { background-color: #1f2235; background-image: linear-gradient(135deg, #1f2235, rgba(42,44,62,var(--g-strength,1))); background-attachment: fixed; color: #fffffe; }
+      body.theme-hh13 .nb-chapter-content, body.theme-hh13 .nb-toc-pane, body.theme-hh13 .nb-editor-tiptap { background: #2a2c3e; color: #fffffe; }
+
+      /* === HappyHues 14: 黃白藍 === */
+      body.theme-hh14 {
+        --purple: #faae2b; --purple-light: #cee3f8; --purple-dark: #d68b15; --purple-soft: #cee3f8;
+        --strong-bg: #faae2b; --strong-color: #1f2235; --em-color: #2c698d;
+        --tag-bg: #cee3f8; --tag-color: #1f2235;
+      }
+      body.theme-hh14 { background-color: #fffffe; background-image: linear-gradient(135deg, #fffffe, rgba(206,227,248,var(--g-strength,1))); background-attachment: fixed; }
+
+      /* === HappyHues 15: 海綠檸黃 === */
+      body.theme-hh15 {
+        --purple: #28666e; --purple-light: #cee3f8; --purple-dark: #1a4d54; --purple-soft: #faae2b;
+        --strong-bg: #faae2b; --strong-color: #28666e; --em-color: #2c698d;
+        --tag-bg: #cee3f8; --tag-color: #28666e;
+      }
+      body.theme-hh15 { background-color: #fffffe; background-image: linear-gradient(135deg, #fffffe, rgba(206,227,248,var(--g-strength,1))); background-attachment: fixed; }
+
+      /* === HappyHues 17: 奶油派(粉+薄荷) === */
+      body.theme-hh17 {
+        --purple: #f582ae; --purple-light: #fef6e4; --purple-dark: #001858; --purple-soft: #8bd3dd;
+        --strong-bg: #f3d2c1; --strong-color: #001858; --em-color: #5b21b6;
+        --tag-bg: #8bd3dd; --tag-color: #001858;
+      }
+      body.theme-hh17 { background: #fef6e4; }
+      body.theme-hh17 .nb-chapter-content, body.theme-hh17 .nb-toc-pane, body.theme-hh17 .nb-editor-tiptap { background: #fffaf0; }
+
+      /* === 日本傳統色 1: 桜 sakura(淡櫻粉) === */
+      body.theme-jp-sakura {
+        --purple: #d24e58; --purple-light: #fef4f4; --purple-dark: #8a1d2a; --purple-soft: #f5b1aa;
+        --strong-bg: #f9c0c0; --strong-color: #8a1d2a; --em-color: #767676;
+        --tag-bg: #fef4f4; --tag-color: #8a1d2a;
+      }
+      body.theme-jp-sakura { background-color: #fffafa; background-image: linear-gradient(135deg, #fffafa, rgba(254,244,244,var(--g-strength,1))); background-attachment: fixed; }
+
+      /* === 日本傳統色 2: 抹茶 matcha(茶綠) === */
+      body.theme-jp-matcha {
+        --purple: #6f7d3a; --purple-light: #f0eed7; --purple-dark: #3a4625; --purple-soft: #aab578;
+        --strong-bg: #d3d56e; --strong-color: #3a4625; --em-color: #5a5a3a;
+        --tag-bg: #f0eed7; --tag-color: #3a4625;
+      }
+      body.theme-jp-matcha { background-color: #fdfdf5; background-image: linear-gradient(135deg, #fdfdf5, rgba(240,238,215,var(--g-strength,1))); background-attachment: fixed; }
+
+      /* === 日本傳統色 3: 浅葱 asagi(水藍) === */
+      body.theme-jp-asagi {
+        --purple: #008b94; --purple-light: #d6ecea; --purple-dark: #00484f; --purple-soft: #5dbdc6;
+        --strong-bg: #aee0db; --strong-color: #00484f; --em-color: #4a6c6a;
+        --tag-bg: #d6ecea; --tag-color: #00484f;
+      }
+      body.theme-jp-asagi { background-color: #f6fcfb; background-image: linear-gradient(135deg, #f6fcfb, rgba(214,236,234,var(--g-strength,1))); background-attachment: fixed; }
+
+      /* === 日本傳統色 4: 白鼠 shironezumi(灰白護眼) === */
+      body.theme-jp-shironezumi {
+        --purple: #6e6962; --purple-light: #e8e1dc; --purple-dark: #3a3631; --purple-soft: #b9a8a6;
+        --strong-bg: #d3c8c0; --strong-color: #3a3631; --em-color: #6b6258;
+        --tag-bg: #e8e1dc; --tag-color: #3a3631;
+      }
+      body.theme-jp-shironezumi { background-color: #fafafa; background-image: linear-gradient(135deg, #fafafa, rgba(232,225,220,var(--g-strength,1))); background-attachment: fixed; }
+
+      /* === 日本傳統色 5: 鳩羽紫 hatoba(灰紫雅致) === */
+      body.theme-jp-hatoba {
+        --purple: #7a6d85; --purple-light: #ede9f0; --purple-dark: #3f3548; --purple-soft: #b3a3bc;
+        --strong-bg: #d0c2d6; --strong-color: #3f3548; --em-color: #6f5f7a;
+        --tag-bg: #ede9f0; --tag-color: #3f3548;
+      }
+      body.theme-jp-hatoba { background-color: #fafafb; background-image: linear-gradient(135deg, #fafafb, rgba(237,233,240,var(--g-strength,1))); background-attachment: fixed; }
+
+      /* === 日本傳統色 6: 黄丹 oudan(暖橙) === */
+      body.theme-jp-oudan {
+        --purple: #cd5d2a; --purple-light: #fceddb; --purple-dark: #7a3712; --purple-soft: #f3a06f;
+        --strong-bg: #f8c89c; --strong-color: #7a3712; --em-color: #815e3b;
+        --tag-bg: #fceddb; --tag-color: #7a3712;
+      }
+      body.theme-jp-oudan { background-color: #fffaf2; background-image: linear-gradient(135deg, #fffaf2, rgba(252,237,219,var(--g-strength,1))); background-attachment: fixed; }
+      /* 日本傳統色:章節內容區/sidebar/編輯器也帶主題 tint(不再是純白) */
+      body.theme-jp-sakura      .nb-chapter-content, body.theme-jp-sakura      .nb-toc-pane, body.theme-jp-sakura      .nb-editor-tiptap { background: #fef7f7; }
+      body.theme-jp-matcha      .nb-chapter-content, body.theme-jp-matcha      .nb-toc-pane, body.theme-jp-matcha      .nb-editor-tiptap { background: #f8f6e6; }
+      body.theme-jp-asagi       .nb-chapter-content, body.theme-jp-asagi       .nb-toc-pane, body.theme-jp-asagi       .nb-editor-tiptap { background: #ebf5f3; }
+      body.theme-jp-shironezumi .nb-chapter-content, body.theme-jp-shironezumi .nb-toc-pane, body.theme-jp-shironezumi .nb-editor-tiptap { background: #f1ece8; }
+      body.theme-jp-hatoba      .nb-chapter-content, body.theme-jp-hatoba      .nb-toc-pane, body.theme-jp-hatoba      .nb-editor-tiptap { background: #f3eff5; }
+      body.theme-jp-oudan       .nb-chapter-content, body.theme-jp-oudan       .nb-toc-pane, body.theme-jp-oudan       .nb-editor-tiptap { background: #fbf4e7; }
+      /* 背景樣式選擇:格子 / 純色(預設用 theme 漸層) */
+      body.bg-style-grid {
+        background-image:
+          linear-gradient(color-mix(in srgb, var(--purple-soft, #999) 25%, transparent) 1px, transparent 1px),
+          linear-gradient(90deg, color-mix(in srgb, var(--purple-soft, #999) 25%, transparent) 1px, transparent 1px) !important;
+        background-size: 22px 22px !important;
+      }
+      body.bg-style-solid { background-image: none !important; }
+      /* 和紙(washi):細纖維 noise,柔和米灰 */
+      body.bg-style-washi, body.bg-style-paper {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.55  0 0 0 0 0.5  0 0 0 0 0.45  0 0 0 0.14 0'/></filter><rect width='100%25' height='100%25' filter='url(%23p)'/></svg>") !important;
+        background-size: 300px 300px !important;
+        background-attachment: fixed !important;
+      }
+      /* 粗紙(kraft):粗纖維,暖灰色,更明顯顆粒感 */
+      body.bg-style-kraft {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='k'><feTurbulence type='fractalNoise' baseFrequency='0.45' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.42  0 0 0 0 0.32  0 0 0 0.18 0'/></filter><rect width='100%25' height='100%25' filter='url(%23k)'/></svg>") !important;
+        background-size: 400px 400px !important;
+        background-attachment: fixed !important;
+      }
+      /* 古紙(vintage):大塊雲狀紋,泛黃,像舊書頁 */
+      body.bg-style-vintage {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='500' height='500'><filter id='v'><feTurbulence type='turbulence' baseFrequency='0.05' numOctaves='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.65  0 0 0 0 0.55  0 0 0 0 0.35  0 0 0 0.18 0'/></filter><rect width='100%25' height='100%25' filter='url(%23v)'/></svg>") !important;
+        background-size: 500px 500px !important;
+        background-attachment: fixed !important;
+      }
+      /* 字體選擇:每個都接中文 fallback + 希臘符號(α β γ ±)的數學字體 fallback */
+      body.font-serif  { font-family: 'Noto Serif TC', 'Songti TC', '宋體', 'Cambria', 'STIX Two Text', serif !important; }
+      body.font-kai    { font-family: 'LXGW WenKai TC', 'Noto Serif TC', '楷體', 'Kaiti TC', 'STIX Two Text', serif !important; }
+      body.font-maru   { font-family: 'Zen Maru Gothic', 'Noto Sans TC', 'Cambria', sans-serif !important; }
+      body.font-mincho { font-family: 'Shippori Mincho', 'Noto Serif TC', '明朝', '宋體', 'Cambria', serif !important; }
+      /* 麻布(linen):兩方向細線交織 */
+      body.bg-style-linen {
+        background-image:
+          repeating-linear-gradient(45deg, color-mix(in srgb, var(--purple-soft, #999) 14%, transparent) 0 1px, transparent 1px 6px),
+          repeating-linear-gradient(-45deg, color-mix(in srgb, var(--purple-soft, #999) 14%, transparent) 0 1px, transparent 1px 6px) !important;
+        background-size: 8px 8px !important;
+        background-attachment: fixed !important;
+      }
+      /* 米紙(rice):超細密 noise,溫暖米白色 */
+      body.bg-style-rice {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='r'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.6  0 0 0 0 0.55  0 0 0 0 0.45  0 0 0 0.1 0'/></filter><rect width='100%25' height='100%25' filter='url(%23r)'/></svg>") !important;
+        background-size: 200px 200px !important;
+        background-attachment: fixed !important;
+      }
+      /* 帆布(canvas):中度粗糙,偏冷灰 */
+      body.bg-style-canvas {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='350' height='350'><filter id='c'><feTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0 0.48  0 0 0 0.16 0'/></filter><rect width='100%25' height='100%25' filter='url(%23c)'/></svg>") !important;
+        background-size: 350px 350px !important;
+        background-attachment: fixed !important;
+      }
+      /* 筆記紙(note):橫線筆記本樣式,跟主題色協調 */
+      body.bg-style-note {
+        background-image: repeating-linear-gradient(0deg, transparent 0 27px, color-mix(in srgb, var(--purple-soft, #999) 25%, transparent) 27px 28px) !important;
+        background-size: 100% 28px !important;
+        background-attachment: fixed !important;
+      }
+      /* 點點紙(dot):圓點 grid,輕巧不搶眼 */
+      body.bg-style-dot {
+        background-image: radial-gradient(circle, color-mix(in srgb, var(--purple-soft, #999) 30%, transparent) 1px, transparent 1.5px) !important;
+        background-size: 16px 16px !important;
+        background-attachment: fixed !important;
+      }
+      /* 大理石(marble):低頻 turbulence 產生大漩渦紋,搭主題色像玉石/大理石 — 柔和版 */
+      body.bg-style-marble {
+        background-image:
+          url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='800'><filter id='m'><feTurbulence type='turbulence' baseFrequency='0.012' numOctaves='5' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.35  0 0 0 0 0.4  0 0 0 0 0.45  0 0 0 0.2 0'/></filter><rect width='100%25' height='100%25' filter='url(%23m)'/></svg>"),
+          linear-gradient(135deg, var(--purple-light, #f0f0f0) 0%, color-mix(in srgb, var(--purple-soft, #999) 35%, transparent) 100%) !important;
+        background-size: 800px 800px, 100% 100% !important;
+        background-attachment: fixed, fixed !important;
+      }
+      /* 抽象藝術(abstract):大塊不規則 turbulence + 主題色漸層,藝術感 */
+      body.bg-style-abstract {
+        background-image:
+          url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='700' height='700'><filter id='ab'><feTurbulence type='turbulence' baseFrequency='0.008' numOctaves='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.48  0 0 0 0 0.5  0 0 0 0.22 0'/></filter><rect width='100%25' height='100%25' filter='url(%23ab)'/></svg>"),
+          linear-gradient(135deg, var(--purple-light, #f0f0f0) 0%, color-mix(in srgb, var(--purple-soft, #999) 32%, transparent) 100%) !important;
+        background-size: 700px 700px, 100% 100% !important;
+        background-attachment: fixed, fixed !important;
+      }
+      /* 大理石紋(marble-vein):紋路較明顯,像真實石材 */
+      body.bg-style-marble-vein {
+        background-image:
+          url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1000' height='1000'><filter id='mv'><feTurbulence type='turbulence' baseFrequency='0.018' numOctaves='6' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.22  0 0 0 0 0.25  0 0 0 0.28 0'/></filter><rect width='100%25' height='100%25' filter='url(%23mv)'/></svg>"),
+          linear-gradient(135deg, var(--purple-light, #fafafa) 0%, color-mix(in srgb, var(--purple-soft, #999) 30%, transparent) 100%) !important;
+        background-size: 1000px 1000px, 100% 100% !important;
+        background-attachment: fixed, fixed !important;
+      }
+      /* 白漆刷塗 橫向(white-paint):baseFrequency 水平低/垂直高 → 模擬橫向刷痕 */
+      body.bg-style-white-paint {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='wp'><feTurbulence type='fractalNoise' baseFrequency='0.005 0.1' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.92  0 0 0 0 0.91  0 0 0 0 0.88  0 0 0 0.32 0'/></filter><rect width='100%25' height='100%25' filter='url(%23wp)'/></svg>") !important;
+        background-size: 600px 600px !important;
+        background-attachment: fixed !important;
+      }
+      /* 白漆刷塗 豎向(white-paint-2):baseFrequency 水平高/垂直低 → 模擬豎向刷痕 */
+      body.bg-style-white-paint-2 {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='wp2'><feTurbulence type='fractalNoise' baseFrequency='0.1 0.005' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.94  0 0 0 0 0.93  0 0 0 0 0.9  0 0 0 0.34 0'/></filter><rect width='100%25' height='100%25' filter='url(%23wp2)'/></svg>") !important;
+        background-size: 600px 600px !important;
+        background-attachment: fixed !important;
+      }
+      /* 復古粗糙(grunge):中頻 noise + 高對比,有歲月痕跡感 */
+      body.bg-style-grunge {
+        background-image:
+          url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.25  0 0 0 0 0.22  0 0 0 0 0.2  0 0 0 0.28 0'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>") !important;
+        background-size: 600px 600px !important;
+        background-attachment: fixed !important;
+      }
+      /* 漸層紙(grad-paper):主題色斜向漸層 + 細紙紋 noise 疊層,類似 free-paper-texture 那種 */
+      body.bg-style-grad-paper {
+        background-image:
+          url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='gp'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.55  0 0 0 0 0.5  0 0 0 0 0.45  0 0 0 0.1 0'/></filter><rect width='100%25' height='100%25' filter='url(%23gp)'/></svg>"),
+          linear-gradient(135deg, var(--purple-light, #ffffff) 0%, color-mix(in srgb, var(--purple-soft, #999) 45%, transparent) 100%) !important;
+        background-size: 300px 300px, 100% 100% !important;
+        background-attachment: fixed, fixed !important;
+      }
+      /* 方格紙(graph):大方格,像數學筆記本 */
+      body.bg-style-graph {
+        background-image:
+          linear-gradient(color-mix(in srgb, var(--purple-soft, #999) 22%, transparent) 1px, transparent 1px),
+          linear-gradient(90deg, color-mix(in srgb, var(--purple-soft, #999) 22%, transparent) 1px, transparent 1px) !important;
+        background-size: 40px 40px !important;
+        background-attachment: fixed !important;
+      }
+      /* 深色主題:全域背景與字色 */
+      body.theme-dark { background: #1c1a23; color: #ebe5f0; }
+      body.theme-dark .nb-chapter-content,
+      body.theme-dark .nb-toc-pane,
+      body.theme-dark .nb-editor-tiptap,
+      body.theme-dark .nb-editor-textarea,
+      body.theme-dark .nb-editor-preview-live { background: #28252f; color: #ebe5f0; }

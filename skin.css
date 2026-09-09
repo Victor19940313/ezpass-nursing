@@ -1,0 +1,590 @@
+/* ═══════════════════════════════════════════════════════════════
+   skin.css — 全站「風格」(v550, 最後改 v558)
+   所有規則都以 html[data-skin] 開頭 → 沒選風格時整個檔案不生效。
+   六種風格只改「變數」+ 少量裝飾; 各頁元件的對應寫在下面「共用對應」。
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ───────── 變數: 六種風格 ───────── */
+html[data-skin="kawaii"] {
+  --sk-bg: #fff8f1; --sk-bg-img: radial-gradient(#ffd3de 1.6px, transparent 1.7px); --sk-bg-size: 22px 22px;
+  --sk-card: #ffffff; --sk-ink: #4a3b4b; --sk-ink2: #7a6a7b; --sk-mute: #a899a9; --sk-line: #4a3b4b;
+  --sk-accent: #ee5a8a; --sk-accent-d: #4a3b4b; --sk-accent-soft: #ffd3de; --sk-accent-ink: #ffffff;
+  --sk-radius: 20px; --sk-radius-s: 14px; --sk-bw: 2.5px;
+  --sk-shadow: 4px 4px 0 #4a3b4b; --sk-shadow-lift: 6px 6px 0 #4a3b4b; --sk-btn-shadow: 3px 3px 0 #4a3b4b;
+  --sk-font: "Noto Sans TC", system-ui, sans-serif; --sk-font-display: "Noto Sans TC", system-ui, sans-serif; --sk-font-num: "Baloo 2", "Noto Sans TC", sans-serif;
+}
+html[data-skin="toon"] {
+  --sk-bg: #eaf6ff; --sk-bg-img: linear-gradient(#bfe3ff, #eaf6ff 40%); --sk-bg-size: auto;
+  --sk-card: #ffffff; --sk-ink: #1e2a47; --sk-ink2: #4e5b7a; --sk-mute: #8a96b3; --sk-line: #dce6f5;
+  --sk-accent: #2f8ef5; --sk-accent-d: #1c63b8; --sk-accent-soft: #ddeeff; --sk-accent-ink: #ffffff;
+  --sk-radius: 22px; --sk-radius-s: 14px; --sk-bw: 0px;
+  --sk-shadow: 0 6px 0 #c9d6ea, 0 10px 24px rgba(30, 42, 71, 0.1); --sk-shadow-lift: 0 9px 0 #c9d6ea, 0 16px 30px rgba(30, 42, 71, 0.16); --sk-btn-shadow: 0 4px 0 #1c63b8;
+  --sk-font: "Noto Sans TC", system-ui, sans-serif; --sk-font-display: "Noto Sans TC", system-ui, sans-serif; --sk-font-num: Fredoka, "Noto Sans TC", sans-serif;
+}
+html[data-skin="notebook"] {
+  --sk-bg: #fbf8f0; --sk-bg-img: repeating-linear-gradient(transparent 0 27px, rgba(70, 110, 180, 0.22) 27px 28px); --sk-bg-size: auto;
+  --sk-card: #ffffff; --sk-ink: #2b2b33; --sk-ink2: #5b5b66; --sk-mute: #8a8a95; --sk-line: #2b2b33;
+  --sk-accent: #d64545; --sk-accent-d: #2b2b33; --sk-accent-soft: #ffe86b; --sk-accent-ink: #ffffff;
+  --sk-radius: 12px 14px 10px 16px / 14px 10px 16px 12px; --sk-radius-s: 8px 10px 7px 11px / 10px 7px 11px 8px; --sk-bw: 2px;
+  --sk-shadow: 3px 3px 0 rgba(43, 43, 51, 0.2); --sk-shadow-lift: 4px 4px 0 rgba(43, 43, 51, 0.3); --sk-btn-shadow: 3px 3px 0 rgba(43, 43, 51, 0.3);
+  --sk-font: "LXGW WenKai TC", "Noto Sans TC", serif; --sk-font-display: "LXGW WenKai TC", "Noto Sans TC", serif; --sk-font-num: "LXGW WenKai TC", serif;
+}
+html[data-skin="stationery"] {
+  --sk-bg: #f4eee6; --sk-bg-img: none; --sk-bg-size: auto;
+  --sk-card: #ffffff; --sk-ink: #4b3f39; --sk-ink2: #8c7b72; --sk-mute: #a69a91; --sk-line: #e7dcd1;
+  --sk-accent: #a67c6d; --sk-accent-d: #8a6455; --sk-accent-soft: #f3e4da; --sk-accent-ink: #ffffff;
+  --sk-radius: 18px; --sk-radius-s: 12px; --sk-bw: 1px;
+  --sk-shadow: none; --sk-shadow-lift: 0 6px 16px rgba(75, 63, 57, 0.1); --sk-btn-shadow: none;
+  --sk-font: "Noto Sans TC", system-ui, sans-serif; --sk-font-display: "Noto Sans TC", system-ui, sans-serif; --sk-font-num: "Gowun Dodum", "Noto Sans TC", sans-serif;
+}
+html[data-skin="clinic"] {
+  --sk-bg: #f4f9fc; --sk-bg-img: linear-gradient(rgba(27, 127, 196, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(27, 127, 196, 0.06) 1px, transparent 1px); --sk-bg-size: 28px 28px;
+  --sk-card: #ffffff; --sk-ink: #123b5c; --sk-ink2: #5a6b7a; --sk-mute: #8a9aa8; --sk-line: #e3edf5;
+  --sk-accent: #1b7fc4; --sk-accent-d: #12588a; --sk-accent-soft: #e1f0fa; --sk-accent-ink: #ffffff;
+  --sk-radius: 16px; --sk-radius-s: 12px; --sk-bw: 1px;
+  --sk-shadow: 0 2px 10px rgba(27, 127, 196, 0.1); --sk-shadow-lift: 0 8px 22px rgba(27, 127, 196, 0.18); --sk-btn-shadow: none;
+  --sk-font: "Noto Sans TC", system-ui, sans-serif; --sk-font-display: "Noto Sans TC", system-ui, sans-serif; --sk-font-num: "Noto Sans TC", sans-serif;
+}
+/* v626: 夜讀暗色 — 低亮度、低對比、暖灰底,看久眼睛不累 (HUA) */
+html[data-skin="night"] {
+  --sk-bg: #17181d; --sk-bg-img: none; --sk-bg-size: auto;
+  --sk-card: #22242b; --sk-ink: #e4e2dc; --sk-ink2: #a9a79f; --sk-mute: #7d7b74; --sk-line: #34363f;
+  --sk-accent: #b39ddb; --sk-accent-d: #9b82cf; --sk-accent-soft: #2e2a3d; --sk-accent-ink: #17181d;
+  --sk-radius: 14px; --sk-radius-s: 10px; --sk-bw: 1px;
+  --sk-shadow: 0 1px 4px rgba(0, 0, 0, 0.5); --sk-shadow-lift: 0 8px 22px rgba(0, 0, 0, 0.55); --sk-btn-shadow: none;
+  --sk-font: "Noto Sans TC", system-ui, sans-serif; --sk-font-display: "Noto Sans TC", system-ui, sans-serif; --sk-font-num: "Noto Sans TC", sans-serif;
+  color-scheme: dark;
+}
+html[data-skin="watercolor"] {
+  --sk-bg: #fcfbf8; --sk-bg-img: none; --sk-bg-size: auto;
+  --sk-card: rgba(255, 255, 255, 0.9); --sk-ink: #3a3a45; --sk-ink2: #7a7a88; --sk-mute: #9a9aa8; --sk-line: rgba(58, 58, 69, 0.12);
+  --sk-accent: #c48a9b; --sk-accent-d: #a66c7e; --sk-accent-soft: #f9e1e7; --sk-accent-ink: #ffffff;
+  --sk-radius: 20px; --sk-radius-s: 14px; --sk-bw: 1px;
+  --sk-shadow: 0 1px 3px rgba(58, 58, 69, 0.05); --sk-shadow-lift: 0 8px 20px rgba(58, 58, 69, 0.1); --sk-btn-shadow: none;
+  --sk-font: "Noto Sans TC", system-ui, sans-serif; --sk-font-display: "Noto Serif TC", "Noto Sans TC", serif; --sk-font-num: "Noto Serif TC", serif;
+}
+
+/* ───────── 蓋掉各頁自己的變數 (html[data-skin] 比 :root 強) ───────── */
+html[data-skin] {
+  /* index / mnemonics / ya5 */
+  --bg: var(--sk-bg); --bg-card: var(--sk-card); --bg-sidebar: var(--sk-card);
+  --text: var(--sk-ink); --text-sub: var(--sk-ink2); --border: var(--sk-line); --border-dk: var(--sk-line);
+  --shadow: var(--sk-shadow); --shadow-hover: var(--sk-shadow-lift); --grid-color: transparent;
+  /* ya3 / ya4 / ya6 */
+  --nb-bg: var(--sk-bg); --nb-card: var(--sk-card); --nb-text: var(--sk-ink); --nb-sub: var(--sk-ink2); --nb-bd: var(--sk-line); --nb-bdk: var(--sk-line); --nb-gc: transparent;
+  /* game */
+  --card: var(--sk-card);
+  /* exam 主色 (body.theme-xxx 舊配色若有設會蓋回去, 可接受) */
+  --purple: var(--sk-accent); --purple-dark: var(--sk-accent-d); --purple-light: var(--sk-accent-soft);
+}
+
+/* ───────── 共用對應: 背景 / 字型 ───────── */
+html[data-skin] body {
+  background: var(--sk-bg) !important;
+  background-image: var(--sk-bg-img) !important;
+  background-size: var(--sk-bg-size) !important;
+  color: var(--sk-ink);
+  font-family: var(--sk-font) !important;
+}
+/* v554: background-attachment: fixed / backdrop-filter / 大模糊 在手機很慢,只給桌機用 */
+@media (min-width: 900px) {
+  html[data-skin] body { background-attachment: fixed !important; }
+}
+@media (max-width: 899px) {
+  #skin-deco { display: none !important; }
+  html[data-skin="watercolor"] { --sk-card: #ffffff; }
+}
+html[data-skin] h1,
+html[data-skin] h2,
+html[data-skin] h3 {
+  font-family: var(--sk-font-display);
+}
+html[data-skin] .countdown .days,
+html[data-skin] .stats-card .num,
+html[data-skin] .exam-res-score,
+html[data-skin] .plan .price {
+  font-family: var(--sk-font-num);
+}
+
+/* ───────── 共用對應: 卡片類 ───────── */
+html[data-skin] a.card,
+html[data-skin] .countdown,
+html[data-skin] .user-bar,
+html[data-skin] .status-card,
+html[data-skin] .plan,
+html[data-skin] .bank-info,
+html[data-skin] .form,
+html[data-skin] .success,
+html[data-skin] .not-logged,
+html[data-skin] .notes,
+html[data-skin] .reward-row,
+html[data-skin] .hint:not(.field .hint):not(#len-hint), /* v559: 回饋頁字數計數不是卡片 */
+html[data-skin] .empty,
+html[data-skin] .card,
+html[data-skin] .ok-card,
+html[data-skin] .device-row,
+html[data-skin] .warn,
+html[data-skin] .book,
+html[data-skin] .intro,
+html[data-skin] .editor-card,
+html[data-skin] .chapter-list,
+html[data-skin] .comment-pane,
+html[data-skin] .info-banner,
+html[data-skin] .home-card,
+html[data-skin] .content-panel,
+html[data-skin] .sidebar,
+html[data-skin] .qr-card,
+html[data-skin] .stats-card,
+html[data-skin] .filter-card,
+html[data-skin] .topic-sidebar,
+html[data-skin] .home-how,
+html[data-skin] .home-start,
+html[data-skin] .home-mode,
+html[data-skin] .home-top .daily-log-section,
+html[data-skin] .q-card,
+html[data-skin] .expl-box,
+html[data-skin] .modal,
+html[data-skin] .exam-res-card,
+html[data-skin] .scroll-q-card,
+html[data-skin] .practice-progress,
+html[data-skin] .qgrid-panel,
+html[data-skin] .daily-hist-list,
+html[data-skin] .terms-box {
+  background: var(--sk-card) !important;
+  border: var(--sk-bw) solid var(--sk-line) !important;
+  border-radius: var(--sk-radius) !important;
+  box-shadow: var(--sk-shadow) !important;
+  color: var(--sk-ink);
+}
+html[data-skin] a.card::before { display: none; } /* 首頁卡片頂端色條 */
+html[data-skin] a.card:hover,
+html[data-skin] .home-card:hover,
+html[data-skin] .book:hover,
+html[data-skin] .plan:hover {
+  box-shadow: var(--sk-shadow-lift) !important;
+  transform: translateY(-2px);
+}
+html[data-skin] .home-mode { position: relative; }
+html[data-skin] .home-mode[aria-selected="true"] {
+  background: var(--sk-card) !important;
+  border: 3px solid var(--sk-accent) !important;
+  box-shadow: 0 0 0 4px var(--sk-accent-soft), var(--sk-shadow) !important;
+}
+html[data-skin] .home-mode[aria-selected="true"]::after {
+  content: "✓ 已選";
+  position: absolute; top: -0.65rem; right: 0.8rem;
+  background: var(--sk-accent); color: var(--sk-accent-ink);
+  font-size: 0.68rem; font-weight: 900; letter-spacing: 0.05em;
+  padding: 0.1rem 0.55rem; border-radius: 999px; line-height: 1.5;
+}
+html[data-skin] .home-mode[aria-selected="false"] { opacity: 0.78; }
+html[data-skin] .home-mode[aria-selected="false"]:hover { opacity: 1; }
+html[data-skin] .plan.selected,
+html[data-skin] .device-row.current,
+html[data-skin] .type-btn.active {
+  border-color: var(--sk-accent) !important;
+  background: var(--sk-accent-soft) !important;
+  color: var(--sk-ink) !important;
+  box-shadow: 0 0 0 4px var(--sk-accent-soft) !important;
+}
+html[data-skin] .home-mode[aria-selected="true"] b { color: var(--sk-accent) !important; }
+html[data-skin] .plan.selected { border-width: 3px !important; }
+html[data-skin] .topic-sidebar-title { background: var(--sk-card) !important; color: var(--sk-mute) !important; }
+html[data-skin] .topic-item.active { background: var(--sk-accent-soft) !important; color: var(--sk-accent-d) !important; border-left-color: var(--sk-accent) !important; }
+html[data-skin] .topic-item:hover { background: var(--sk-accent-soft) !important; }
+
+/* ───────── 共用對應: 頁首列 ───────── */
+html[data-skin] .header,
+html[data-skin] .topbar,
+html[data-skin] .top-bar,
+html[data-skin] .qr-bar,
+html[data-skin] .scroll-exam-topbar {
+  background: var(--sk-card) !important;
+  border-bottom: var(--sk-bw) solid var(--sk-line) !important;
+  color: var(--sk-ink) !important;
+  box-shadow: var(--sk-shadow) !important;
+}
+html[data-skin] .header h1,
+html[data-skin] .topbar h1,
+html[data-skin] .top-bar h1,
+html[data-skin] .bar-title,
+html[data-skin] .header .btn-back { color: var(--sk-ink) !important; }
+html[data-skin] .header .btn-back { border-color: var(--sk-line) !important; }
+
+/* ───────── 共用對應: 主要按鈕 ───────── */
+html[data-skin] .submit-btn:not(.locked),
+html[data-skin] .copy-btn,
+html[data-skin] .home-start-btn,
+html[data-skin] .start-btn,
+html[data-skin] .btn-next,
+html[data-skin] .btn-mode.active,
+html[data-skin] .scroll-exam-submit,
+html[data-skin] .save-btn,
+html[data-skin] .topbar-add,
+html[data-skin] .subject-tabs button.active,
+html[data-skin] .back-btn,
+html[data-skin] .review-btn.done,
+html[data-skin] .qr-btn,
+html[data-skin] .ok-card .btn2,
+html[data-skin] .go-login,
+html[data-skin] .user-switch,
+html[data-skin] .sync-btn,
+html[data-skin] .comment-send,
+html[data-skin] .cur-btn {
+  background: var(--sk-accent) !important;
+  color: var(--sk-accent-ink) !important;
+  border: var(--sk-bw) solid var(--sk-accent-d) !important;
+  border-radius: var(--sk-radius-s) !important;
+  box-shadow: var(--sk-btn-shadow) !important;
+  font-family: var(--sk-font);
+}
+html[data-skin] .btn-mode {
+  background: var(--sk-card) !important;
+  color: var(--sk-ink) !important;
+  border: var(--sk-bw) solid var(--sk-line) !important;
+  border-radius: 999px !important;
+}
+html[data-skin] .btn-mode.active { border-radius: 999px !important; }
+html[data-skin] .btn-prev,
+html[data-skin] .btn-skip,
+html[data-skin] .btn-count,
+html[data-skin] .qgrid-toggle,
+html[data-skin] .daily-hist-toggle,
+html[data-skin] .menu-btn,
+html[data-skin] .kick-btn,
+html[data-skin] .btn-edit-expl,
+html[data-skin] .btn-add-notebook {
+  background: var(--sk-card) !important;
+  color: var(--sk-ink) !important;
+  border: var(--sk-bw) solid var(--sk-line) !important;
+  border-radius: var(--sk-radius-s) !important;
+  box-shadow: none !important;
+}
+html[data-skin] .kick-btn { color: #dc2626 !important; }
+/* v554: 標記鈕保留原色,只改圓角;active/flagged 要看得出來 */
+html[data-skin] .btn-mark,
+html[data-skin] .btn-flag { border-radius: var(--sk-radius-s) !important; font-family: var(--sk-font); }
+html[data-skin] .btn-mark.active { box-shadow: 0 0 0 2px currentColor !important; transform: scale(1.04); }
+html[data-skin] .btn-flag.flagged { background: #ef4444 !important; color: #fff !important; border-color: #ef4444 !important; }
+
+/* ───────── 共用對應: chips / 篩選鈕 ───────── */
+html[data-skin] .chip,
+html[data-skin] .ts-chip,
+html[data-skin] .type-btn,
+html[data-skin] .qr-filter-btn,
+html[data-skin] .subject-tabs button,
+html[data-skin] .nav-link {
+  background: var(--sk-card) !important;
+  color: var(--sk-ink) !important;
+  border: var(--sk-bw) solid var(--sk-line) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+html[data-skin] .chip.sel,
+html[data-skin] .ts-chip.sel,
+html[data-skin] .qr-filter-btn.active,
+html[data-skin] .nav-link:hover {
+  background: var(--sk-accent-soft) !important;
+  color: var(--sk-accent-d) !important;
+  border-color: var(--sk-accent) !important;
+}
+
+/* ───────── 練習本作答畫面 ───────── */
+/* v554: 有標記 (劃線/螢光筆/對錯) 的選項列不套風格底色,不然標記看不到 (HUA 手機回報) */
+html[data-skin] .opt-row:not(.mark-highlight):not(.mark-strike):not(.review-correct):not(.review-wrong),
+html[data-skin] .scroll-opt:not(.show-correct):not(.show-wrong):not(.sel),
+html[data-skin] .exam-res-opt:not(.wrong-sel):not(.correct-ans) {
+  background: var(--sk-card) !important;
+  border: var(--sk-bw) solid var(--sk-line) !important;
+  border-radius: var(--sk-radius-s) !important;
+  color: var(--sk-ink);
+}
+html[data-skin] .opt-row.mark-highlight { background: #fde047 !important; border-color: #facc15 !important; color: #1f2937 !important; }
+html[data-skin] .opt-row.mark-strike { color: #dc2626 !important; text-decoration: line-through; text-decoration-thickness: 1.5px; }
+html[data-skin] .ans-btn {
+  background: var(--sk-card) !important;
+  border: var(--sk-bw) solid var(--sk-line) !important;
+  border-radius: var(--sk-radius-s) !important;
+  color: var(--sk-ink) !important;
+  box-shadow: none !important;
+}
+html[data-skin] .ans-btn.sel { background: var(--sk-accent-soft) !important; border-color: var(--sk-accent) !important; color: var(--sk-accent-d) !important; }
+html[data-skin] .ans-btn.show-correct,
+html[data-skin] .scroll-opt.show-correct { background: #22c55e !important; border-color: #16a34a !important; color: #fff !important; }
+html[data-skin] .ans-btn.show-wrong,
+html[data-skin] .scroll-opt.show-wrong { background: #ef4444 !important; border-color: #dc2626 !important; color: #fff !important; }
+html[data-skin] .progress-bar { background: var(--sk-line) !important; }
+html[data-skin] .progress-fill { background: var(--sk-accent) !important; }
+
+/* ───────── 輸入框 ───────── */
+html[data-skin] input[type="text"],
+html[data-skin] input[type="email"],
+html[data-skin] textarea,
+html[data-skin] .search-box,
+html[data-skin] .comment-input {
+  background: var(--sk-card);
+  color: var(--sk-ink);
+  border: var(--sk-bw) solid var(--sk-line) !important;
+  border-radius: var(--sk-radius-s) !important;
+  font-family: var(--sk-font);
+}
+html[data-skin] input:focus,
+html[data-skin] textarea:focus { border-color: var(--sk-accent) !important; outline: none; }
+
+/* ───────── 頁尾 / 小字 ───────── */
+html[data-skin] footer,
+html[data-skin] .foot { color: var(--sk-mute) !important; background: transparent !important; }
+
+/* ───────── 風格專屬小裝飾 ───────── */
+#skin-deco { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+/* v552: 暈染只留在四個角落、變淡,不能壓到內容區 (HUA 回報影響閱讀) */
+#skin-deco .sk-blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.32; display: block; }
+#skin-deco .sk-b1 { width: 380px; height: 380px; background: #f9c5d1; top: -220px; left: -220px; }
+#skin-deco .sk-b2 { width: 360px; height: 360px; background: #bfe3f2; top: -200px; right: -220px; }
+#skin-deco .sk-b3 { width: 340px; height: 340px; background: #fff0b3; bottom: -220px; right: -200px; }
+#skin-deco .sk-cloud { position: absolute; display: block; background: #fff; border-radius: 999px; opacity: 0.85; width: 120px; height: 38px; top: 90px; right: 2%; }
+#skin-deco .sk-cloud::before,
+#skin-deco .sk-cloud::after { content: ""; position: absolute; background: #fff; border-radius: 50%; }
+#skin-deco .sk-cloud::before { width: 52px; height: 52px; top: -26px; left: 22px; }
+#skin-deco .sk-cloud::after { width: 38px; height: 38px; top: -16px; left: 66px; }
+@media (min-width: 900px) {
+  html[data-skin="watercolor"] .card,
+  html[data-skin="watercolor"] a.card,
+  html[data-skin="watercolor"] .home-card,
+  html[data-skin="watercolor"] .q-card,
+  html[data-skin="watercolor"] .expl-box { backdrop-filter: blur(8px); }
+}
+html[data-skin="toon"] h1 { color: var(--sk-accent); text-shadow: 0 3px 0 var(--sk-accent-d); }
+html[data-skin="notebook"] body { font-size: 16px; }
+html[data-skin="kawaii"] .chip,
+html[data-skin="kawaii"] .ts-chip { box-shadow: 2px 2px 0 #4a3b4b !important; }
+
+/* ───────── 左下角風格選單 (所有風格、含經典都顯示) ───────── */
+/* v615: 風格選單改成從各頁「選單」叫出的置中面板 (不再浮動在旁邊) */
+#skin-picker { position: fixed; inset: 0; z-index: 12000; background: rgba(20, 18, 30, 0.45); display: flex; align-items: center; justify-content: center; padding: 1rem; font-family: "Noto Sans TC", system-ui, sans-serif; }
+#skin-picker[hidden] { display: none; }
+#skin-menu {
+  width: min(320px, 100%); background: #fff; border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 16px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25); padding: 0.5rem; display: grid; gap: 2px;
+}
+#skin-menu .sk-menu-title { display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; font-weight: 800; color: #6b7280; letter-spacing: 0.08em; padding: 0.35rem 0.6rem 0.4rem; }
+#skin-menu .sk-close { font: inherit; font-size: 0.9rem; color: #9ca3af; background: none; border: 0; cursor: pointer; padding: 0.1rem 0.3rem; }
+#skin-menu button[data-skin] {
+  display: flex; align-items: center; gap: 0.6rem; width: 100%; text-align: left; font: inherit; font-size: 0.92rem; color: #1f2937;
+  background: none; border: 0; border-radius: 10px; padding: 0.55rem 0.7rem; cursor: pointer;
+}
+#skin-menu button[data-skin]:hover { background: #f3f4f6; }
+#skin-menu button[aria-checked="true"] { background: #ede9fe; color: #5b21b6; font-weight: 700; }
+#skin-menu .sk-em { width: 1.4em; text-align: center; }
+@media print { #skin-picker, #skin-deco { display: none !important; } }
+
+/* v556: 作答畫面底下那排 (考試首頁/跳過/下一題/交卷) 在手機上擠到直排 → 不換行文字、縮 padding,太窄就讓「下一題」自己一排 */
+html[data-skin] .nav-row { flex-wrap: wrap; gap: 0.5rem; }
+html[data-skin] .nav-row button { white-space: nowrap; padding-left: 0.75rem !important; padding-right: 0.75rem !important; font-size: 0.86rem !important; }
+@media (max-width: 480px) {
+  html[data-skin] .nav-row .btn-next { flex: 1 1 100%; order: 9; }
+}
+
+/* v556: 動畫風 header 按鈕 (btn-mode) 沒邊框看起來像純文字 → 給底部立體陰影 */
+html[data-skin="toon"] .btn-mode,
+html[data-skin="toon"] .chip,
+html[data-skin="toon"] .ts-chip,
+html[data-skin="toon"] .daily-hist-toggle,
+html[data-skin="toon"] .btn-prev,
+html[data-skin="toon"] .btn-skip { box-shadow: 0 2px 0 #c9d6ea !important; }
+html[data-skin="toon"] .btn-mode.active { box-shadow: 0 3px 0 var(--sk-accent-d) !important; }
+
+/* v559: 訂閱頁價格、獎勵頁序號 等硬編碼的紫色 → 跟風格主色走 (巡檢: 文具/診所風下紫色很突兀) */
+html[data-skin] .plan .price,
+html[data-skin] .reward-code,
+html[data-skin] .back,
+html[data-skin] .daily a,
+html[data-skin] .grid-link a { color: var(--sk-accent) !important; }
+html[data-skin] .plan .save { color: #15803d !important; }
+
+/* ───────── v560: 首頁 hero / 卡片 照 demo 的排法 (只在風格模式) ───────── */
+html[data-skin] .hero { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 1rem; width: 100%; max-width: 560px; margin: 0 auto 0.4rem; }
+html[data-skin] .hero-text { text-align: left; min-width: 0; }
+html[data-skin] .hero-eyebrow { display: block; font-family: var(--sk-font-num); font-weight: 800; font-size: 0.8rem; letter-spacing: 0.28em; color: var(--sk-accent); margin-bottom: 0.2rem; }
+html[data-skin] .hero h1 { text-align: left; font-size: clamp(2rem, 6vw, 2.7rem); line-height: 1.15; margin-bottom: 0.3rem; letter-spacing: 0.02em; }
+html[data-skin] .hero .sub { text-align: left; margin-bottom: 1.2rem; color: var(--sk-ink2); }
+html[data-skin] .hero-art { display: block; width: 110px; height: 110px; flex: none; }
+html[data-skin] .hero-art svg { width: 100%; height: 100%; display: block; }
+html[data-skin="kawaii"] .hero-art svg, html[data-skin="toon"] .hero-art svg { animation: sk-bob 3s ease-in-out infinite; }
+@keyframes sk-bob { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-8px) rotate(3deg); } }
+@media (prefers-reduced-motion: reduce) { html[data-skin] .hero-art svg { animation: none !important; } }
+/* 倒數卡: 數字在左、說明在右 */
+html[data-skin] .countdown { display: grid; grid-template-columns: auto 1fr; column-gap: 1rem; align-items: center; text-align: left; position: relative; padding: 1rem 1.3rem !important; }
+html[data-skin] .countdown .days { grid-row: 1 / 3; }
+html[data-skin] .countdown .label { align-self: end; white-space: nowrap; }
+html[data-skin] .countdown > div:last-child { align-self: start; }
+html[data-skin] .countdown .days { font-size: 3rem; line-height: 1; color: var(--sk-accent); font-weight: 800; white-space: nowrap; }
+html[data-skin] .countdown .label { font-weight: 900; font-size: 1rem; color: var(--sk-ink); margin: 0; }
+html[data-skin] .countdown > div:last-child { font-size: 0.72rem !important; color: var(--sk-mute) !important; margin: 0 !important; }
+html[data-skin="kawaii"] .countdown::before { content: ""; position: absolute; top: -12px; left: 24px; width: 64px; height: 20px; background: #cff2e4; border: 2px solid var(--sk-line); transform: rotate(-6deg); border-radius: 3px; }
+html[data-skin="notebook"] .countdown::before { content: ""; position: absolute; top: -10px; left: 28px; width: 70px; height: 18px; background: rgba(255, 232, 107, 0.85); transform: rotate(-4deg); }
+/* 卡片 emoji → 彩色圖示格 */
+html[data-skin] a.card .emoji { width: 46px; height: 46px; border-radius: var(--sk-radius-s); display: grid; place-items: center; font-size: 1.4rem; flex: none; background: var(--sk-accent-soft); border: var(--sk-bw) solid var(--sk-line); }
+html[data-skin="kawaii"] a.card[href^="exam/index.html#"] .emoji { background: #e6dcff; }
+html[data-skin="kawaii"] a.card[href="mnemonics.html"] .emoji { background: #fff1b8; }
+html[data-skin="kawaii"] a.card[href="subscribe.html"] .emoji { background: #cff2e4; }
+html[data-skin="kawaii"] a.card[href="feedback.html"] .emoji { background: #fff1b8; }
+html[data-skin="toon"] a.card .emoji { box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.12); border: 0; background: #2f8ef5; }
+html[data-skin="toon"] a.card[href^="exam/index.html#"] .emoji { background: #8e5cf6; }
+html[data-skin="toon"] a.card[href="mnemonics.html"] .emoji { background: #ffc63a; }
+html[data-skin="toon"] a.card[href="subscribe.html"] .emoji { background: #ff6b57; }
+html[data-skin="toon"] a.card[href="rewards.html"] .emoji { background: #3cc27c; }
+html[data-skin="toon"] a.card[href="feedback.html"] .emoji { background: #d6def0; }
+html[data-skin="stationery"] a.card[href^="exam/index.html#"] .emoji { background: #e5eaf5; }
+html[data-skin="stationery"] a.card[href="mnemonics.html"] .emoji { background: #fff1c9; }
+html[data-skin="stationery"] a.card[href="rewards.html"] .emoji { background: #e8f1e4; }
+html[data-skin="stationery"] a.card[href="feedback.html"] .emoji { background: #ede6f5; }
+html[data-skin="clinic"] a.card .emoji { border-radius: 50%; }
+html[data-skin="clinic"] a.card[href="subscribe.html"] .emoji { background: #fff3d6; }
+html[data-skin="clinic"] a.card[href="rewards.html"] .emoji { background: #e6f6ea; }
+html[data-skin="clinic"] a.card[href="feedback.html"] .emoji { background: #eeeafb; }
+html[data-skin="watercolor"] a.card .emoji { border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #f9c5d1); border: 0; }
+html[data-skin="watercolor"] a.card[href^="exam/index.html#"] .emoji { background: radial-gradient(circle at 35% 30%, #fff, #bfe3f2); }
+html[data-skin="watercolor"] a.card[href="mnemonics.html"] .emoji { background: radial-gradient(circle at 35% 30%, #fff, #fff0b3); }
+html[data-skin="watercolor"] a.card[href="subscribe.html"] .emoji { background: radial-gradient(circle at 35% 30%, #fff, #d9c8f2); }
+html[data-skin="watercolor"] a.card[href="rewards.html"] .emoji { background: radial-gradient(circle at 35% 30%, #fff, #c9ebd5); }
+html[data-skin="notebook"] a.card .emoji { border-radius: 50% 45% 50% 48%; background: #fff; }
+/* 「支持作者」貼紙 */
+html[data-skin] .card-badge { display: inline-block; position: absolute; top: -10px; right: 12px; background: var(--sk-accent); color: var(--sk-accent-ink); font-size: 0.66rem; font-weight: 900; padding: 0.1rem 0.55rem; border-radius: 999px; letter-spacing: 0.05em; border: var(--sk-bw) solid var(--sk-line); z-index: 1; }
+html[data-skin="toon"] .card-badge { transform: rotate(4deg); box-shadow: 0 2px 0 var(--sk-accent-d); border: 0; }
+html[data-skin] a.card { overflow: visible !important; }
+@media (max-width: 520px) {
+  html[data-skin] .hero-art { width: 84px; height: 84px; }
+  html[data-skin] .countdown .days { font-size: 2.4rem; }
+}
+
+/* v561: 網站特色卡 + 許願卡 (現在是半寬一對) 的圖示格顏色 */
+html[data-skin="kawaii"] a.card[href="features.html"] .emoji { background: #fff1b8; }
+html[data-skin="toon"] a.card[href="features.html"] .emoji { background: #ffc63a; }
+html[data-skin="stationery"] a.card[href="features.html"] .emoji { background: #fff1c9; }
+html[data-skin="clinic"] a.card[href="features.html"] .emoji { background: #e6f6ea; }
+html[data-skin="watercolor"] a.card[href="features.html"] .emoji { background: radial-gradient(circle at 35% 30%, #fff, #fff0b3); }
+html[data-skin] .feat, html[data-skin] .stat, html[data-skin] .vnote, html[data-skin] .bug { background: var(--sk-card) !important; border: var(--sk-bw) solid var(--sk-line) !important; border-radius: var(--sk-radius-s) !important; box-shadow: var(--sk-shadow) !important; color: var(--sk-ink); }
+html[data-skin] .stat .n, html[data-skin] .vnote .vtag { color: var(--sk-accent) !important; font-family: var(--sk-font-num); }
+html[data-skin] .story b { color: var(--sk-accent); }
+html[data-skin] .btn.main { background: var(--sk-accent) !important; color: var(--sk-accent-ink) !important; border: var(--sk-bw) solid var(--sk-accent-d) !important; box-shadow: var(--sk-btn-shadow) !important; }
+html[data-skin] .btn.sub { background: var(--sk-card) !important; color: var(--sk-ink) !important; border: var(--sk-bw) solid var(--sk-line) !important; }
+
+/* v562: 標題旁的「使用網站前先來看這邊！」 */
+html[data-skin] .hero { text-align: left; }
+html[data-skin] .hero-cta { margin: -0.6rem 0 1rem; background: var(--sk-accent) !important; color: var(--sk-accent-ink) !important; border: var(--sk-bw) solid var(--sk-accent-d) !important; box-shadow: var(--sk-btn-shadow) !important; border-radius: 999px !important; }
+
+/* v563: features 頁收合式重點 */
+html[data-skin] .hl { background: var(--sk-card) !important; border: var(--sk-bw) solid var(--sk-line) !important; border-radius: var(--sk-radius-s) !important; box-shadow: var(--sk-shadow) !important; }
+html[data-skin] .hl .body b, html[data-skin] .hl summary::after { color: var(--sk-accent); }
+html[data-skin] .hl[open] summary { background: var(--sk-accent-soft); }
+
+/* v569: 答完後工具列在風格下也一致 */
+html[data-skin] .expl-actions > button, html[data-skin] .mark-row button { border-radius: 999px !important; }
+
+
+/* ───────── v626: 夜讀 — 各頁硬編碼的白底/深字 一次蓋掉 (對比稽核 audit_night.js 找出來的) ───────── */
+/* 白底盒子 → 卡片色 */
+html[data-skin="night"] body :is(.back, .wb-chip, .wb2-lab, .wb2-start, .wb2-start .s, .mn-tabs, .sub-status, .opt-row, .expl-box, .nb-chapter-content, .nb-content-pane, .story, .quote, .box, .box.first, .box.fav, .fav-i, .hl, .feat, .vnote, .bug, .more,
+  .wb2-acc, .wb2-rowi, .wb2-summary .s, .wb2-row, .wb2-search input, .wb2-year, .wb2-sort select,
+  .rw-row, .mn-reward, .rw-month, .rw-pane, .rw-tabs, .hint, .hint.rw-pane,
+  .nb-toc-item, .nb-toc-pane, .nb-content-pane, .nb-chapter, .nb-chapter-nav, .nb-nav-btn, .nb-chapter-sources, .nb-menu, .nb-tb-btn,
+  .terms-box, .terms-wrap, .terms-agree, .status-card, .status-text, .plan, .bank-info, .bank-row, .form, .field input, .notes, .redeem-box,
+  .home-how, .home-how label, .home-start, .filter-card, .stats-card, .topic-sidebar, .topic-item, .ts-subj-hdr, .chip, .ts-chip,
+  .result-banner, .expl-box, .gemini-expl, .nb-expl, .clinical-expl, .gemini-expl-content, .expl-actions > button, .mark-row button,
+  .ch-item, .ch-meta, .editor-card, .editor-status, .comment-pane, .search-row input, .ch-search-top, .info-banner, .user-tag, .mn-legend,
+  .sim-card, .sim-opt, #similar-modal .sim-card, .qgrid, .qgrid-toggle, .option, .options .option, .ans-btn,
+  .ai-key-input, #ai-settings-overlay .modal, .modal, .nb-editor-tiptap, .ProseMirror) {
+  background-color: var(--sk-card) !important;
+  color: var(--sk-ink) !important;
+  border-color: var(--sk-line) !important;
+}
+/* 深字 → 亮字 (h1-h4、label、粗體、題幹、方案名…) */
+html[data-skin="night"] body :is(.nb-tb-btn, .nb-toolbar-title, .wb2-lab, .review-marker, h1, h2, h3, h4, h5, label, p, li, b, strong, .q-text, #pq-text, .plan .name, .plan .per, .status-text, .bank-row .v, .bank-row .k,
+  .terms-title, .terms-box, .terms-agree span, .notes, .notes b, .rw-pane b, .field label, .hint b, .story p, .hl .body, .feat b, .sub-title, .lead,
+  .home-how .opt-title, .home-how .opt-sub, .nb-chapter-title, .nb-toc-head, .wb2-lab, .wb2-rowi .q, .expl-box, .expl-box p, .expl-box li, .expl-box td, .expl-box th,
+  .gemini-expl summary, .nb-expl summary, .clinical-expl summary, .option, .sim-card, .sim-opt, .ch-title, .editor-body, .ProseMirror, .comment-pane, .rw-row .t) {
+  color: var(--sk-ink) !important;
+}
+/* 灰字 → 次要亮灰 */
+html[data-skin="night"] body :is(small, .expl-source, .wb2-rowi .no, .wb2-rowi .st, .nb-toc-count, .rw-row .cnt, .rw-count, .rw-head .rule, .ch-vis, .crumb, .ch-meta span,
+  .user-tag, .feat span, .fav-i small, .quote small, .sig, .ver, .ti-sub, .home-how .sub, .nb-chapter-sources, .wb2-year, .wb2-sort, .hint) {
+  color: var(--sk-ink2) !important;
+}
+/* 硬編碼的紫色/藍色重點字 → 淡紫 (深底上才看得到) */
+html[data-skin="night"] body :is(.story b, .hl .body b, a.back, .bug a, .rw-pane a, .terms-box a, .plan .price, .plan .save, .reward-code, .md-label, .md-colon, .nb-chapter-content h3, .nb-chapter-content h4, .quote, .quote b, .box.first h3, .box.fav h3, .steps li::before, .fav-i, .topic-tag, .mn-tabs button, .subject-tabs button, .link-btn, .topic-btn, #pub-label, .btn-flag, .rw-more) {
+  color: var(--sk-accent) !important;
+}
+html[data-skin="night"] body :is(.steps li::before, .mn-tabs button.active, .subject-tabs button.active, .btn-mode.active, .chip.sel, .ts-chip.sel, .wb-chip.sel) {
+  background: var(--sk-accent) !important;
+  color: var(--sk-accent-ink) !important;
+}
+/* 筆記內文的螢光底線/淡紫關鍵字 在深底改成半透明 */
+html[data-skin="night"] .nb-chapter-content strong { background: linear-gradient(180deg, transparent 64%, rgba(253, 230, 138, 0.35) 64%) !important; color: var(--sk-ink) !important; }
+html[data-skin="night"] .nb-chapter-content .ctag { background: rgba(179, 157, 219, 0.22) !important; color: #d6c9f2 !important; }
+html[data-skin="night"] .nb-chapter-content h2 { background: linear-gradient(135deg, #5b4a8a, #7c6aa8) !important; color: #fff !important; }
+html[data-skin="night"] .nb-chapter-content h3 { background: linear-gradient(90deg, rgba(179, 157, 219, 0.15), transparent) !important; border-left-color: var(--sk-accent) !important; }
+html[data-skin="night"] .nb-chapter-content table th { background: #4a3f6e !important; color: #fff !important; }
+html[data-skin="night"] .nb-chapter-content table td { background: var(--sk-card) !important; color: var(--sk-ink) !important; border-color: var(--sk-line) !important; }
+html[data-skin="night"] .nb-chapter-content table td:first-child:not(:only-child) { background: #2a2738 !important; }
+html[data-skin="night"] .nb-chapter-content blockquote { background: #2a2738 !important; color: var(--sk-ink) !important; }
+html[data-skin="night"] .nb-chapter-content blockquote.callout-tip { background: #3a3420 !important; }
+html[data-skin="night"] .nb-chapter-content blockquote.callout-warn { background: #3d2626 !important; }
+html[data-skin="night"] .nb-chapter-content blockquote.callout-clinical { background: #223327 !important; }
+html[data-skin="night"] .nb-chapter-content blockquote.callout-exam { background: #2e2a3d !important; }
+html[data-skin="night"] .nb-chapter-content li.li-group > strong { color: #e8e0ff !important; }
+html[data-skin="night"] .nb-chapter-content details summary { background: #2e2a3d !important; color: var(--sk-accent) !important; }
+/* 作答:選項、正解/錯誤色調降 */
+html[data-skin="night"] .option.correct, html[data-skin="night"] .option.right { background: #1f3b2a !important; border-color: #3f8a5a !important; }
+html[data-skin="night"] .option.wrong { background: #3d2626 !important; border-color: #a04848 !important; }
+html[data-skin="night"] .result-banner.ok, html[data-skin="night"] .result-banner.correct { background: #1f3b2a !important; color: #9be7b5 !important; }
+html[data-skin="night"] .result-banner.bad, html[data-skin="night"] .result-banner.wrong { background: #3d2626 !important; color: #f1a0a0 !important; }
+/* 圖片、iframe 稍微降亮,不刺眼 */
+html[data-skin="night"] img:not(.auth-w-avatar):not(.user-avatar) { filter: brightness(0.85); }
+html[data-skin="night"] body .nb-chapter-content em { color: #9fd3ff !important; }
+html[data-skin="night"] body .expl-box span[style*="color"], html[data-skin="night"] body .expl-box b[style*="color"] { color: #a9c4ff !important; }
+html[data-skin="night"] body .opt-row.review-correct { background: #1f3b2a !important; }
+html[data-skin="night"] body .opt-row.review-wrong { background: #3d2626 !important; }
+html[data-skin="night"] body .nb-toc-count { color: var(--sk-ink2) !important; background: transparent !important; }
+html[data-skin="night"] body .topic-tag { background: #2e2a3d !important; color: #d6c9f2 !important; }
+html[data-skin="night"] body .wb-chip.sel, html[data-skin="night"] body .wb-chip.sel small { color: var(--sk-accent-ink) !important; }
+/* v626 夜讀 收尾:筆記表格/工具列、分頁 active 的字色 */
+html[data-skin="night"] body .nb-chapter-content table td, html[data-skin="night"] body .nb-chapter-content table td * { background-color: var(--sk-card) !important; color: var(--sk-ink) !important; }
+html[data-skin="night"] body .nb-chapter-content table td .ctag { background: rgba(179, 157, 219, 0.22) !important; color: #d6c9f2 !important; }
+html[data-skin="night"] body .nb-chapter-content table td em { color: #9fd3ff !important; }
+html[data-skin="night"] body .nb-chapter-content table td:first-child:not(:only-child) { background-color: #2a2738 !important; }
+html[data-skin="night"] body .nb-toolbar, html[data-skin="night"] body .nb-toolbar-search input { background: #1e1f26 !important; color: var(--sk-ink) !important; border-color: var(--sk-line) !important; }
+html[data-skin="night"] body .mn-tabs button.active, html[data-skin="night"] body .subject-tabs button.active, html[data-skin="night"] body .btn-mode.active, html[data-skin="night"] body .chip.sel, html[data-skin="night"] body .ts-chip.sel, html[data-skin="night"] body .wb-chip.sel, html[data-skin="night"] body .home-mode[aria-selected="true"] { background: var(--sk-accent) !important; color: #17181d !important; }
+html[data-skin="night"] body .nb-chapter-content h3 { color: #d6c9f2 !important; }
+html[data-skin="night"] body .nb-chapter-content .nb-table tr:nth-child(even) td, html[data-skin="night"] body .nb-chapter-content .nb-table tr:hover td, html[data-skin="night"] body .nb-chapter-content table tr:nth-child(even) td { background-color: #26283040 !important; background-color: #262830 !important; }
+html[data-skin="night"] body #mn-tabs button.active, html[data-skin="night"] body #subject-tabs button.active, html[data-skin="night"] body #screen-home .home-mode[aria-selected="true"], html[data-skin="night"] body #screen-home .home-mode[aria-selected="true"] *, html[data-skin="night"] body .header .btn-mode.active { color: #17181d !important; }
+html[data-skin="night"] body #wb2-start-n, html[data-skin="night"] body #wb2-onlywrong-n, html[data-skin="night"] body #match-count, html[data-skin="night"] body #sub-status-body, html[data-skin="night"] body #notebook-body, html[data-skin="night"] body #pq-expl { color: var(--sk-ink) !important; background-color: var(--sk-card) !important; }
+html[data-skin="night"] body #practice-score span { color: var(--sk-accent) !important; }
+html[data-skin="night"] body #screen-wrongbook .wb-chip.sel, html[data-skin="night"] body #screen-wrongbook .wb-chip.sel small { background-color: var(--sk-accent) !important; color: #17181d !important; }
+/* v627 夜讀:所有「選中」狀態一律淡紫底深字,眼睛才分得出來 (HUA: 年份/標籤按下去還是黑的) */
+html[data-skin="night"] body :is(#screen-home, #screen-browse, #screen-wrongbook, #screen-notebook, #screen-practice, .nav-row, .header, .home-modes, .chip-row, .wb-filters, .topic-sidebar, .plans, .mn-tabs, .subject-tabs, .chapter-list, #pub-list, .rw-tabs, .home-how, .wb2-filters) :is(.sel, .active, .selected, [aria-selected="true"]):not(.btn-mark):not(.nb-toc-item):not(.option) { background-color: var(--sk-accent) !important; background-image: none !important; color: #17181d !important; border-color: var(--sk-accent) !important; }
+html[data-skin="night"] body :is(.chip-row, .wb-filters, .topic-sidebar, .mn-tabs, .subject-tabs, .rw-tabs) :is(.sel, .active, [aria-selected="true"]) * { color: #17181d !important; }
+html[data-skin="night"] body :is(.chip, .ts-chip, .bf-chip, .wb-chip, .how-opt, .btn-mode):not(.sel):not(.active) { background-color: #2b2d36 !important; color: var(--sk-ink) !important; border-color: #44465a !important; }
+html[data-skin="night"] body .btn-mark.active { outline: 2px solid #fff !important; outline-offset: 1px; filter: brightness(1.15); }
+html[data-skin="night"] body .nb-toc-item.active, html[data-skin="night"] body .ch-item.active, html[data-skin="night"] body .pub-item.active, html[data-skin="night"] body .topic-item.active { background-color: #3a3357 !important; color: #fff !important; border-left: 3px solid var(--sk-accent) !important; }
+html[data-skin="night"] body .plan.selected { border-color: var(--sk-accent) !important; box-shadow: 0 0 0 2px var(--sk-accent) !important; background-color: #2e2a3d !important; color: var(--sk-ink) !important; }
+
+/* v632 錯題本就地展開 + 昨日錯題 (夜讀) */
+html[data-skin="night"] body :is(.wb2-qbody, .wb2-q[open] > summary.wb2-rowi, .wb2-yday, .wb2-qmarks, .wb2-qbody .opt-row, .wb2-qbody .gemini-expl, .wb2-qbody .nb-expl, .wb2-qbody .clinical-expl) { background-color: #22242b !important; color: var(--sk-ink) !important; border-color: #44465a !important; }
+html[data-skin="night"] body .wb2-q[open] > summary.wb2-rowi { background-color: #2b2d36 !important; }
+html[data-skin="night"] body :is(.wb2-yday .tt, .wb2-yday .sb, .wb2-qans, .wb2-qmarks span) { color: var(--sk-ink) !important; }
+html[data-skin="night"] body .wb2-yday.zero :is(.tt, .sb) { color: #a0a0aa !important; }
+html[data-skin="night"] body .wb2-yday .yd-go { background: var(--sk-accent) !important; color: #17181d !important; }
+html[data-skin="night"] body .wb2-qmarks button:not(.on) { background-color: #2b2d36 !important; color: var(--sk-ink) !important; }
+html[data-skin="night"] body .wb2-qmarks button.on { color: #17181d !important; }
+html[data-skin="night"] body .wb2-qimg { background-color: #fff !important; }
+
+/* v636 錯誤率說明 (夜讀) */
+html[data-skin="night"] body .ts-errhelp-body { background-color: #22242b !important; color: var(--sk-ink) !important; border-color: #44465a !important; }
+html[data-skin="night"] body .ts-errhelp > summary { color: var(--sk-accent) !important; }
+
+/* v642 訂閱頁公開說明 (夜讀) */
+html[data-skin="night"] body :is(.pub-box, .seller-card) { background-color: #22242b !important; color: var(--sk-ink) !important; border-color: #44465a !important; }
+html[data-skin="night"] body :is(.pub-box h2, .buy-notes dt) { color: var(--sk-ink) !important; }
+html[data-skin="night"] body :is(.pub-box p, .pub-feat li, .buy-notes dd, .seller-card) { color: #c9c6c0 !important; }
+html[data-skin="night"] body .buy-notes a { color: var(--sk-accent) !important; }

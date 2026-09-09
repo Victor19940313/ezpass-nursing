@@ -1,0 +1,1 @@
+const COMPARISON_TABLES = [];

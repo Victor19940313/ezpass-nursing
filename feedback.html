@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title data-site-title="許願 / Bug 回報 - {name}"></title>
+    <script src="site-config.js"></script>
+    <script src="site.js"></script>
+    <link rel="icon" href="icons/icon-192.png" />
+    <script src="version.js"></script>
+    <script src="skin.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          "Noto Sans TC",
+          -apple-system,
+          sans-serif;
+        background: #f8f7f0;
+        color: #2d2a22;
+        min-height: 100vh;
+        padding: 1.5rem 1rem 3rem;
+      }
+      .wrap {
+        max-width: 640px;
+        margin: 0 auto;
+      }
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+      }
+      .back {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        text-decoration: none;
+        color: #4b5563;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+      .back:hover {
+        background: #f3f4f6;
+      }
+      h1 {
+        font-size: 1.5rem;
+        text-align: center;
+        margin-bottom: 0.5rem;
+      }
+      .sub-title {
+        text-align: center;
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 1.5rem 1.2rem;
+        margin-bottom: 1rem;
+      }
+
+      .type-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.6rem;
+        margin-bottom: 1.2rem;
+      }
+      .type-btn {
+        background: #fff;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 0.9rem 0.4rem;
+        text-align: center;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #4b5563;
+        transition: all 0.15s;
+        user-select: none;
+      }
+      .type-btn:hover {
+        border-color: #9ca3af;
+        background: #f9fafb;
+      }
+      .type-btn.active {
+        background: #eff6ff;
+        border-color: #3b82f6;
+        color: #1d4ed8;
+      }
+      .type-btn .emoji {
+        font-size: 1.4rem;
+        display: block;
+        margin-bottom: 0.2rem;
+      }
+
+      label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 0.35rem;
+      }
+      textarea,
+      input[type="text"] {
+        width: 100%;
+        border: 1.5px solid #d1d5db;
+        border-radius: 8px;
+        padding: 0.7rem 0.9rem;
+        font-size: 0.95rem;
+        font-family: inherit;
+        color: #1f2937;
+        resize: vertical;
+      }
+      textarea:focus,
+      input:focus {
+        outline: none;
+        border-color: #3b82f6;
+      }
+      textarea {
+        min-height: 130px;
+      }
+
+      .hint {
+        font-size: 0.75rem;
+        color: #9ca3af;
+        margin-top: 0.35rem;
+      }
+
+      .submit-btn {
+        display: block;
+        width: 100%;
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: #fff;
+        border: 0;
+        border-radius: 10px;
+        padding: 0.95rem;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 1.2rem;
+      }
+      .submit-btn:hover {
+        filter: brightness(1.08);
+      }
+      .submit-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .login-hint {
+        text-align: center;
+        padding: 1rem;
+        background: #fef3c7;
+        border: 1px solid #fbbf24;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        color: #78350f;
+      }
+
+      .ok-card {
+        text-align: center;
+        padding: 2rem 1rem;
+      }
+      .ok-card .big {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+      }
+      .ok-card h2 {
+        font-size: 1.2rem;
+        color: #16a34a;
+        margin-bottom: 0.5rem;
+      }
+      .ok-card p {
+        color: #4b5563;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      .ok-card .btn2 {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.6rem 1.2rem;
+        background: #3b82f6;
+        color: #fff;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.9rem;
+      }
+
+      .foot {
+        text-align: center;
+        font-size: 0.75rem;
+        color: #9ca3af;
+        margin-top: 2rem;
+      }
+    </style>
+      <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="top">
+        <a href="index.html" class="back">← 回首頁</a>
+        <span id="ver-tag" style="font-size: 0.75rem; color: #9ca3af"></span>
+      </div>
+
+      <h1>💬 許願 / Bug 回報</h1>
+      <p class="sub-title">
+        跟作者說說話，想要什麼功能、哪裡壞掉、或想罵人都可以
+      </p>
+
+      <div id="need-login" class="login-hint" style="display: none">
+        ⚠️ 需要用 Google 登入才能送出（防止匿名亂灌）
+        <br />
+        <a
+          href="index.html"
+          style="color: #78350f; font-weight: 700; text-decoration: underline"
+          >回首頁登入</a
+        >
+      </div>
+
+      <form id="fb-form" class="card">
+        <label>類型</label>
+        <div class="type-row" id="type-row">
+          <div class="type-btn active" data-type="wish">
+            <span class="emoji">💡</span>許願
+          </div>
+          <div class="type-btn" data-type="bug">
+            <span class="emoji">🐛</span>Bug 回報
+          </div>
+          <div class="type-btn" data-type="other">
+            <span class="emoji">💬</span>其他
+          </div>
+        </div>
+
+        <label for="fb-msg">內容</label>
+        <textarea
+          id="fb-msg"
+          maxlength="2000"
+          placeholder="例:&#10;· 想要新增○○功能&#10;· ○○那頁點○○會壞掉&#10;· 詳解○○那題錯了，應該是○○"
+          required
+        ></textarea>
+        <p class="hint" id="len-hint">0 / 2000</p>
+
+        <label for="fb-page" style="margin-top: 1rem">出現在哪頁（選填）</label>
+        <input
+          id="fb-page"
+          type="text"
+          placeholder="例: 練習本 · 科目 · 年次 · 題號"
+          maxlength="200"
+        />
+
+        <button id="submit-btn" type="submit" class="submit-btn">送出</button>
+      </form>
+
+      <div id="ok-card" class="card ok-card" style="display: none">
+        <div class="big">🙏</div>
+        <h2>謝謝妳的回饋！</h2>
+        <p>
+          作者會盡快看到<br />
+          <small style="color: #9ca3af"
+            >訂單編號 <span id="ok-id"></span
+          ></small>
+        </p>
+        <a href="index.html" class="btn2">回首頁</a>
+      </div>
+
+      <p class="foot">
+        © 2026 <span data-site="fullName"></span> · v<span id="v"></span>
+      </p>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
+    <script>
+      document.getElementById("v").textContent = (
+        window.APP_VERSION || ""
+      ).replace(/^v/, "");
+      document.getElementById("ver-tag").textContent = window.APP_VERSION || "";
+
+      let currentType = "wish";
+      const typeRow = document.getElementById("type-row");
+      typeRow.addEventListener("click", (e) => {
+        const btn = e.target.closest(".type-btn");
+        if (!btn) return;
+        typeRow
+          .querySelectorAll(".type-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentType = btn.dataset.type;
+      });
+
+      const msgEl = document.getElementById("fb-msg");
+      const lenHint = document.getElementById("len-hint");
+      msgEl.addEventListener("input", () => {
+        lenHint.textContent = msgEl.value.length + " / 2000";
+      });
+
+      function refreshLoginUI() {
+        const user = window.Auth ? window.Auth.getUser() : null;
+        const needLogin = document.getElementById("need-login");
+        const submit = document.getElementById("submit-btn");
+        if (!user) {
+          needLogin.style.display = "block";
+          submit.disabled = true;
+          submit.textContent = "請先 Google 登入";
+        } else {
+          needLogin.style.display = "none";
+          submit.disabled = false;
+          submit.textContent = "送出";
+        }
+      }
+      // v539: 只靠 onChange (已 ready 會立刻補呼),不再 800ms 硬 render
+      //       — 那時 Auth 可能還沒回，會先閃「請先登入」
+      if (window.Auth && window.Auth.onChange) {
+        window.Auth.onChange(refreshLoginUI);
+      }
+
+      document
+        .getElementById("fb-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const user = window.Auth ? window.Auth.getUser() : null;
+          if (!user) {
+            alert("請先 Google 登入");
+            return;
+          }
+          const msg = msgEl.value.trim();
+          if (!msg) {
+            alert("請寫內容");
+            return;
+          }
+          const page = document.getElementById("fb-page").value.trim();
+          const submit = document.getElementById("submit-btn");
+          submit.disabled = true;
+          submit.textContent = "送出中...";
+          try {
+            const ref = firebase.database().ref("user_feedback").push();
+            await ref.set({
+              uid: user.uid,
+              email: user.email || "",
+              name: user.displayName || "",
+              type: currentType,
+              message: msg,
+              page: page,
+              version: window.APP_VERSION || "",
+              ua: (navigator.userAgent || "").slice(0, 200),
+              status: "new",
+              created_ts: firebase.database.ServerValue.TIMESTAMP,
+            });
+            // 通知 HUA (Telegram, 失敗不 fatal)
+            try {
+              fetch(
+                "https://island-watch.seat-watch.workers.dev/notify/feedback?fid=" +
+                  encodeURIComponent(ref.key),
+                { method: "GET", mode: "cors" },
+              ).catch(() => {});
+            } catch (e) {}
+            document.getElementById("ok-id").textContent = ref.key.slice(-8);
+            document.getElementById("fb-form").style.display = "none";
+            document.getElementById("ok-card").style.display = "block";
+          } catch (err) {
+            alert("送出失敗: " + err.message);
+            submit.disabled = false;
+            submit.textContent = "送出";
+          }
+        });
+    </script>
+      <script src="tour.js" defer></script>
+</body>
+</html>

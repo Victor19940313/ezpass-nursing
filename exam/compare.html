@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title data-site-title="📊 比較表速查"></title>
+    <script src="../site-config.js"></script>
+    <script src="../site.js"></script>
+<style>
+:root {
+  --bg: #f8f7f0;
+  --bg-alt: #f3f1e8;
+  --primary: #1c1917;
+  --primary2: #78350f;
+  --gray: #78716c;
+  --border: #e7e5e4;
+  --red: #dc2626;
+  --orange: #c05621;
+  --green: #166534;
+  --blue: #1e40af;
+  --shadow: 0 2px 8px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,.1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--primary);
+  line-height: 1.7;
+  min-height: 100vh;
+  /* notebook grid lines */
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 31px, #e8e6dc 31px, #e8e6dc 32px);
+  background-size: 100% 32px;
+}
+
+/* ══ HEADER ══ */
+.header {
+  background: linear-gradient(135deg, #1c1917 0%, #44403c 60%, #78716c 100%);
+  color: white;
+  padding: .75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,.2);
+}
+.back-btn {
+  background: rgba(255,255,255,.15);
+  border: none;
+  color: white;
+  padding: .35rem .8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: .85rem;
+  text-decoration: none;
+  transition: background .15s;
+}
+.back-btn:hover { background: rgba(255,255,255,.25); }
+.header h1 { font-size: 1.05rem; font-weight: 700; }
+.header-count {
+  margin-left: auto;
+  font-size: .78rem;
+  opacity: .75;
+}
+
+/* ══ CONTROLS ══ */
+.controls {
+  max-width: 900px;
+  margin: 1rem auto 0;
+  padding: 0 1rem;
+}
+
+/* Subject tabs */
+.tabs {
+  display: flex;
+  gap: .4rem;
+  flex-wrap: wrap;
+  margin-bottom: .75rem;
+}
+.tab {
+  padding: .4rem .9rem;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: white;
+  color: var(--gray);
+  font-size: .82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+}
+.tab:hover { border-color: #a8a29e; }
+.tab.active { color: white; border-color: transparent; }
+.tab[data-subject="all"].active { background: var(--primary); }
+
+/* Search */
+.search-wrap {
+  position: relative;
+  margin-bottom: .5rem;
+}
+.search-input {
+  width: 100%;
+  padding: .6rem 1rem .6rem 2.4rem;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: white;
+  font-size: .88rem;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.search-input:focus {
+  border-color: #a8a29e;
+  box-shadow: 0 0 0 3px rgba(168,162,158,.15);
+}
+.search-icon {
+  position: absolute;
+  left: .8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray);
+  font-size: .9rem;
+  pointer-events: none;
+}
+
+/* ══ TABLE LIST ══ */
+.table-list {
+  max-width: 900px;
+  margin: .75rem auto 2rem;
+  padding: 0 1rem;
+}
+
+/* Section group (by topic) */
+.topic-group {
+  margin-bottom: .5rem;
+}
+.topic-label {
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  padding: .4rem 0;
+  margin-top: .5rem;
+}
+
+/* Card */
+.table-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  margin-bottom: .65rem;
+  overflow: hidden;
+  transition: box-shadow .15s;
+}
+.table-card:hover { box-shadow: var(--shadow-lg); }
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .7rem 1rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background .1s;
+}
+.card-header:hover { background: #fafaf5; }
+.card-header:active { background: #f5f4ed; }
+
+.card-arrow {
+  font-size: .7rem;
+  color: var(--gray);
+  transition: transform .2s;
+  flex-shrink: 0;
+  width: 1rem;
+  text-align: center;
+}
+.table-card.open .card-arrow { transform: rotate(90deg); }
+
+.card-title {
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--primary);
+  flex: 1;
+  min-width: 0;
+}
+.card-subject {
+  font-size: .7rem;
+  font-weight: 700;
+  padding: .15rem .5rem;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.card-meta {
+  font-size: .72rem;
+  color: var(--gray);
+  flex-shrink: 0;
+}
+
+.card-body {
+  display: none;
+  padding: 0 1rem 1rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.table-card.open .card-body { display: block; }
+
+/* ══ TABLE STYLES ══ */
+.card-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .84rem;
+  border-radius: 8px;
+  overflow: hidden;
+  min-width: 480px;
+}
+.card-body th {
+  background: var(--primary);
+  color: #fef9c3;
+  padding: .55rem .7rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: .8rem;
+  white-space: nowrap;
+}
+.card-body td {
+  padding: .5rem .7rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.6;
+}
+.card-body tr:last-child td { border-bottom: none; }
+.card-body tr:nth-child(odd) td { background: white; }
+.card-body tr:nth-child(even) td { background: #fafaf5; }
+.card-body tr:hover td { background: #f5f0e0; }
+.card-body td:first-child {
+  font-weight: 700;
+  color: var(--primary2);
+  white-space: nowrap;
+  background: #faf8f0 !important;
+  border-right: 1px solid var(--border);
+}
+.card-body tr:nth-child(even) td:first-child { background: #f5f2ea !important; }
+
+/* Scroll hint for mobile */
+.scroll-hint {
+  display: none;
+  font-size: .72rem;
+  color: var(--gray);
+  text-align: right;
+  padding: .2rem 0 .4rem;
+}
+
+/* ══ EMPTY STATE ══ */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--gray);
+}
+.empty-state .icon { font-size: 2.5rem; margin-bottom: .5rem; }
+.empty-state p { font-size: .9rem; }
+
+/* ══ STATS BAR ══ */
+.stats-bar {
+  display: flex;
+  gap: .6rem;
+  flex-wrap: wrap;
+  margin-bottom: .25rem;
+  font-size: .78rem;
+  color: var(--gray);
+}
+.stat-item { display: flex; align-items: center; gap: .3rem; }
+.stat-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ══ MOBILE ══ */
+@media (max-width: 700px) {
+  .header h1 { font-size: .92rem; }
+  .card-body table { min-width: 400px; }
+  .card-body td:first-child { white-space: normal; min-width: 80px; }
+  .scroll-hint { display: block; }
+  .card-title { font-size: .84rem; }
+  .card-meta { display: none; }
+  .tabs { gap: .3rem; }
+  .tab { padding: .35rem .7rem; font-size: .78rem; }
+}
+
+@media (max-width: 400px) {
+  .card-body table { min-width: 340px; font-size: .78rem; }
+  .card-body th { font-size: .75rem; padding: .45rem .5rem; }
+  .card-body td { padding: .4rem .5rem; }
+}
+
+/* ══ EXPAND/COLLAPSE ALL ══ */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.btn-expand {
+  padding: .3rem .7rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--gray);
+  font-size: .78rem;
+  cursor: pointer;
+  transition: all .15s;
+}
+.btn-expand:hover { background: #f5f4ed; border-color: #a8a29e; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <a class="back-btn" href="index.html">← 考試首頁</a>
+  <h1>📊 比較表速查</h1>
+  <span class="header-count" id="countDisplay"></span>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <!-- Subject tabs -->
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-subject="all">全部</button>
+    <script>Site.here(Site.subjectButtons((s) => `<button class="tab" data-subject="${s.code}">${s.name}</button>`))</script>
+  </div>
+
+  <!-- Search -->
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="searchInput" type="text" placeholder="搜尋表格標題或內容...">
+  </div>
+
+  <!-- Stats + toolbar -->
+  <div class="toolbar">
+    <div class="stats-bar" id="statsBar">
+      <script>Site.here(Site.subjectButtons((s) => `<span class="stat-item"><span class="stat-dot" style="background:var(--${s.code}-accent)"></span>${s.name}: <b id="stat-${s.code}">0</b></span>`))</script>
+    </div>
+    <div style="display:flex;gap:.3rem">
+      <button class="btn-expand" id="btnExpandAll">全部展開</button>
+      <button class="btn-expand" id="btnCollapseAll">全部收合</button>
+    </div>
+  </div>
+</div>
+
+<!-- TABLE LIST -->
+<div class="table-list" id="tableList"></div>
+
+<!-- EMPTY STATE -->
+<div class="empty-state" id="emptyState" style="display:none">
+  <div class="icon">📭</div>
+  <p>找不到符合條件的比較表</p>
+</div>
+
+<script src="comparison-tables-data.js"></script>
+<script>
+const SUBJECT_LABELS = SITE.SMAP;
+let allTables = [];
+let currentSubject = 'all';
+let searchQuery = '';
+
+// Load data: prefer global variable (works on file://), fall back to fetch
+if (typeof COMPARISON_TABLES !== 'undefined') {
+  allTables = COMPARISON_TABLES;
+  updateStats(allTables);
+  render();
+} else {
+  fetch('comparison-tables.json')
+    .then(r => r.json())
+    .then(data => {
+      allTables = data;
+      updateStats(data);
+      render();
+    })
+    .catch(err => {
+      document.getElementById('tableList').innerHTML =
+        '<div class="empty-state"><div class="icon">⚠️</div><p>無法載入資料: ' + err.message + '</p></div>';
+    });
+}
+
+function updateStats(data) {
+  const counts = Object.fromEntries(SITE.SUBJ_CODES.map((c) => [c, 0]));
+  data.forEach(t => { if (counts[t.subject] !== undefined) counts[t.subject]++; });
+  SITE.SUBJ_CODES.forEach((c) => { const el = document.getElementById('stat-' + c); if (el) el.textContent = counts[c]; });
+}
+
+function matchesSearch(table, q) {
+  if (!q) return true;
+  const lower = q.toLowerCase();
+  if (table.title.toLowerCase().includes(lower)) return true;
+  if (table.topic && table.topic.toLowerCase().includes(lower)) return true;
+  // Search in headers
+  if (table.headers && table.headers.some(h => h.toLowerCase().includes(lower))) return true;
+  // Search in cell content
+  if (table.rows) {
+    for (const row of table.rows) {
+      for (const cell of row) {
+        if (cell.toLowerCase().includes(lower)) return true;
+      }
+    }
+  }
+  return false;
+}
+
+function getFiltered() {
+  return allTables.filter(t => {
+    if (currentSubject !== 'all' && t.subject !== currentSubject) return false;
+    return matchesSearch(t, searchQuery);
+  });
+}
+
+function escapeHTML(s) {
+  const div = document.createElement('div');
+  div.textContent = s;
+  return div.innerHTML;
+}
+
+function formatCell(s) {
+  let h = escapeHTML(s);
+  // "中文名 (English Name, ABBR)" → 中文名<br><small>English Name, ABBR</small>
+  h = h.replace(/^(.+?)\s*\(([A-Za-z][\w\s,./\-'']+)\)\s*$/, '$1<br><span style="font-size:.78em;color:#78716c">($2)</span>');
+  // "English (中文)" pattern too
+  h = h.replace(/^([A-Z][\w\s\-]+)\s*[（\(]([^\x00-\x7F]+)[）\)]\s*$/, '$1<br><span style="font-size:.78em;color:#78716c">（$2）</span>');
+  return h;
+}
+
+function buildTableHTML(t) {
+  let html = '<div class="scroll-hint">← 左右滑動查看完整表格 →</div>';
+  html += '<table><thead><tr>';
+  for (const h of t.headers) {
+    html += '<th>' + escapeHTML(h) + '</th>';
+  }
+  html += '</tr></thead><tbody>';
+  for (const row of t.rows) {
+    html += '<tr>';
+    for (let i = 0; i < row.length; i++) {
+      html += '<td>' + formatCell(row[i]) + '</td>';
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  return html;
+}
+
+function render() {
+  const filtered = getFiltered();
+  const container = document.getElementById('tableList');
+  const empty = document.getElementById('emptyState');
+  const countDisplay = document.getElementById('countDisplay');
+
+  countDisplay.textContent = filtered.length + ' / ' + allTables.length + ' 表';
+
+  if (filtered.length === 0) {
+    container.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  // Group by topic
+  const groups = new Map();
+  for (const t of filtered) {
+    const key = (t.subject || '') + '|' + (t.topic || '其他');
+    if (!groups.has(key)) groups.set(key, { subject: t.subject, topic: t.topic || '其他', tables: [] });
+    groups.get(key).tables.push(t);
+  }
+
+  let html = '';
+  for (const [, group] of groups) {
+    html += '<div class="topic-group">';
+    html += '<div class="topic-label">' + (SUBJECT_LABELS[group.subject] || '') + ' — ' + escapeHTML(group.topic) + '</div>';
+    for (const t of group.tables) {
+      const idx = allTables.indexOf(t);
+      html += '<div class="table-card" data-idx="' + idx + '">';
+      html += '<div class="card-header" onclick="toggleCard(this)">';
+      html += '<span class="card-arrow">▶</span>';
+      html += '<span class="card-title">' + escapeHTML(t.title) + '</span>';
+      html += '<span class="card-subject" data-s="' + t.subject + '">' + (SUBJECT_LABELS[t.subject] || t.subject) + '</span>';
+      html += '<span class="card-meta">' + t.rows.length + ' 列</span>';
+      html += '</div>';
+      html += '<div class="card-body">' + buildTableHTML(t) + '</div>';
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+
+  container.innerHTML = html;
+}
+
+function toggleCard(headerEl) {
+  headerEl.parentElement.classList.toggle('open');
+}
+
+// Tab clicks
+document.getElementById('tabs').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  currentSubject = tab.dataset.subject;
+  render();
+});
+
+// Search
+let searchTimer;
+document.getElementById('searchInput').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    searchQuery = e.target.value.trim();
+    render();
+  }, 200);
+});
+
+// Expand / Collapse all
+document.getElementById('btnExpandAll').addEventListener('click', () => {
+  document.querySelectorAll('.table-card').forEach(c => c.classList.add('open'));
+});
+document.getElementById('btnCollapseAll').addEventListener('click', () => {
+  document.querySelectorAll('.table-card').forEach(c => c.classList.remove('open'));
+});
+
+// Keyboard shortcut: Escape clears search
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const input = document.getElementById('searchInput');
+    if (input.value) {
+      input.value = '';
+      searchQuery = '';
+      render();
+    }
+  }
+});
+</script>
+</body>
+</html>
