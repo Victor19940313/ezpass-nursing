@@ -751,14 +751,86 @@
     _listeners = [];
   }
 
+  // ═══ v673:同步節流 (萬人審計 #5) ═══
+  //   以前:每改一個東西 (每答一題、每標記一次) 就把「整包」推上去一次 —
+  //         整包包含整本筆記,大的使用者一次好幾 MB,而且一秒可能推好幾次。
+  //         一萬人同時用 = 每秒上千次整包寫入,資料庫會被自己打掛。
+  //   現在:把改動記起來,安靜幾秒之後「只推改到的那幾個 key」,一次寫完。
+  //         離開頁面前會強制送出,所以不會掉資料 (而且本機時間戳已經更新,
+  //         下次開網頁比對到雲端比較舊,還會再補推一次)。
+  var FLUSH_MS = 6000; // 改動之後等這麼久 (期間再有改動就一起送)
+  var MAX_WAIT_MS = 20000; // 但最久不超過這麼久,免得一直打字一直延後
+  var _dirtyKeys = {};
+  var _flushTimer = null;
+  var _dirtySince = 0;
+
+  function _skFromKey(key) {
+    if (!key || !_userId) return "";
+    var prefix = _userId + "_";
+    return key.indexOf(prefix) === 0 ? key.slice(prefix.length) : "";
+  }
+
+  function markDirty(sk) {
+    if (!sk || !_db || !_userId) return;
+    _dirtyKeys[sk] = true;
+    if (!_dirtySince) _dirtySince = Date.now();
+    localStorage.setItem(_userId + "__ts", String(Date.now()));
+    if (_flushTimer) clearTimeout(_flushTimer);
+    var waited = Date.now() - _dirtySince;
+    var wait = Math.max(500, Math.min(FLUSH_MS, MAX_WAIT_MS - waited));
+    _flushTimer = setTimeout(function () {
+      flushDirty();
+    }, wait);
+  }
+
+  function flushDirty() {
+    if (_flushTimer) {
+      clearTimeout(_flushTimer);
+      _flushTimer = null;
+    }
+    _dirtySince = 0;
+    var keys = Object.keys(_dirtyKeys);
+    _dirtyKeys = {};
+    if (!keys.length || !_db || !_userId) return Promise.resolve();
+    if (identityMismatch("flushDirty")) return Promise.resolve();
+    var update = {};
+    var oldUpdate = {};
+    keys.forEach(function (sk) {
+      var val = localStorage.getItem(_userId + "_" + sk);
+      if (val === null) return;
+      update[sk] = val;
+      oldUpdate[sk] = val;
+    });
+    if (!Object.keys(update).length) return Promise.resolve();
+    var ts = Date.now();
+    update._ts = ts;
+    _syncing = true;
+    _stampLocalTs(ts);
+    return Promise.all([userRef().update(update), userDataRef().update(oldUpdate)])
+      .catch(function (err) {
+        console.error("[Sync] 批次上傳失敗:", err);
+        // 失敗的 key 放回去,下次再試
+        keys.forEach(function (sk) {
+          _dirtyKeys[sk] = true;
+        });
+      })
+      .finally(function () {
+        _syncing = false;
+      });
+  }
+
   function onLocalChange(e) {
     if (_syncing || !_db || !_userId) return;
     if (!e.key || !isSyncKey(e.key)) return;
-    localStorage.setItem(_userId + "__ts", String(Date.now()));
-    pushToFirebase();
+    var sk = _skFromKey(e.key);
+    if (sk) markDirty(sk);
+    else {
+      localStorage.setItem(_userId + "__ts", String(Date.now()));
+      pushToFirebase();
+    }
   }
 
-  /** Auto-push: check every 3 seconds if local data changed, push if so */
+  /** 每 3 秒看一次錯題本有沒有變 (它是 IDB 存的,不會觸發 setItem) */
   var _lastPushed = "";
   function startAutoSync() {
     setInterval(function () {
@@ -766,9 +838,18 @@
       var cur = localStorage.getItem(_userId + "_wrongbook_state") || "";
       if (cur && cur !== _lastPushed) {
         _lastPushed = cur;
-        pushToFirebase();
+        markDirty("wrongbook_state");
       }
     }, 3000);
+    // 關掉分頁 / 切到背景 → 把還沒送出去的立刻送出
+    var flushNow = function () {
+      if (Object.keys(_dirtyKeys).length) flushDirty();
+    };
+    window.addEventListener("pagehide", flushNow);
+    window.addEventListener("beforeunload", flushNow);
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "hidden") flushNow();
+    });
   }
 
   // ══════════════════════════════════════════
@@ -891,6 +972,7 @@
     },
 
     pushAll: pushToFirebase,
+    flushNow: flushDirty, // v673:立刻把待送的改動送出去
     // v413:輕量單 key 推送 — 標記變動只推 wrongbook_state,不要每次都把 examHistory + notebook 全部一起推
     pushOne: function (sk, payload) {
       if (!_db || !_userId) return Promise.resolve();
