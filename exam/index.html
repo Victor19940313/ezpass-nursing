@@ -8,8 +8,8 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title data-site-title="{practiceIcon} {practiceName}"></title>
-    <script src="../site-config.js?v=v667"></script>
-    <script src="../site.js?v=v667"></script>
+    <script src="../site-config.js?v=v668"></script>
+    <script src="../site.js?v=v668"></script>
     <script>
       // 從首頁直接連到筆記本(#notebook):在頁面 paint 前就先隱藏考試 home,
       // 避免閃一下「考試首頁」再跳到筆記本
@@ -6287,11 +6287,14 @@
         flex: 1;
       }
 
+      /* v668:章節目錄的收合鍵 — 固定在畫面左邊中間 (HUA 圈的位置),不會被內容或頁尾蓋住 */
       .nb-toc-fab {
         display: none;
         position: fixed;
-        bottom: 1rem;
-        left: 1rem;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        z-index: 12100;
         z-index: 60;
         width: 48px;
         height: 48px;
@@ -6308,6 +6311,19 @@
           display: flex;
           align-items: center;
           justify-content: center;
+          width: 34px;
+          height: 74px;
+          border-radius: 0 16px 16px 0;
+          font-size: 1.05rem;
+          line-height: 1;
+          padding: 0;
+          box-shadow: 3px 2px 12px rgba(0, 0, 0, 0.25);
+        }
+        /* 抽屜打開時這顆鈕讓位 (抽屜自己有 ✕)。
+           鈕已經搬到 <html> 底下,所以 html 跟 body 兩種情況都要寫 */
+        html.nbtoc-open .nb-toc-fab,
+        body.nbtoc-open .nb-toc-fab {
+          display: none;
         }
       }
       .nb-loading {
@@ -6375,8 +6391,8 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.1.0/style.css"
     />
-      <script src="../skin.js?v=v667"></script>
-    <link rel="stylesheet" href="../skin.css?v=v667" />
+      <script src="../skin.js?v=v668"></script>
+    <link rel="stylesheet" href="../skin.css?v=v668" />
   </head>
   <body>
     <!-- HEADER -->
@@ -9095,7 +9111,7 @@
         } catch (e) {}
         if (!codes || !codes.length) codes = SITE.SUBJ_CODES;
         for (var i = 0; i < codes.length; i++)
-          document.write('<script src="q-' + codes[i] + '.js?v=v667"><\/script>');
+          document.write('<script src="q-' + codes[i] + '.js?v=v668"><\/script>');
       })();
     </script>
     <script>
@@ -20530,6 +20546,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
 
       // ── Notebook screen render ──
       function showNotebook() {
+        _liftTocFab(); // v668
         closeAllOverlays();
         loadNotebook();
         // 若 peek 是從重看試卷叫的 → 保存返回狀態 + 隱藏試卷 modal
@@ -23720,6 +23737,16 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
         if (pane) pane.classList.remove("open");
         _nbTocBackdrop().classList.remove("open");
         document.body.classList.remove("nbtoc-open");
+        document.documentElement.classList.remove("nbtoc-open");
+      }
+      // v668: 筆記主題會對 body 加 filter,祖先有 filter 時子元素的 position: fixed
+      //   會變成相對那個祖先 → 收合鍵就跟著整頁跑到最底下。掛到 <html> 就正常了。
+      function _liftTocFab() {
+        try {
+          var fab = document.querySelector(".nb-toc-fab");
+          if (fab && fab.parentNode !== document.documentElement)
+            document.documentElement.appendChild(fab);
+        } catch (e) {}
       }
       function toggleMobileToc() {
         const pane = document.querySelector(".nb-toc-pane");
@@ -23728,6 +23755,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
         pane.classList.toggle("open", willOpen);
         _nbTocBackdrop().classList.toggle("open", willOpen);
         document.body.classList.toggle("nbtoc-open", willOpen);
+        document.documentElement.classList.toggle("nbtoc-open", willOpen);
       }
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closeMobileToc();
@@ -29525,15 +29553,15 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-    <script src="../visitor-log.js?v=v667"></script>
+    <script src="../visitor-log.js?v=v668"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-    <script src="../sync.js?v=v667"></script>
-    <script src="comment-system.js?v=v667"></script>
-    <script src="../auth.js?v=v667"></script>
-    <script src="../keysync.js?v=v667"></script>
-    <script src="../migration.js?v=v667"></script>
-    <script src="../subscription.js?v=v667"></script>
-    <script src="../device-guard.js?v=v667"></script>
+    <script src="../sync.js?v=v668"></script>
+    <script src="comment-system.js?v=v668"></script>
+    <script src="../auth.js?v=v668"></script>
+    <script src="../keysync.js?v=v668"></script>
+    <script src="../migration.js?v=v668"></script>
+    <script src="../subscription.js?v=v668"></script>
+    <script src="../device-guard.js?v=v668"></script>
     <script>
       if (typeof DentalSync !== "undefined") {
         // v413:等 loadState 從 IDB hydrate 完才 init sync,不然 sync 拉 remote 寫進 qState 後會被 loadState 用 IDB 舊版蓋掉
@@ -30036,7 +30064,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
       © 2026 <span data-site="fullName"></span> · <strong>版權所有翻印必究</strong> ·
       未經授權禁止轉載、複製、爬取內容
     </footer>
-      <script src="../tour.js?v=v667" defer></script>
-    <script src="../update.js?v=v667" defer></script>
+      <script src="../tour.js?v=v668" defer></script>
+    <script src="../update.js?v=v668" defer></script>
 </body>
 </html>
