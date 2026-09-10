@@ -8786,7 +8786,41 @@
 
     <div class="toast" id="toast"></div>
 
-    <script src="questions-data.js"></script>
+    <!-- v657: 題庫切成一科一檔 (萬人審計 #1)。重產一科詳解時,使用者只重抓那一科 (約 3 MB),
+         其他科維持快取。四個檔平行下載,總量跟以前一樣。
+         q-*.js 各自把題目塞進 window.QUESTIONS_PARTS;下面合併成 QUESTIONS。
+         舊檔 questions-data.js 仍留著給「編輯詳解」工具用,頁面不再載入它;
+         萬一分科檔全部載不到 (舊快取 / 部署到一半),會自動退回載入整包。 -->
+    <script>
+      // 科目代碼:多站共用版從 site-config.js 拿,牙醫站沒有 SITE 就用預設四科
+      (function () {
+        var codes = null;
+        try {
+          if (window.SITE && Array.isArray(SITE.subjects))
+            codes = SITE.subjects.map(function (x) { return x.code; });
+        } catch (e) {}
+        if (!codes || !codes.length) codes = SITE.SUBJ_CODES;
+        for (var i = 0; i < codes.length; i++)
+          document.write('<script src="q-' + codes[i] + '.js"><\/script>');
+      })();
+    </script>
+    <script>
+      (function () {
+        var parts = window.QUESTIONS_PARTS || {};
+        var codes = Object.keys(parts);
+        if (codes.length) {
+          var all = [];
+          codes.sort();
+          for (var i = 0; i < codes.length; i++) all = all.concat(parts[codes[i]]);
+          window.QUESTIONS = all;
+        }
+      })();
+    </script>
+    <script>
+      // 分科檔一個都沒載到 → 同步載回整包 (document.write 保證在下面的程式跑之前就位)
+      if (!window.QUESTIONS || !window.QUESTIONS.length)
+        document.write('<script src="questions-data.js"><\/script>');
+    </script>
     <script src="cross-links-data.js"></script>
     <script src="similar-questions-data.js"></script>
     <script>

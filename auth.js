@@ -50,12 +50,11 @@
         email: user.email || "",
         name: user.displayName || "",
         avatar: user.photoURL || "",
-        provider:
-          user.providerData &&
-          user.providerData[0] &&
-          user.providerData[0].providerId === "password"
-            ? "email"
-            : "google",
+        provider: (function () {
+          const p0 = (user.providerData || [])[0];
+          if (!p0) return "sso"; // 從別站帶通行證進來的
+          return p0.providerId === "password" ? "email" : "google";
+        })(),
         last_login_ts: now,
       };
       if (!existing.created_ts) {
@@ -85,11 +84,14 @@
   // 監聽登入狀態
   auth.onAuthStateChanged(async function (user) {
     // 過濾: 只認 Google provider (匿名的照舊，不影響)
-    if (user && user.providerData && user.providerData.length > 0) {
+    if (user && !user.isAnonymous) {
       // v651: Google 或「Email 收登入連結」(providerId = password) 都算登入
-      const isGoogle = user.providerData.some(function (p) {
-        return p.providerId === "google.com" || p.providerId === "password";
-      });
+      // v657: 從別站帶通行證進來的 (signInWithCustomToken) providerData 是空的,但有 email → 也算登入
+      const pd = user.providerData || [];
+      const isGoogle =
+        pd.some(function (p) {
+          return p.providerId === "google.com" || p.providerId === "password";
+        }) || (pd.length === 0 && !!user.email);
       if (isGoogle) {
         currentUser = user;
         await upsertUserProfile(user);

@@ -1,7 +1,7 @@
 // v609: 版本號直接寫死在這裡 (deploy.sh 會從 version.js 同步),不再 importScripts('./version.js')
 //   原因:瀏覽器檢查 SW 更新時,importScripts 的檔案會走 HTTP 快取 (Cloudflare 給 4 小時),
 //   拿到舊的 version.js 就會把「舊版」當成新版裝進來 → 使用者按更新 → 又檢查到新版 → 無限「立即更新」
-const APP_VERSION = "v656";
+const APP_VERSION = "v658";
 self.APP_VERSION = APP_VERSION;
 const SITE_ID = 'nursing'; // build.py 填入 (dental / nursing …)
 const CACHE_NAME = SITE_ID + '-all-' + self.APP_VERSION + '-persist-isClassPractice-through-reload';
@@ -56,20 +56,23 @@ self.addEventListener('message', e => {
   if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
+// v657: 題庫切成一科一檔 (q-ya3.js …)。版本換了就把「每一個」題庫檔從舊快取搬過來,
+//   之後 fetch 各自用 ETag 背景確認 → 只有真的改過的那一科會重抓。
+function isQuestionBank(url) {
+  return /\/q-[a-z0-9]+\.js(\?|$)/.test(url) || url.includes('questions-data.js');
+}
 async function carryOverQuestionBank() {
-  // v554: 版本換了,題庫通常沒變 → 從舊快取搬過來,不重抓 41 MB (fetch 時會用 ETag 背景確認)
   try {
     const keys = await caches.keys();
     const newCache = await caches.open(CACHE_NAME);
-    const already = (await newCache.keys()).some(r => r.url.includes('questions-data.js'));
-    if (already) return;
+    const have = new Set((await newCache.keys()).filter(r => isQuestionBank(r.url)).map(r => r.url));
     for (const k of keys) {
       if (k === CACHE_NAME) continue;
       const old = await caches.open(k);
-      const reqs = (await old.keys()).filter(r => r.url.includes('questions-data.js'));
-      for (const r of reqs) {
+      for (const r of (await old.keys()).filter(x => isQuestionBank(x.url))) {
+        if (have.has(r.url)) continue;
         const res = await old.match(r);
-        if (res) { await newCache.put(r, res); return; }
+        if (res) { await newCache.put(r, res); have.add(r.url); }
       }
     }
   } catch (err) { console.warn('SW carryOver fail', err); }
@@ -90,7 +93,6 @@ self.addEventListener('activate', e => {
 
 // Data files that update frequently → network first, fall back to cache
 const NETWORK_FIRST = [
-  'questions-data.js',
 ];
 
 function isDataFile(url) {
@@ -120,7 +122,7 @@ self.addEventListener('fetch', e => {
 
   // v553: 41 MB 題庫改 cache-first — 有快取就直接回,不再每次開頁重抓 (萬人審計 #1)
   //        新版本 = 新 CACHE_NAME,install 時會重新 precache,所以更新還是會拿到
-  if (e.request.url.includes('questions-data.js')) {
+  if (isQuestionBank(e.request.url)) {
     e.respondWith(
       caches.match(e.request).then(cached => {
         if (cached) {
