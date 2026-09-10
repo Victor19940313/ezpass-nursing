@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title data-site-title="口訣與重點分享區 — {examShort}"></title>
-    <script src="site-config.js?v=v662"></script>
-    <script src="site.js?v=v662"></script>
+    <script src="site-config.js?v=v663"></script>
+    <script src="site.js?v=v663"></script>
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#f8f7f0" />
     <link rel="apple-touch-icon" href="icons/icon-192.png" />
@@ -16,16 +16,16 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="themes.css?v=v662" />
-    <script src="version.js?v=v662"></script>
-    <script src="topics.js?v=v662"></script>
-    <script src="skin.js?v=v662"></script>
+    <link rel="stylesheet" href="themes.css?v=v663" />
+    <script src="version.js?v=v663"></script>
+    <script src="topics.js?v=v663"></script>
+    <script src="skin.js?v=v663"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-    <script src="auth.js?v=v662"></script>
-    <script src="subscription.js?v=v662"></script>
-    <script src="visitor-log.js?v=v662"></script>
+    <script src="auth.js?v=v663"></script>
+    <script src="subscription.js?v=v663"></script>
+    <script src="visitor-log.js?v=v663"></script>
     <style>
       :root {
         --bg: #f8f7f0;
@@ -134,16 +134,45 @@
         background: #fef3c7;
         color: #92400e;
       }
+      /* v663: 分頁按鈕排整齊 */
+      .nav-row .hdr-nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      @media (min-width: 721px) and (max-width: 1100px) {
+        .nav-row .hdr-nav {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+          flex: 1 1 100%;
+        }
+        .nav-row .hdr-nav .nav-pill {
+          width: 100%;
+          justify-content: center;
+          text-align: center;
+        }
+      }
       /* v613: 手機導覽收合 — 桌機不變;手機只留 ☰ 選單 + 三個分頁 + 使用者標籤 */
       .nav-toggle-mn {
         display: none;
       }
       @media (max-width: 720px) {
-        .nav-row .nav-pill {
+        .nav-row .hdr-nav {
           display: none;
         }
-        .nav-row.nav-open .nav-pill {
-          display: inline-flex;
+        .nav-row.nav-open .hdr-nav {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 0.4rem;
+          flex: 1 1 100%;
+          margin-top: 0.2rem;
+        }
+        .nav-row.nav-open .hdr-nav .nav-pill {
+          width: 100%;
+          justify-content: center;
+          text-align: center;
+          min-height: 40px;
         }
         .nav-toggle-mn {
           display: inline-flex;
@@ -1660,12 +1689,14 @@
         }
       }
     </style>
-      <link rel="stylesheet" href="skin.css?v=v662" />
+      <link rel="stylesheet" href="skin.css?v=v663" />
   </head>
   <body>
     <div class="nav-row">
       <!-- v613: 手機版導覽收合 -->
       <button class="nav-toggle-mn" id="nav-toggle-mn" type="button" onclick="document.querySelector('.nav-row').classList.toggle('nav-open')">☰ 選單</button>
+      <!-- v663: 包成一組才排得整齊 (手機 2 欄、平板等寬) -->
+      <div class="hdr-nav">
       <a href="index.html" class="nav-link nav-pill"><span data-site="homeLabel">牙醫主頁</span></a>
       <a href="exam/index.html" class="nav-link nav-pill">考題區</a>
       <a href="exam/index.html#resume" class="nav-link nav-pill">↩ 回到考題</a>
@@ -1674,6 +1705,7 @@
         >📒 筆記本</a
       >
       <a href="javascript:void(0)" class="nav-link nav-pill" onclick="if (window.Skin && Skin.open) Skin.open()">🎨 風格</a>
+      </div>
       <!-- v574: 三分頁取代作者下拉 -->
       <div class="mn-tabs" id="mn-tabs" role="tablist">
         <button data-mode="mine" class="active" onclick="switchMode('mine')">🧠 我的口訣</button>
@@ -5408,7 +5440,7 @@
       © 2026 <span data-site="fullName"></span> · <strong>版權所有翻印必究</strong> ·
       未經授權禁止轉載、複製、爬取內容
     </footer>
-      <script src="tour.js?v=v662" defer></script>
-      <script src="update.js?v=v662" defer></script>
+      <script src="tour.js?v=v663" defer></script>
+      <script src="update.js?v=v663" defer></script>
 </body>
 </html>

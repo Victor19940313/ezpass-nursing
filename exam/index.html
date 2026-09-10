@@ -8,8 +8,8 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title data-site-title="{practiceIcon} {practiceName}"></title>
-    <script src="../site-config.js?v=v662"></script>
-    <script src="../site.js?v=v662"></script>
+    <script src="../site-config.js?v=v663"></script>
+    <script src="../site.js?v=v663"></script>
     <script>
       // 從首頁直接連到筆記本(#notebook):在頁面 paint 前就先隱藏考試 home,
       // 避免閃一下「考試首頁」再跳到筆記本
@@ -1591,6 +1591,52 @@
         }
         .exam-timer {
           font-size: 0.72rem;
+        }
+      }
+
+      /* ═══ v663:頁首分頁按鈕排整齊 (HUA:「按鈕列那樣排很不整齊」) ═══ */
+      .header-right .hdr-nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.4rem;
+      }
+      /* 平板:一格一格等寬排好,不要長短不一參差不齊 */
+      @media (min-width: 761px) and (max-width: 1100px) {
+        .header-right {
+          width: 100%;
+        }
+        .header-right .hdr-nav {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(122px, 1fr));
+          width: 100%;
+        }
+        .header-right .hdr-nav .btn-mode {
+          width: 100%;
+          margin: 0 !important;
+          text-align: center;
+        }
+      }
+      /* 手機:收起時整組藏起來,展開時 2 欄等寬 */
+      @media (max-width: 760px) {
+        .header-right .hdr-nav {
+          display: none;
+        }
+        .header.nav-open .header-right .hdr-nav {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 0.4rem;
+          width: 100%;
+          margin-top: 0.15rem;
+        }
+        .header.nav-open .header-right .hdr-nav .btn-mode {
+          width: 100%;
+          margin: 0 !important;
+          padding-left: 0.3rem;
+          padding-right: 0.3rem;
+          text-align: center;
+          font-size: 0.82rem;
         }
       }
 
@@ -4942,6 +4988,8 @@
       }
       /* B. 手指操作的裝置:按鈕加大到好按 (滑鼠不受影響) */
       @media (pointer: coarse) {
+        /* v663: <button> 本來就會把文字置中,只要加高就好。
+           **不可以在這裡設 display**,不然 .nav-toggle (平板應該是 display:none) 會被打開 */
         .btn-mode,
         .nav-toggle,
         .wb-chip,
@@ -4950,7 +4998,9 @@
         .btn-mark,
         .btn-flag,
         .mark-row button,
-        .nb-nav-btn,
+        .nb-nav-btn {
+          min-height: 40px;
+        }
         .nb-toc-item,
         details.nb-toc-subj > summary,
         details.nb-toc-group > summary,
@@ -6273,8 +6323,8 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.1.0/style.css"
     />
-      <script src="../skin.js?v=v662"></script>
-    <link rel="stylesheet" href="../skin.css?v=v662" />
+      <script src="../skin.js?v=v663"></script>
+    <link rel="stylesheet" href="../skin.css?v=v663" />
   </head>
   <body>
     <!-- HEADER -->
@@ -6289,6 +6339,8 @@
           <span class="nav-cur" id="nav-cur">考題區</span><span class="nav-caret">▾</span>
         </button>
         <i class="nav-break" aria-hidden="true"></i>
+        <!-- v663: 分頁按鈕包成一組,才排得整齊 (手機 2 欄、平板等寬、桌機一列) -->
+        <div class="hdr-nav" id="hdr-nav">
         <button
           class="btn-mode"
           id="btn-notes"
@@ -6339,6 +6391,7 @@
         <button class="btn-mode" id="btn-skin" onclick="if (window.Skin && Skin.open) Skin.open()" title="換網站風格">
           🎨 風格
         </button>
+        </div>
         <!-- v583: ☁️ 同步面板 / 🔧 修補 / 🗑️ 重置 三顆頁首小圖示拿掉 (HUA);同步全自動,重製搬到標記統計旁 -->
       </div>
     </div>
@@ -8981,7 +9034,7 @@
         } catch (e) {}
         if (!codes || !codes.length) codes = SITE.SUBJ_CODES;
         for (var i = 0; i < codes.length; i++)
-          document.write('<script src="q-' + codes[i] + '.js?v=v662"><\/script>');
+          document.write('<script src="q-' + codes[i] + '.js?v=v663"><\/script>');
       })();
     </script>
     <script>
@@ -29355,14 +29408,14 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-    <script src="../visitor-log.js?v=v662"></script>
+    <script src="../visitor-log.js?v=v663"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-    <script src="../sync.js?v=v662"></script>
-    <script src="comment-system.js?v=v662"></script>
-    <script src="../auth.js?v=v662"></script>
-    <script src="../migration.js?v=v662"></script>
-    <script src="../subscription.js?v=v662"></script>
-    <script src="../device-guard.js?v=v662"></script>
+    <script src="../sync.js?v=v663"></script>
+    <script src="comment-system.js?v=v663"></script>
+    <script src="../auth.js?v=v663"></script>
+    <script src="../migration.js?v=v663"></script>
+    <script src="../subscription.js?v=v663"></script>
+    <script src="../device-guard.js?v=v663"></script>
     <script>
       if (typeof DentalSync !== "undefined") {
         // v413:等 loadState 從 IDB hydrate 完才 init sync,不然 sync 拉 remote 寫進 qState 後會被 loadState 用 IDB 舊版蓋掉
@@ -29865,7 +29918,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
       © 2026 <span data-site="fullName"></span> · <strong>版權所有翻印必究</strong> ·
       未經授權禁止轉載、複製、爬取內容
     </footer>
-      <script src="../tour.js?v=v662" defer></script>
-    <script src="../update.js?v=v662" defer></script>
+      <script src="../tour.js?v=v663" defer></script>
+    <script src="../update.js?v=v663" defer></script>
 </body>
 </html>
