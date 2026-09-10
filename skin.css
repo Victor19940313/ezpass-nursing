@@ -354,7 +354,8 @@ html[data-skin] .foot { color: var(--sk-mute) !important; background: transparen
   html[data-skin="watercolor"] .q-card,
   html[data-skin="watercolor"] .expl-box { backdrop-filter: blur(8px); }
 }
-html[data-skin="toon"] h1 { color: var(--sk-accent); text-shadow: 0 3px 0 var(--sk-accent-d); }
+/* v669: 原本的立體字陰影會讓標題看起來像兩層疊在一起 (HUA 不喜歡),改成純色 */
+html[data-skin="toon"] h1 { color: var(--sk-accent); text-shadow: none; }
 html[data-skin="notebook"] body { font-size: 16px; }
 html[data-skin="kawaii"] .chip,
 html[data-skin="kawaii"] .ts-chip { box-shadow: 2px 2px 0 #4a3b4b !important; }
