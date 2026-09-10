@@ -8,8 +8,8 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title data-site-title="{practiceIcon} {practiceName}"></title>
-    <script src="../site-config.js?v=v663"></script>
-    <script src="../site.js?v=v663"></script>
+    <script src="../site-config.js?v=v664"></script>
+    <script src="../site.js?v=v664"></script>
     <script>
       // 從首頁直接連到筆記本(#notebook):在頁面 paint 前就先隱藏考試 home,
       // 避免閃一下「考試首頁」再跳到筆記本
@@ -4881,20 +4881,72 @@
         max-height: calc(100vh - 80px);
         overflow-y: auto;
       }
+      /* ═══ v664-drawer:手機章節目錄抽屜 (有遮罩、有關閉鍵、點旁邊會關) ═══ */
+      .nb-toc-x {
+        display: none;
+      }
+      .nb-toc-backdrop {
+        display: none;
+      }
       @media (max-width: 760px) {
         .nb-toc-pane {
           position: fixed;
           top: 0;
-          left: -260px;
-          width: 240px;
+          left: -300px;
+          width: 78vw;
+          max-width: 290px;
           height: 100vh;
-          z-index: 200;
-          box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15);
+          height: 100dvh;
+          /* 頁首是 11000,抽屜要蓋過去,不然上半截點不到 */
+          z-index: 12300;
+          box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
           transition: left 0.25s;
-          background: white;
+          background: #fff;
+          padding-top: calc(0.8rem + env(safe-area-inset-top));
+          padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+          overscroll-behavior: contain;
         }
         .nb-toc-pane.open {
           left: 0;
+        }
+        .nb-toc-backdrop {
+          display: block;
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.45);
+          z-index: 12200;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.2s;
+        }
+        .nb-toc-backdrop.open {
+          opacity: 1;
+          pointer-events: auto;
+        }
+        body.nbtoc-open {
+          overflow: hidden;
+        }
+        .nb-toc-x {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          border: 1.5px solid #e5e7eb;
+          background: #fff;
+          color: #6b7280;
+          font-size: 1rem;
+          font-weight: 700;
+          cursor: pointer;
+          flex-shrink: 0;
+        }
+        /* 還沒有章節時給一句話,不要只是一片空白 */
+        .nb-toc-empty {
+          color: #9ca3af;
+          font-size: 0.82rem;
+          line-height: 1.8;
+          padding: 1rem 0.2rem;
         }
       }
       .nb-toc-head {
@@ -6323,8 +6375,8 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.1.0/style.css"
     />
-      <script src="../skin.js?v=v663"></script>
-    <link rel="stylesheet" href="../skin.css?v=v663" />
+      <script src="../skin.js?v=v664"></script>
+    <link rel="stylesheet" href="../skin.css?v=v664" />
   </head>
   <body>
     <!-- HEADER -->
@@ -7744,6 +7796,15 @@
           >
             <span>📑 章節目錄</span>
             <button
+              class="nb-toc-x"
+              type="button"
+              onclick="toggleMobileToc()"
+              title="關閉章節目錄"
+              aria-label="關閉章節目錄"
+            >
+              ✕
+            </button>
+            <button
               id="nb-star-filter"
               onclick="toggleStarFilter()"
               title="只顯示標記為重點 ★ 的章節"
@@ -9034,7 +9095,7 @@
         } catch (e) {}
         if (!codes || !codes.length) codes = SITE.SUBJ_CODES;
         for (var i = 0; i < codes.length; i++)
-          document.write('<script src="q-' + codes[i] + '.js?v=v663"><\/script>');
+          document.write('<script src="q-' + codes[i] + '.js?v=v664"><\/script>');
       })();
     </script>
     <script>
@@ -22472,7 +22533,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
         if (!toc || !body) return;
         if (notebook.chapters.length === 0) {
           toc.innerHTML =
-            '<div style="color:#9ca3af;font-size:.82rem;padding:1rem 0">還沒有章節</div>';
+            '<div class="nb-toc-empty" style="color:#9ca3af;font-size:.82rem;padding:1rem 0">還沒有章節。<br>到考題區答題後按「📒 加入筆記」,AI 會幫你整理成章節。</div>';
           body.innerHTML =
             '<div style="text-align:center;color:#9ca3af;padding:3rem 1rem">' +
             '<div style="font-size:2.5rem">📭</div>' +
@@ -22756,10 +22817,8 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
         editingChapterId = null;
         currentChapterId = id;
         renderNotebook();
-        // 手機把 toc 收起來
-        const pane = document.querySelector(".nb-toc-pane");
-        if (pane && pane.classList.contains("open"))
-          pane.classList.remove("open");
+        // 手機把 toc 收起來 (連遮罩一起)
+        if (typeof closeMobileToc === "function") closeMobileToc();
       }
 
       // ── 編輯模式 ──
@@ -23611,10 +23670,35 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
         } catch (e) {}
         updateNavCur();
       })();
+      // v664-drawer:手機章節目錄 — 一起處理遮罩、背景鎖定 (以前只有滑出來,點旁邊關不掉)
+      function _nbTocBackdrop() {
+        let bd = document.getElementById("nb-toc-backdrop");
+        if (!bd) {
+          bd = document.createElement("div");
+          bd.id = "nb-toc-backdrop";
+          bd.className = "nb-toc-backdrop";
+          bd.onclick = () => closeMobileToc();
+          document.body.appendChild(bd);
+        }
+        return bd;
+      }
+      function closeMobileToc() {
+        const pane = document.querySelector(".nb-toc-pane");
+        if (pane) pane.classList.remove("open");
+        _nbTocBackdrop().classList.remove("open");
+        document.body.classList.remove("nbtoc-open");
+      }
       function toggleMobileToc() {
         const pane = document.querySelector(".nb-toc-pane");
-        if (pane) pane.classList.toggle("open");
+        if (!pane) return;
+        const willOpen = !pane.classList.contains("open");
+        pane.classList.toggle("open", willOpen);
+        _nbTocBackdrop().classList.toggle("open", willOpen);
+        document.body.classList.toggle("nbtoc-open", willOpen);
       }
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeMobileToc();
+      });
       function changeChapterDomain(id) {
         const ch = notebook.chapters.find((c) => c.id === id);
         if (!ch) return;
@@ -29408,14 +29492,14 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-    <script src="../visitor-log.js?v=v663"></script>
+    <script src="../visitor-log.js?v=v664"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-    <script src="../sync.js?v=v663"></script>
-    <script src="comment-system.js?v=v663"></script>
-    <script src="../auth.js?v=v663"></script>
-    <script src="../migration.js?v=v663"></script>
-    <script src="../subscription.js?v=v663"></script>
-    <script src="../device-guard.js?v=v663"></script>
+    <script src="../sync.js?v=v664"></script>
+    <script src="comment-system.js?v=v664"></script>
+    <script src="../auth.js?v=v664"></script>
+    <script src="../migration.js?v=v664"></script>
+    <script src="../subscription.js?v=v664"></script>
+    <script src="../device-guard.js?v=v664"></script>
     <script>
       if (typeof DentalSync !== "undefined") {
         // v413:等 loadState 從 IDB hydrate 完才 init sync,不然 sync 拉 remote 寫進 qState 後會被 loadState 用 IDB 舊版蓋掉
@@ -29918,7 +30002,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
       © 2026 <span data-site="fullName"></span> · <strong>版權所有翻印必究</strong> ·
       未經授權禁止轉載、複製、爬取內容
     </footer>
-      <script src="../tour.js?v=v663" defer></script>
-    <script src="../update.js?v=v663" defer></script>
+      <script src="../tour.js?v=v664" defer></script>
+    <script src="../update.js?v=v664" defer></script>
 </body>
 </html>
