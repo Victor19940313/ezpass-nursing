@@ -589,3 +589,77 @@ html[data-skin="night"] body :is(.pub-box, .seller-card) { background-color: #22
 html[data-skin="night"] body :is(.pub-box h2, .buy-notes dt) { color: var(--sk-ink) !important; }
 html[data-skin="night"] body :is(.pub-box p, .pub-feat li, .buy-notes dd, .seller-card) { color: #c9c6c0 !important; }
 html[data-skin="night"] body .buy-notes a { color: var(--sk-accent) !important; }
+
+/* ═══ v672:換風格時「重要內容不能消失」的修補 ═══
+   起因 (HUA 2026-09-11):「有一些風格的方案與價格那邊的標題都會不見」。
+   全站 8 風格 × 11 頁掃過一遍,實際壞掉的有下面這幾類。 */
+
+/* 1. 招牌列 .topbar (入口網站首頁/方案與價格/獎勵/第一次使用/預覽、牙醫訂閱頁)
+      上面那條「頁首列一律換成卡片色」會把漸層洗掉,但裡面的字和按鈕是白色的
+      → 白字白底,logo、「← 首頁」、「第一次使用看這邊」、「🎨 風格」通通看不見。
+      skin.css 是最後才載入的,所以修補寫在這裡才蓋得過去。 */
+html[data-skin] .topbar {
+  background: linear-gradient(135deg, var(--sk-accent-d), var(--sk-accent)) !important;
+  color: var(--sk-accent-ink, #fff) !important;
+  border: 0 !important;
+  border-bottom: 0 !important;
+}
+html[data-skin] .topbar .logo,
+html[data-skin] .topbar .logo *,
+html[data-skin] .topbar h1,
+html[data-skin] .topbar a,
+html[data-skin] .topbar .btn {
+  color: var(--sk-accent-ink, #fff) !important;
+}
+html[data-skin] .topbar .btn {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+html[data-skin] .topbar .btn.primary {
+  background: #fff !important;
+  color: var(--sk-accent-d) !important;
+  border-color: #fff !important;
+}
+html[data-skin] .topbar .logo .mark {
+  background: rgba(255, 255, 255, 0.22) !important;
+  color: #fff !important;
+}
+
+/* 2. 夜讀暗色:這幾張卡片還是寫死白底,配上淺色字就看不到
+      (口訣區「請先登入」卡、「加到主畫面」教學卡、右下角的 ❓ 說明鈕) */
+html[data-skin] .sbo-card,
+html[data-skin] .a2h-card,
+html[data-skin] #tour-help {
+  background: var(--sk-card) !important;
+  color: var(--sk-ink) !important;
+  border-color: var(--sk-line) !important;
+}
+html[data-skin] .sbo-card h2,
+html[data-skin] .sbo-card p,
+html[data-skin] .a2h-card li,
+html[data-skin] .a2h-card p,
+html[data-skin] .a2h-card h3 {
+  color: var(--sk-ink) !important;
+}
+
+/* 3. 還沒登入時的「請先 Google 登入」按鈕 (.submit-btn.locked):
+      上面只處理了 :not(.locked),鎖住的狀態變成白字白底 (可愛風/動畫風/水彩風) */
+html[data-skin] .submit-btn.locked,
+html[data-skin] button.locked {
+  background: var(--sk-line) !important;
+  color: var(--sk-ink) !important;
+  border-color: var(--sk-line) !important;
+  opacity: 1 !important;
+}
+
+/* 4. 淺色小字在夜讀暗色底下會糊掉 (瀏覽器支援說明那幾行) */
+html[data-skin="night"] .browser-note,
+html[data-skin="night"] .browser-note * {
+  color: #cbd5e1 !important;
+  background: transparent !important;
+}
+
+/* 5. 入口網站考試卡片右邊那個「→」:水彩風的主題色太淺,配白底幾乎看不見 */
+html[data-skin] .site-go {
+  color: var(--sk-accent-d, #4c1d95) !important;
+}
