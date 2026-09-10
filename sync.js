@@ -115,10 +115,22 @@
   function _mergeNotebookForPush(localNbStr) {
     if (!localNbStr || typeof localNbStr !== "string")
       return Promise.resolve(localNbStr);
-    return userDataRef()
-      .child("notebook")
+    // v667: 先看雲端的 _ts (幾個位元組)。本機已經是最新 → 不用把整本筆記抓下來比對,
+    //   直接推本機這一份就好。(以前每存一次筆記就下載一次整本,免費流量就是這樣燒掉的)
+    return userRef()
+      .child("_ts")
       .once("value")
+      .then(function (tsSnap) {
+        var remoteTs = tsSnap.val() || 0;
+        var localTs =
+          parseInt(localStorage.getItem(_userId + "__ts") || "0") || 0;
+        if (remoteTs && localTs && remoteTs <= localTs) {
+          return null; // 不用合併
+        }
+        return userDataRef().child("notebook").once("value");
+      })
       .then(function (snap) {
+        if (snap === null) return localNbStr;
         var remoteVal = snap.val();
         if (!remoteVal) return localNbStr;
         var local = _parseNbStr(localNbStr);
@@ -253,6 +265,17 @@
     } catch (e) {}
     return false;
   }
+  // v667: 推完之後把本機的「已同步到哪個時間」對齊雲端寫進去的值。
+  //   沒對齊的話,下次開網頁會誤判「雲端比較新」→ 把整包資料重新下載一次。
+  //   全新裝置 (還沒同步過,cur = 0) 不標記,免得永遠拉不到雲端既有的資料。
+  function _stampLocalTs(ts) {
+    try {
+      if (!ts || !_userId) return;
+      var cur = parseInt(localStorage.getItem(_userId + "__ts") || "0") || 0;
+      if (cur > 0 && ts > cur)
+        localStorage.setItem(_userId + "__ts", String(ts));
+    } catch (e) {}
+  }
   function pushToFirebase(force) {
     if (!_db || !_userId) return Promise.resolve();
     if (identityMismatch("pushAll")) return Promise.resolve();
@@ -384,6 +407,7 @@
         ) {
           delete payload.notebook;
           delete oldPayload.notebook;
+          _stampLocalTs(payload._ts); // 送出前就記,頁面被關掉也不會漏
           return Promise.all([
             userRef().update(payload),
             userDataRef().update(oldPayload),
@@ -396,6 +420,7 @@
               payload.notebook = merged;
               oldPayload.notebook = merged;
               _recordNbMax(merged); // 更新本機歷史最大值
+              _stampLocalTs(payload._ts);
               return Promise.all([
                 userRef().update(payload),
                 userDataRef().update(oldPayload),
@@ -403,6 +428,7 @@
             },
           );
         }
+        _stampLocalTs(payload._ts);
         return Promise.all([
           userRef().update(payload),
           userDataRef().update(oldPayload),
@@ -498,7 +524,25 @@
   function syncOnLoad() {
     if (!_db || !_userId) return Promise.resolve();
     _syncing = true;
-    return readRemote()
+    // v667: 先只看 _ts 與 _meta (幾個位元組)。雲端沒有比較新 → 完全不用把整包抓下來。
+    return Promise.all([
+      userRef().child("_ts").once("value"),
+      userRef().child("_meta").once("value"),
+    ])
+      .then(function (r) {
+        var remoteTs = r[0].val() || 0;
+        var meta = r[1].val() || null;
+        var localTs =
+          parseInt(localStorage.getItem(_userId + "__ts") || "0") || 0;
+        var wipedAt =
+          parseInt(localStorage.getItem(_userId + "__wiped") || "0") || 0;
+        var needWipe = !!(meta && meta.wipe_ts && meta.wipe_ts > wipedAt);
+        if (!needWipe && remoteTs && localTs && remoteTs <= localTs) {
+          // 本機已經是最新 → 只回一份很小的資料,下面會走「推本機上去」那條
+          return { _ts: remoteTs, _meta: meta, _light: true };
+        }
+        return readRemote();
+      })
       .then(function (remote) {
         // v601: 先看有沒有遠端清除標記
         try {
@@ -643,82 +687,61 @@
       _syncing = false;
     }
 
-    // Listen on root (new path)
-    var firstRoot = true;
-    var unsubRoot = userRef().on("value", function (snap) {
-      if (firstRoot) {
-        firstRoot = false;
-        return;
-      }
-      handleUpdate(snap);
-    });
+    // ═══ v667:只監聽 _ts,真的有變才抓整包 ═══
+    //   以前是 userRef().on("value") 監聽整個節點,Firebase 一連上就把整包丟下來,
+    //   使用者的筆記如果有好幾 MB,等於每開一次網頁就下載好幾 MB → 免費額度一個月就爆。
+    //   現在:平常只收到幾個位元組的 _ts;只有雲端比本機新 (在別台裝置改過) 才抓整包。
+    var _legacyChecked = false;
+    function _localTs() {
+      return parseInt(localStorage.getItem(_userId + "__ts") || "0") || 0;
+    }
+    function _pullFull(reason) {
+      if (_syncing) return;
+      userRef()
+        .once("value")
+        .then(function (snap) {
+          console.log("[Sync] 拉回雲端資料 (" + reason + ")");
+          handleUpdate(snap);
+        })
+        .catch(function (e) {
+          console.warn("[Sync] 拉資料失敗", e && e.message);
+        });
+    }
+    var unsubTs = userRef()
+      .child("_ts")
+      .on("value", function (snap) {
+        var remoteTs = snap.val() || 0;
+        if (!remoteTs) {
+          // v667: 只有「這台從來沒同步過」才去看舊路徑;已經同步過的裝置不要因為
+          //   _ts 短暫讀不到就把整包 (好幾 MB) 重抓一次
+          if (_localTs() > 0 || _legacyChecked) return;
+          _legacyChecked = true;
+          // 根節點還沒有 _ts:可能是老帳號 (資料只在舊路徑 data/) → 抓一次舊路徑
+          userDataRef()
+            .once("value")
+            .then(function (ds) {
+              var val = ds.val();
+              if (!val || typeof val !== "object") return;
+              _syncing = true;
+              SYNC_KEYS.forEach(function (sk) {
+                if (val[sk] === undefined || val[sk] === null) return;
+                try {
+                  localStorage.setItem(_userId + "_" + sk, val[sk]);
+                } catch (e) {}
+              });
+              _syncing = false;
+              console.log("[Sync] 從舊路徑補資料 (老帳號)");
+            })
+            .catch(function () {});
+          return;
+        }
+        if (remoteTs <= _localTs()) return; // 本機已經是最新 → 完全不用下載
+        _pullFull("雲端有新資料");
+      });
     _listeners.push(function () {
-      userRef().off("value", unsubRoot);
+      userRef().child("_ts").off("value", unsubTs);
     });
 
-    // Also listen on data/ (old path from phone)
-    var firstData = true;
-    var unsubData = userDataRef().on("value", function (snap) {
-      if (firstData) {
-        firstData = false;
-        return;
-      }
-      if (_syncing) return;
-      var val = snap.val();
-      if (!val || typeof val !== "object") return;
-      // Old path doesn't have _ts, always apply if changed
-      _syncing = true;
-      var changed = false;
-      SYNC_KEYS.forEach(function (sk) {
-        if (val[sk] !== undefined && val[sk] !== null) {
-          var cur = localStorage.getItem(_userId + "_" + sk);
-          if (cur !== val[sk]) {
-            // 🛡 v283/v285:notebook 跟 examHistory 走 IDB,其他維持 localStorage
-            if (
-              sk === "notebook" &&
-              window._notebookIdbBridge &&
-              window._notebookIdbBridge.applyRemoteNotebook
-            ) {
-              window._notebookIdbBridge.applyRemoteNotebook(val[sk]);
-              try {
-                localStorage.setItem(_userId + "_" + sk, val[sk]);
-              } catch (e) {}
-              _recordNbMax(val[sk]); // v371 stale-device guard
-            } else if (
-              sk === "examHistory" &&
-              window._examHistoryIdbBridge &&
-              window._examHistoryIdbBridge.applyRemoteExamHistory
-            ) {
-              window._examHistoryIdbBridge.applyRemoteExamHistory(val[sk]);
-              try {
-                localStorage.setItem(_userId + "_" + sk, val[sk]);
-              } catch (e) {}
-            } else if (
-              sk === "wrongbook_state" &&
-              window._wrongbookIdbBridge &&
-              window._wrongbookIdbBridge.applyRemoteWrongbook
-            ) {
-              window._wrongbookIdbBridge.applyRemoteWrongbook(val[sk]);
-              try {
-                localStorage.setItem(_userId + "_" + sk, val[sk]);
-              } catch (e) {}
-            } else {
-              try {
-                localStorage.setItem(_userId + "_" + sk, val[sk]);
-              } catch (e) {}
-            }
-            changed = true;
-          }
-        }
-      });
-      if (changed) {
-        localStorage.setItem(_userId + "__ts", String(Date.now()));
-      }
-      _syncing = false;
-    });
-    _listeners.push(function () {
-      userDataRef().off("value", unsubData);
-    });
   }
 
   function stopListening() {
@@ -874,10 +897,13 @@
       if (identityMismatch("pushOne " + sk)) return Promise.resolve();
       var update = {};
       update[sk] = payload;
-      update._ts = Date.now();
+      var ts = Date.now();
+      update._ts = ts;
       var oldUpdate = {};
       oldUpdate[sk] = payload;
       _syncing = true;
+      // v667: 送出前就把本機時間戳對齊 (以前完全沒更新 → 下次開網頁又把整包重抓一次)
+      _stampLocalTs(ts);
       return Promise.all([
         userRef().update(update),
         userDataRef().update(oldUpdate),
