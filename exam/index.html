@@ -8,8 +8,8 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title data-site-title="{practiceIcon} {practiceName}"></title>
-    <script src="../site-config.js?v=v670"></script>
-    <script src="../site.js?v=v670"></script>
+    <script src="../site-config.js?v=v671"></script>
+    <script src="../site.js?v=v671"></script>
     <script>
       // 從首頁直接連到筆記本(#notebook):在頁面 paint 前就先隱藏考試 home,
       // 避免閃一下「考試首頁」再跳到筆記本
@@ -6391,8 +6391,8 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.1.0/style.css"
     />
-      <script src="../skin.js?v=v670"></script>
-    <link rel="stylesheet" href="../skin.css?v=v670" />
+      <script src="../skin.js?v=v671"></script>
+    <link rel="stylesheet" href="../skin.css?v=v671" />
   </head>
   <body>
     <!-- HEADER -->
@@ -9111,7 +9111,7 @@
         } catch (e) {}
         if (!codes || !codes.length) codes = SITE.SUBJ_CODES;
         for (var i = 0; i < codes.length; i++)
-          document.write('<script src="q-' + codes[i] + '.js?v=v670"><\/script>');
+          document.write('<script src="q-' + codes[i] + '.js?v=v671"><\/script>');
       })();
     </script>
     <script>
@@ -9125,6 +9125,67 @@
           window.QUESTIONS = all;
         }
       })();
+    </script>
+    <script>
+      // v671:詳解跟題目分家 — 題目 q-<科>.js (共 3.6 MB) 開頁就載,
+      //   詳解 e-<科>.js (一科 5~6 MB) 等使用者真的要看詳解才載。
+      //   載完之後直接把欄位貼回題目物件上,所以底下所有讀 q.explanation 的程式都不用改。
+      window.EXPL_LOADED = {};
+      var _explPromise = {};
+      function _explCode(x) {
+        if (!x) return "";
+        if (typeof x === "string") return x;
+        return x.subject || x._subj || "";
+      }
+      function _mergeExpl(code) {
+        var m = (window.EXPL_PARTS || {})[code];
+        if (!m) return false;
+        var list = (window.QUESTIONS_PARTS || {})[code] || [];
+        for (var i = 0; i < list.length; i++) {
+          var h = m[list[i].id];
+          if (h) Object.assign(list[i], h);
+        }
+        window.EXPL_LOADED[code] = true;
+        return true;
+      }
+      function ensureExpl(x) {
+        var code = _explCode(x);
+        if (!code) return Promise.resolve(false);
+        if (window.EXPL_LOADED[code]) return Promise.resolve(true);
+        // 走「載回整包 questions-data.js」的退路時,詳解本來就在題目裡,不用再抓
+        if (!(window.QUESTIONS_PARTS || {})[code]) return Promise.resolve(false);
+        if (_explPromise[code]) return _explPromise[code];
+        _explPromise[code] = new Promise(function (resolve) {
+          var s = document.createElement("script");
+          s.src = "e-" + code + ".js";
+          s.async = true;
+          s.onload = function () {
+            resolve(_mergeExpl(code));
+          };
+          s.onerror = function () {
+            console.warn("[expl] 載不到 e-" + code + ".js");
+            _explPromise[code] = null; // 讓下次還能重試
+            resolve(false);
+          };
+          document.head.appendChild(s);
+        });
+        return _explPromise[code];
+      }
+      // 一份題目清單 → 先把會用到的科目詳解在背景抓起來 (不等它)
+      function preloadExplFor(list) {
+        try {
+          var seen = {};
+          (list || []).forEach(function (q) {
+            var c = _explCode(q);
+            if (c && !seen[c]) {
+              seen[c] = 1;
+              ensureExpl(c);
+            }
+          });
+        } catch (e) {}
+      }
+      window.ensureExpl = ensureExpl;
+      window.preloadExplFor = preloadExplFor;
     </script>
     <script>
       // 分科檔一個都沒載到 → 同步載回整包 (document.write 保證在下面的程式跑之前就位)
@@ -9255,6 +9316,7 @@
 
       // Practice state
       let practiceList = [];
+ preloadExplFor(practiceList); // v671:背景把這幾科的詳解抓起來
       let practiceIdx = 0;
       let answered = false;
       let editingId = null;
@@ -9880,6 +9942,7 @@
         }
         activeTopic = null;
         practiceList = _applyPracticeSort(list);
+        preloadExplFor(practiceList); // v671:背景把這幾科的詳解抓起來
         practiceIdx = 0;
         resetPracticeScore();
         clearLastPos();
@@ -10026,6 +10089,7 @@
         try {
           if (Array.isArray(practiceList) && practiceList.length) {
             practiceList = _applyPracticeSort(practiceList);
+            preloadExplFor(practiceList); // v671:背景把這幾科的詳解抓起來
             practiceIdx = 0;
             if (typeof resetPracticeScore === "function") resetPracticeScore();
             if (typeof updatePracticeScoreUI === "function")
@@ -10054,6 +10118,7 @@
           return;
         }
         practiceList = _applyPracticeSort(list);
+        preloadExplFor(practiceList); // v671:背景把這幾科的詳解抓起來
         practiceIdx = 0;
         resetPracticeScore();
         clearLastPos();
@@ -10255,11 +10320,21 @@
         },
       };
       // v449:相似題 modal(每題可選選項、選完展開詳解)
-      function openSimilarModal(qid) {
+      async function openSimilarModal(qid) {
         const sims = _normalizeSims(SIMILAR_QS[qid]);
         if (!sims.length) return;
         const srcQ = QS.find((q) => q.id === qid);
         if (!srcQ) return;
+        // v671:類似題視窗裡會展開詳解 → 先把這些科目的詳解檔載好
+        try {
+          const codes = {};
+          sims.forEach((s) => {
+            const sq = QS.find((q) => q.id === (s.id || s));
+            if (sq && sq.subject) codes[sq.subject] = 1;
+          });
+          codes[srcQ.subject] = 1;
+          await Promise.all(Object.keys(codes).map(ensureExpl));
+        } catch (e) {}
 
         const items = sims
           .map((simEntry, i) => {
@@ -11647,6 +11722,7 @@ ${SITE.ai.explExamples}
         }
         // 單題 practiceList — 從我的討論跳過去看那一題
         practiceList = [q];
+        preloadExplFor(practiceList); // v671:背景把這幾科的詳解抓起來
         practiceIdx = 0;
         activeTopic = null;
         examMode = false;
@@ -12005,6 +12081,7 @@ ${SITE.ai.explExamples}
           practiceResults = pos.practiceResults || {};
           qgridSkipped = pos.qgridSkipped || {};
           practiceList = list;
+          preloadExplFor(practiceList); // v671:背景把這幾科的詳解抓起來
           practiceIdx = Math.min(pos.idx, list.length - 1);
           // v445:恢復「分類練習」flag,重整/reload 後繼續做題才會累加 classCount
           _isClassPractice = !!pos.isClass;
@@ -12108,6 +12185,7 @@ ${SITE.ai.explExamples}
         qgridSkipped = {};
         activeTopic = null;
         practiceList = qs;
+        preloadExplFor(practiceList); // v671:背景把這幾科的詳解抓起來
         practiceIdx = 0;
         resetPracticeScore();
         clearLastPos();
@@ -12132,6 +12210,7 @@ ${SITE.ai.explExamples}
         qgridSkipped = {};
         activeTopic = null;
         practiceList = list;
+        preloadExplFor(practiceList); // v671:背景把這幾科的詳解抓起來
         practiceIdx = 0;
         resetPracticeScore();
         clearLastPos();
@@ -12515,6 +12594,8 @@ ${SITE.ai.explExamples}
         document.getElementById("btn-next").style.display = "block";
         document.getElementById("btn-edit-expl").style.display = "block";
 
+        // v671:詳解在另一個檔,先確定載好 (通常在按下答案之前就背景載完了,這行是保險)
+        await ensureExpl(q);
         // Show expl immediately if exists, or show request button
         const st2 = getS(q.id);
         const expl2 = st2.expl_override ?? q.explanation ?? "";
@@ -12694,6 +12775,7 @@ ${SITE.ai.explExamples}
         const list = practiceList.filter((q) => ids.includes(q.id));
         if (!list.length) return;
         practiceList = list;
+        preloadExplFor(practiceList); // v671:背景把這幾科的詳解抓起來
         practiceIdx = 0;
         resetPracticeScore();
         clearLastPos();
@@ -12800,6 +12882,7 @@ ${SITE.ai.explExamples}
         qgridSkipped = {};
         resetPracticeScore();
         practiceList = _applyPracticeSort(list);
+        preloadExplFor(practiceList); // v671:背景把這幾科的詳解抓起來
         practiceIdx = 0;
         clearLastPos();
         showPractice();
@@ -14020,6 +14103,12 @@ ${_markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
         const qid = _reviewEntry.qids[idx];
         const q =
           typeof QS !== "undefined" ? QS.find((x) => x.id === qid) : null;
+        // v671:詳解在另一個檔;還沒載好就先畫題目,載好之後自己重畫一次
+        if (q && q.subject && !window.EXPL_LOADED[q.subject]) {
+          ensureExpl(q).then(function (ok) {
+            if (ok && _reviewIdx === idx) renderReviewQ(idx);
+          });
+        }
         const el = document.getElementById("exam-review-detail");
         if (!q) {
           el.innerHTML = `<div style="color:#9ca3af;text-align:center;padding:2rem">找不到題目資料 (${escapeHtml(qid || "")})</div>`;
@@ -14631,6 +14720,7 @@ ${sBtn("learning", "❓", "一知半解", "#eab308")}
         examMode = false;
         examAnswers = {};
         practiceList = wrongList;
+        preloadExplFor(practiceList); // v671:背景把這幾科的詳解抓起來
         practiceIdx = 0;
         resetPracticeScore();
         clearLastPos();
@@ -18491,6 +18581,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
 
       async function addQToNotebook(q, opts) {
         opts = opts || {};
+        await ensureExpl(q); // v671:AI 整理時要讀詳解,先確定詳解檔載好
         const _t0 = _now();
         // v408:讓 applyAIDecision 的 toast 能顯示總耗時
         window._addQT0 = _t0;
@@ -24234,6 +24325,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
           return;
         }
         practiceList = [q];
+        preloadExplFor(practiceList); // v671:背景把這幾科的詳解抓起來
         practiceIdx = 0;
         examMode = false;
         examAnswers = {};
@@ -28713,6 +28805,17 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
       }
 
       function showWrongbook() {
+        // v671:錯題本會看詳解 → 背景先把「做過的科目」的詳解抓起來
+        try {
+          const codes = {};
+          Object.keys(qState || {}).forEach(function (id) {
+            const m = /^([a-z0-9]+)-/.exec(id);
+            if (m) codes[m[1]] = 1;
+          });
+          Object.keys(codes).forEach(function (c) {
+            ensureExpl(c);
+          });
+        } catch (e) {}
         closeAllOverlays();
         document.getElementById("screen-home").style.display = "none";
         document.getElementById("screen-practice").style.display = "none";
@@ -29340,6 +29443,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
         examMode = false;
         examAnswers = {};
         practiceList = list;
+        preloadExplFor(practiceList); // v671:背景把這幾科的詳解抓起來
         practiceIdx = startIdx || 0;
         resetPracticeScore();
         clearLastPos();
@@ -29584,15 +29688,15 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-    <script src="../visitor-log.js?v=v670"></script>
+    <script src="../visitor-log.js?v=v671"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-    <script src="../sync.js?v=v670"></script>
-    <script src="comment-system.js?v=v670"></script>
-    <script src="../auth.js?v=v670"></script>
-    <script src="../keysync.js?v=v670"></script>
-    <script src="../migration.js?v=v670"></script>
-    <script src="../subscription.js?v=v670"></script>
-    <script src="../device-guard.js?v=v670"></script>
+    <script src="../sync.js?v=v671"></script>
+    <script src="comment-system.js?v=v671"></script>
+    <script src="../auth.js?v=v671"></script>
+    <script src="../keysync.js?v=v671"></script>
+    <script src="../migration.js?v=v671"></script>
+    <script src="../subscription.js?v=v671"></script>
+    <script src="../device-guard.js?v=v671"></script>
     <script>
       if (typeof DentalSync !== "undefined") {
         // v413:等 loadState 從 IDB hydrate 完才 init sync,不然 sync 拉 remote 寫進 qState 後會被 loadState 用 IDB 舊版蓋掉
@@ -30095,7 +30199,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
       © 2026 <span data-site="fullName"></span> · <strong>版權所有翻印必究</strong> ·
       未經授權禁止轉載、複製、爬取內容
     </footer>
-      <script src="../tour.js?v=v670" defer></script>
-    <script src="../update.js?v=v670" defer></script>
+      <script src="../tour.js?v=v671" defer></script>
+    <script src="../update.js?v=v671" defer></script>
 </body>
 </html>
