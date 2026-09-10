@@ -17,8 +17,9 @@
     "#tour-card button{font:inherit;font-size:.84rem;font-weight:700;border-radius:999px;padding:.4rem .95rem;cursor:pointer;border:1.5px solid #e5e7eb;background:#fff;color:#374151}" +
     "#tour-card .tc-next{background:#7c3aed;border-color:#7c3aed;color:#fff;margin-left:auto}" +
     "#tour-card .tc-skip{border:0;color:#9ca3af;padding-left:.2rem}" +
-    "#tour-card::before{content:'';position:absolute;width:14px;height:14px;background:#fff;transform:rotate(45deg);left:28px}" +
+    "#tour-card::before{content:'';position:absolute;width:14px;height:14px;background:#fff;transform:translateX(-50%) rotate(45deg);left:var(--tc-ax,35px)}" +
     "#tour-card.below::before{top:-7px}#tour-card.above::before{bottom:-7px}" +
+    "#tour-card.noarrow::before{display:none}" +
     "#tour-help{position:fixed;left:12px;bottom:62px;z-index:12000;width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(0,0,0,.12);background:#fff;box-shadow:0 3px 10px rgba(0,0,0,.15);cursor:pointer;font-size:1.1rem;display:grid;place-items:center;padding:0;font-family:system-ui}" +
     "#tour-help:hover{transform:scale(1.06)}" +
     "@media (max-width:899px){#tour-help{left:0;bottom:14px;top:auto;width:28px;height:32px;border-radius:0 12px 12px 0;border-left:0;font-size:.9rem;opacity:.8;transition:bottom .2s}}" + // v624: HUA — 手機放左下角,不要卡在左邊中間
@@ -626,6 +627,18 @@
     els.card.className = below ? "below" : "above";
     els.card.style.left = left + "px";
     els.card.style.top = top + "px";
+    // v664: 箭頭指向目標的水平中心 (以前寫死在卡片左邊 28px,卡片被推開時就指到空氣)
+    var cx = r.left + r.width / 2;
+    var ax = cx - left;
+    var gapOk = below
+      ? Math.abs(top - r.bottom) < 60
+      : Math.abs(r.top - (top + ch)) < 60;
+    var overlapX = r.right > left + 6 && r.left < left + cw - 6;
+    els.card.classList.toggle("noarrow", !(gapOk && overlapX));
+    els.card.style.setProperty(
+      "--tc-ax",
+      Math.max(16, Math.min(ax, cw - 16)) + "px",
+    );
   }
   // v636: 暫時露出目標 — (1) reveal 步驤:目標被 JS 藏起來 (display:none) 就先顯示;(2) 手機收合頁首:把頁首展開 (nav-open)。下一步或結束時 unreveal() 還原
   function reveal(s) {
