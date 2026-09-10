@@ -8,8 +8,8 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title data-site-title="{practiceIcon} {practiceName}"></title>
-    <script src="../site-config.js?v=v665"></script>
-    <script src="../site.js?v=v665"></script>
+    <script src="../site-config.js?v=v666"></script>
+    <script src="../site.js?v=v666"></script>
     <script>
       // 從首頁直接連到筆記本(#notebook):在頁面 paint 前就先隱藏考試 home,
       // 避免閃一下「考試首頁」再跳到筆記本
@@ -6375,8 +6375,8 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.1.0/style.css"
     />
-      <script src="../skin.js?v=v665"></script>
-    <link rel="stylesheet" href="../skin.css?v=v665" />
+      <script src="../skin.js?v=v666"></script>
+    <link rel="stylesheet" href="../skin.css?v=v666" />
   </head>
   <body>
     <!-- HEADER -->
@@ -8310,7 +8310,7 @@
               target="_blank"
               style="color: #7c3aed"
               >點這裡免費申請</a
-            >（5 分鐘、不用綁卡、每天 1500 次免費）
+            >（5 分鐘、不用綁卡、有免費額度）
           </p>
           <label
             style="
@@ -9095,7 +9095,7 @@
         } catch (e) {}
         if (!codes || !codes.length) codes = SITE.SUBJ_CODES;
         for (var i = 0; i < codes.length; i++)
-          document.write('<script src="q-' + codes[i] + '.js?v=v665"><\/script>');
+          document.write('<script src="q-' + codes[i] + '.js?v=v666"><\/script>');
       })();
     </script>
     <script>
@@ -16753,7 +16753,15 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
         return [];
       }
       function setGeminiKeys(arr) {
-        const clean = (arr || []).map((k) => (k || "").trim()).filter(Boolean);
+        let clean = (arr || []).map((k) => (k || "").trim()).filter(Boolean);
+        // v666: 把 GitHub token 貼到 Gemini 這一格 → 不收
+        const wrong = clean.filter((k) => looksLikeGithubToken(k));
+        if (wrong.length) {
+          clean = clean.filter((k) => !looksLikeGithubToken(k));
+          try {
+            showToast("那一串是 GitHub token,不是 Gemini 金鑰,沒有存進去");
+          } catch (e) {}
+        }
         localStorage.setItem(GEMINI_KEYS_LS, JSON.stringify(clean));
         // 同步保留第 1 把到舊欄位（向下相容）
         if (clean.length > 0) localStorage.setItem(GEMINI_KEY_LS, clean[0]);
@@ -16865,10 +16873,35 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
       window._geminiErrorMsg = _geminiErrorMsg;
       const GITHUB_TOKEN_LS = uKey("github_token");
       const GITHUB_REPO_LS = uKey("github_repo");
+      // v666: 兩把鑰匙的形狀檢查 — 以前有人把 Gemini 金鑰貼進 GitHub token 那一格,
+      //   之後每次打開設定都看到一串莫名其妙的東西,而且貼圖一定失敗。
+      function looksLikeGeminiKey(v) {
+        return /^AIza[\w-]{10,}$/.test((v || "").trim());
+      }
+      function looksLikeGithubToken(v) {
+        v = (v || "").trim();
+        return (
+          /^(ghp_|github_pat_|gho_|ghs_)/.test(v) || /^[0-9a-f]{40}$/.test(v)
+        );
+      }
       function getGithubToken() {
-        return localStorage.getItem(GITHUB_TOKEN_LS) || "";
+        const v = localStorage.getItem(GITHUB_TOKEN_LS) || "";
+        // 放錯格子的舊資料:當作沒有 (順手清掉,不然每次都跳出來嚇人)
+        if (v && looksLikeGeminiKey(v)) {
+          localStorage.removeItem(GITHUB_TOKEN_LS);
+          return "";
+        }
+        return v;
       }
       function setGithubToken(t) {
+        t = (t || "").trim();
+        if (t && looksLikeGeminiKey(t)) {
+          showToast("這看起來是 Gemini 金鑰,不是 GitHub token,沒有存進去");
+          return;
+        }
+        if (t && !looksLikeGithubToken(t)) {
+          showToast("GitHub token 通常是 ghp_ 或 github_pat_ 開頭,再確認一下");
+        }
         if (t) localStorage.setItem(GITHUB_TOKEN_LS, t);
         else localStorage.removeItem(GITHUB_TOKEN_LS);
       }
@@ -25643,14 +25676,14 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
                         <p style="margin-top:.7rem"><strong style="color:#7c3aed">完整使用前需要 2 個免費設定</strong>，每個約 5 分鐘：</p>
                         <div style="background:#faf5ff;border:1.5px solid #e9d5ff;border-radius:10px;padding:.8rem 1rem;margin:.8rem 0">
                           <div style="font-weight:800;color:#6b21a8;margin-bottom:.3rem">🤖 1. Gemini API key</div>
-                          <div style="font-size:.85rem;color:#6b7280">給 AI 整理筆記用，<strong>每天 1500 次免費</strong>，不用綁卡</div>
+                          <div style="font-size:.85rem;color:#6b7280">給 AI 整理筆記用，<strong>有免費額度、不用綁信用卡</strong>（每天可用次數以 Google 公告為準）</div>
                         </div>
                         <div style="background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:10px;padding:.8rem 1rem;margin:.8rem 0">
                           <div style="font-weight:800;color:#0369a1;margin-bottom:.3rem">📷 2. GitHub Token</div>
                           <div style="font-size:.85rem;color:#6b7280">給筆記貼截圖用，<strong>無限免費</strong>，存到你自己的 GitHub repo</div>
                         </div>
                         <p style="font-size:.82rem;color:#92400e;background:#fffbeb;border-radius:8px;padding:.55rem .8rem;margin-top:.7rem">
-                          ⚠️ 這兩個設定都會綁定在你的使用者帳號（${escapeHtml(localStorage.getItem("dental_cur_user") || "未知")}）下，<strong>同 user 不同裝置自動同步</strong>，不會給其他人用。
+                          ⚠️ 這兩個設定綁在你的帳號上，<strong>不同裝置、不同科目網站都會自動同步</strong>，別人看不到也用不到。
                         </p>
                         <p style="font-size:.8rem;color:#9ca3af;margin-top:.6rem">不想現在設定可以按「跳過」，之後在筆記本右上 ⚙️ AI 設定 找到。</p>
                       `;
@@ -29492,15 +29525,15 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-    <script src="../visitor-log.js?v=v665"></script>
+    <script src="../visitor-log.js?v=v666"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-    <script src="../sync.js?v=v665"></script>
-    <script src="comment-system.js?v=v665"></script>
-    <script src="../auth.js?v=v665"></script>
-    <script src="../keysync.js?v=v665"></script>
-    <script src="../migration.js?v=v665"></script>
-    <script src="../subscription.js?v=v665"></script>
-    <script src="../device-guard.js?v=v665"></script>
+    <script src="../sync.js?v=v666"></script>
+    <script src="comment-system.js?v=v666"></script>
+    <script src="../auth.js?v=v666"></script>
+    <script src="../keysync.js?v=v666"></script>
+    <script src="../migration.js?v=v666"></script>
+    <script src="../subscription.js?v=v666"></script>
+    <script src="../device-guard.js?v=v666"></script>
     <script>
       if (typeof DentalSync !== "undefined") {
         // v413:等 loadState 從 IDB hydrate 完才 init sync,不然 sync 拉 remote 寫進 qState 後會被 loadState 用 IDB 舊版蓋掉
@@ -30003,7 +30036,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
       © 2026 <span data-site="fullName"></span> · <strong>版權所有翻印必究</strong> ·
       未經授權禁止轉載、複製、爬取內容
     </footer>
-      <script src="../tour.js?v=v665" defer></script>
-    <script src="../update.js?v=v665" defer></script>
+      <script src="../tour.js?v=v666" defer></script>
+    <script src="../update.js?v=v666" defer></script>
 </body>
 </html>

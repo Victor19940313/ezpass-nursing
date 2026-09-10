@@ -40,11 +40,22 @@
       localStorage.setItem(uid() + "_" + k, v);
     } catch (e) {}
   }
+  // v666: 形狀檢查 — 放錯格子的值 (Gemini 金鑰跑到 GitHub token) 不要同步出去,
+  //   不然一台裝置貼錯,每一站都會看到那串怪東西。
+  function sane(name, v) {
+    v = (v || "").trim();
+    if (!v) return false;
+    var isGemini = /^AIza[\w-]{10,}$/.test(v);
+    var isGithub = /^(ghp_|github_pat_|gho_|ghs_)/.test(v) || /^[0-9a-f]{40}$/.test(v);
+    if (name === "github_token") return !isGemini;
+    if (name === "gemini_api_key" || name === "gemini_paid_key") return !isGithub;
+    return true;
+  }
   function localPrefs() {
     var o = {};
     KEYS.forEach(function (k) {
       var v = lsGet(k);
-      if (v) o[k] = v;
+      if (v && sane(k, v)) o[k] = v;
     });
     return o;
   }
@@ -83,7 +94,7 @@
     var remote = j.prefs || {};
     var applied = [];
     KEYS.forEach(function (k) {
-      if (!remote[k]) return;
+      if (!remote[k] || !sane(k, remote[k])) return;
       var cur = lsGet(k);
       if (cur === remote[k]) return;
       // 雲端比較新,或本機根本沒有 → 用雲端的
