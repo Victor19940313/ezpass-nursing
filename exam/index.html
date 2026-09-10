@@ -8,8 +8,8 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title data-site-title="{practiceIcon} {practiceName}"></title>
-    <script src="../site-config.js?v=v669"></script>
-    <script src="../site.js?v=v669"></script>
+    <script src="../site-config.js?v=v670"></script>
+    <script src="../site.js?v=v670"></script>
     <script>
       // 從首頁直接連到筆記本(#notebook):在頁面 paint 前就先隱藏考試 home,
       // 避免閃一下「考試首頁」再跳到筆記本
@@ -6391,8 +6391,8 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.1.0/style.css"
     />
-      <script src="../skin.js?v=v669"></script>
-    <link rel="stylesheet" href="../skin.css?v=v669" />
+      <script src="../skin.js?v=v670"></script>
+    <link rel="stylesheet" href="../skin.css?v=v670" />
   </head>
   <body>
     <!-- HEADER -->
@@ -6943,7 +6943,7 @@
               flex-shrink: 0;
             "
           >
-            🔗 找 10 題最像的
+            🔗 找 10 題類似題
           </button>
         </div>
         <div class="q-text" id="pq-text"></div>
@@ -9111,7 +9111,7 @@
         } catch (e) {}
         if (!codes || !codes.length) codes = SITE.SUBJ_CODES;
         for (var i = 0; i < codes.length; i++)
-          document.write('<script src="q-' + codes[i] + '.js?v=v669"><\/script>');
+          document.write('<script src="q-' + codes[i] + '.js?v=v670"><\/script>');
       })();
     </script>
     <script>
@@ -10206,13 +10206,13 @@
               ? SIMILAR_QS[qid] || []
               : [];
           if (!sims.length) {
-            alert("這題沒有相似題資料。qid=" + qid);
+            alert("這題沒有類似題資料。qid=" + qid);
             return;
           }
           openSimilarModal(qid);
         } catch (e) {
           console.warn("openSimilarForCurrent fail", e);
-          alert("相似題功能出錯: " + (e && e.message ? e.message : e));
+          alert("類似題功能出錯: " + (e && e.message ? e.message : e));
         }
       }
 
@@ -10337,7 +10337,7 @@
                       <div class="sim-box">
                         <div class="sim-head" style="padding:.9rem 1.1rem;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#0d9488,#14b8a6);color:white;border-radius:14px 14px 0 0">
                           <div>
-                            <div style="font-size:1rem;font-weight:700">🔗 相似題 (${sims.length})</div>
+                            <div style="font-size:1rem;font-weight:700">🔗 類似題 (${sims.length})</div>
                             <div style="font-size:.72rem;opacity:.85;margin-top:.15rem">來自 ${srcQ.meta || qid}・${srcQ.topic || ""}</div>
                           </div>
                           <button type="button" class="sim-x" onclick="closeSimilarModal()" style="background:rgba(255,255,255,.2);border:none;color:white;width:34px;height:34px;border-radius:50%;font-size:1.1rem;cursor:pointer;font-weight:700">✕</button>
@@ -12873,7 +12873,7 @@ ${SITE.ai.explExamples}
               `onclick="scrollExamAddNotebook('${q.id}')"`,
               "small",
             );
-            const simBtn = `<button onclick="openSimilarModal('${q.id}')" style="background:#ecfdf5;color:#0d9488;border:1.5px solid #a7f3d0;border-radius:6px;padding:.22rem .55rem;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap">🔗 找 10 題最像的</button>`;
+            const simBtn = `<button onclick="openSimilarModal('${q.id}')" style="background:#ecfdf5;color:#0d9488;border:1.5px solid #a7f3d0;border-radius:6px;padding:.22rem .55rem;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap">🔗 找 10 題類似題</button>`;
             const actionsHtml = `<div style="display:flex;gap:.3rem;flex-wrap:wrap;align-items:center;margin-top:.5rem;padding-top:.5rem;border-top:1px dashed #e5e7eb">
                           ${nbBtn}
                           ${simBtn}
@@ -14145,7 +14145,7 @@ ${sBtn("learning", "❓", "一知半解", "#eab308")}
                       ${markRowHtml}
                       <div style="display:flex;gap:.4rem;margin-bottom:.6rem;flex-wrap:wrap">
                         ${_addNbBtnHTML(q.id, 'onclick="reviewAddToNotebook()"', "large")}
-                        <button onclick="openSimilarModal('${q.id}')" style="background:#ecfdf5;color:#0d9488;border:1.5px solid #a7f3d0;border-radius:8px;padding:.35rem .7rem;font-size:.82rem;font-weight:700;cursor:pointer">🔗 找 10 題最像的</button>
+                        <button onclick="openSimilarModal('${q.id}')" style="background:#ecfdf5;color:#0d9488;border:1.5px solid #a7f3d0;border-radius:8px;padding:.35rem .7rem;font-size:.82rem;font-weight:700;cursor:pointer">🔗 找 10 題類似題</button>
                         <button onclick="reviewPeekNotebook()" style="background:#ecfeff;color:#0369a1;border:1.5px solid #7dd3fc;border-radius:8px;padding:.35rem .7rem;font-size:.82rem;font-weight:700;cursor:pointer">📖 偷看筆記</button>
                       </div>
                       <div style="font-size:.95rem;line-height:1.7;color:#1f2937;margin-bottom:.8rem">${escapeHtml(q.question || "")}</div>
@@ -29584,15 +29584,15 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-    <script src="../visitor-log.js?v=v669"></script>
+    <script src="../visitor-log.js?v=v670"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-    <script src="../sync.js?v=v669"></script>
-    <script src="comment-system.js?v=v669"></script>
-    <script src="../auth.js?v=v669"></script>
-    <script src="../keysync.js?v=v669"></script>
-    <script src="../migration.js?v=v669"></script>
-    <script src="../subscription.js?v=v669"></script>
-    <script src="../device-guard.js?v=v669"></script>
+    <script src="../sync.js?v=v670"></script>
+    <script src="comment-system.js?v=v670"></script>
+    <script src="../auth.js?v=v670"></script>
+    <script src="../keysync.js?v=v670"></script>
+    <script src="../migration.js?v=v670"></script>
+    <script src="../subscription.js?v=v670"></script>
+    <script src="../device-guard.js?v=v670"></script>
     <script>
       if (typeof DentalSync !== "undefined") {
         // v413:等 loadState 從 IDB hydrate 完才 init sync,不然 sync 拉 remote 寫進 qState 後會被 loadState 用 IDB 舊版蓋掉
@@ -30095,7 +30095,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
       © 2026 <span data-site="fullName"></span> · <strong>版權所有翻印必究</strong> ·
       未經授權禁止轉載、複製、爬取內容
     </footer>
-      <script src="../tour.js?v=v669" defer></script>
-    <script src="../update.js?v=v669" defer></script>
+      <script src="../tour.js?v=v670" defer></script>
+    <script src="../update.js?v=v670" defer></script>
 </body>
 </html>
