@@ -311,6 +311,12 @@
     // 首頁相對路徑: 從子目錄 (exam/、ya3/) 要回上一層
     const depth = (location.pathname.match(/\//g) || []).length - 1;
     const base = depth > 0 ? "../".repeat(depth) : "./";
+    // v662: 把現在登入的信箱寫出來 (訂閱綁信箱,登錯帳號會看起來像「沒開通」)
+    let who = "(未登入)";
+    try {
+      const u = window.Auth && window.Auth.getUser && window.Auth.getUser();
+      if (u && u.email) who = u.email;
+    } catch (e) {}
     el = document.createElement("div");
     el.id = id;
     el.dataset.mode = "locked";
@@ -320,6 +326,7 @@
         <h2>${title}</h2>
         <p>${desc}<br><b>妳的筆記本、標記題、做題紀錄都保留著</b>,開通後原樣恢復。</p>
         <a href="${base}subscribe.html" class="sbo-btn">前往訂閱</a>
+        <p class="sbo-sub">目前登入:<b>${who}</b><br>訂閱是綁信箱的,如果你在別的站已經是會員,請確認這裡是同一個信箱。</p>
         <p class="sbo-sub"><a href="${base}rewards.html">有兌換序號?</a> · <a href="${base}index.html">回首頁</a></p>
       </div>`;
     document.body.appendChild(el);
