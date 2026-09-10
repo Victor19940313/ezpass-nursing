@@ -821,15 +821,40 @@
       await mergeFeatured(qid, comments);
       renderCommentSection(qid, body, comments, hiddenSet, bm.set);
       // 聽 realtime 變化 (只有第一次展開才綁)
-      const ref = fbDb().ref(`${FB_ROOT_COMMENTS}/${qid}`);
+      // v674 (萬人審計 #12):以前用 on("value") — 只要有人留一則新的,
+      //   Firebase 會把「整串留言」重送給每一個正在看這題的人。
+      //   熱門題 200 則留言 × 幾千人在看 = 一則留言噴掉幾百 MB。
+      //   改成 child_added / child_changed / child_removed:只送「變動的那一則」。
+      const live = new Map();
+      (comments || []).forEach((c) => live.set(c.cid, c));
+      //   留言 id 是 Firebase push 產生的 (本身就照時間排),所以直接 limitToLast 就好,
+      //   不用 orderByChild — 那個要額外建索引,沒建的話反而會整包下載再自己排。
+      const ref = fbDb().ref(`${FB_ROOT_COMMENTS}/${qid}`).limitToLast(200);
       ref.off();
-      ref.on("value", async (snap) => {
-        const obj = snap.val() || {};
-        const list = Object.entries(obj).map(([cid, v]) => ({ cid, ...v }));
-        const hs = await loadHiddenSet();
-        const bm2 = await loadBookmarkSet();
-        await mergeFeatured(qid, list);
-        renderCommentSection(qid, body, list, hs, bm2.set);
+      let repaintTimer = null;
+      const repaint = () => {
+        // 短時間內連續變動 (例如別人連按幾次讚) 只重畫一次
+        if (repaintTimer) clearTimeout(repaintTimer);
+        repaintTimer = setTimeout(async () => {
+          const list = Array.from(live.values());
+          const hs = await loadHiddenSet();
+          const bm2 = await loadBookmarkSet();
+          await mergeFeatured(qid, list);
+          renderCommentSection(qid, body, list, hs, bm2.set);
+        }, 180);
+      };
+      ref.on("child_added", (snap) => {
+        if (live.has(snap.key)) return; // 一開始就抓過的不用再畫一次
+        live.set(snap.key, { cid: snap.key, ...(snap.val() || {}) });
+        repaint();
+      });
+      ref.on("child_changed", (snap) => {
+        live.set(snap.key, { cid: snap.key, ...(snap.val() || {}) });
+        repaint();
+      });
+      ref.on("child_removed", (snap) => {
+        live.delete(snap.key);
+        repaint();
       });
       // v575: 精選旗標變了也重畫
       const fref = fbDb().ref(`${FB_FEATURED}/${qid}`);
