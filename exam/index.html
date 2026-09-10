@@ -8,8 +8,8 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title data-site-title="{practiceIcon} {practiceName}"></title>
-    <script src="../site-config.js?v=v658"></script>
-    <script src="../site.js?v=v658"></script>
+    <script src="../site-config.js?v=v661"></script>
+    <script src="../site.js?v=v661"></script>
     <script>
       // 從首頁直接連到筆記本(#notebook):在頁面 paint 前就先隱藏考試 home,
       // 避免閃一下「考試首頁」再跳到筆記本
@@ -2252,6 +2252,62 @@
         text-indent: -1.6em;
         margin: 0 0 0.5em 0;
         line-height: 1.7;
+      }
+      /* ═══ v661-sim:十題類似題視窗 (手機也好滑、關閉鍵不會被頁首擋住) ═══ */
+      .sim-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        /* 頁首 sticky 是 11000,一定要比它高,不然「選單」那一行會蓋住關閉鍵 */
+        z-index: 12600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem;
+      }
+      .sim-modal .sim-box {
+        background: #f8fafc;
+        border-radius: 14px;
+        max-width: 680px;
+        width: 100%;
+        max-height: 92vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+      .sim-modal .sim-scroll {
+        padding: 0.75rem;
+        overflow-y: auto;
+        flex: 1;
+        /* 滑到底不要把底下的頁面一起帶著滑 */
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+      }
+      /* 視窗打開時鎖住背景,手指才不會滑到後面的題目 */
+      html.sim-open,
+      body.sim-open {
+        overflow: hidden;
+      }
+      @media (max-width: 760px) {
+        .sim-modal {
+          padding: 0;
+        }
+        .sim-modal .sim-box {
+          max-height: 100%;
+          height: 100%;
+          border-radius: 0;
+        }
+        .sim-modal .sim-head {
+          border-radius: 0 !important;
+          padding-top: calc(0.9rem + env(safe-area-inset-top)) !important;
+        }
+        .sim-modal .sim-head .sim-x {
+          width: 40px !important;
+          height: 40px !important;
+        }
+        .sim-modal .sim-scroll {
+          padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+        }
       }
       .cross-links,
       .similar-qs {
@@ -4849,6 +4905,120 @@
       details.nb-toc-subj:not([open]) > summary .nb-fold-arrow {
         transform: rotate(-90deg);
       }
+      /* ═══ v660-mobile:手機 / 平板操作性 ═══ */
+      /* A. 章節收合:整列變高、右邊放一個會轉的小箭頭 (HUA: 收合的地方很難按) */
+      details.nb-toc-subj > summary,
+      details.nb-toc-group > summary,
+      details.nb-toc-subgroup > summary {
+        position: relative;
+        padding-right: 1.6rem !important;
+      }
+      details.nb-toc-subj > summary::after,
+      details.nb-toc-group > summary::after,
+      details.nb-toc-subgroup > summary::after {
+        content: "▾";
+        position: absolute;
+        right: 0.35rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.9rem;
+        line-height: 1;
+        opacity: 0.55;
+        transition: transform 0.18s;
+        pointer-events: none;
+      }
+      details.nb-toc-subj:not([open]) > summary::after,
+      details.nb-toc-group:not([open]) > summary::after,
+      details.nb-toc-subgroup:not([open]) > summary::after {
+        transform: translateY(-50%) rotate(-90deg);
+      }
+      /* C. 筆記本表格比畫面寬 → 讓它自己可以左右滑,不要被切掉 */
+      .nb-chapter-content table,
+      .nb-table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      /* B. 手指操作的裝置:按鈕加大到好按 (滑鼠不受影響) */
+      @media (pointer: coarse) {
+        .btn-mode,
+        .nav-toggle,
+        .wb-chip,
+        .bf-chip,
+        .chip,
+        .btn-mark,
+        .btn-flag,
+        .mark-row button,
+        .nb-nav-btn,
+        .nb-toc-item,
+        details.nb-toc-subj > summary,
+        details.nb-toc-group > summary,
+        details.nb-toc-subgroup > summary {
+          min-height: 40px;
+          display: flex;
+          align-items: center;
+        }
+        .btn-mode,
+        .nav-toggle,
+        .wb-chip,
+        .bf-chip,
+        .chip {
+          font-size: 0.86rem;
+        }
+        details.nb-toc-subgroup > summary,
+        details.nb-toc-group > summary,
+        details.nb-toc-subj > summary {
+          font-size: 0.84rem !important;
+        }
+      }
+      /* D. 手機作答:詳解很長,底部固定一顆「下一題」,看完不用往回捲 */
+      #mob-next {
+        display: none;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 900;
+        padding: 0.5rem 0.7rem calc(0.5rem + env(safe-area-inset-bottom));
+        background: linear-gradient(
+          to top,
+          var(--bg, #f8f7f0) 72%,
+          rgba(248, 247, 240, 0)
+        );
+        gap: 0.5rem;
+        pointer-events: none;
+      }
+      #mob-next button {
+        pointer-events: auto;
+        border: 0;
+        border-radius: 999px;
+        font-family: inherit;
+        font-weight: 800;
+        font-size: 1rem;
+        padding: 0.8rem 1rem;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+      }
+      #mob-next .mn-next {
+        flex: 1;
+        background: var(--purple, #7c3aed);
+        color: #fff;
+      }
+      #mob-next .mn-top {
+        background: #fff;
+        color: var(--purple, #7c3aed);
+        border: 1.5px solid var(--purple, #7c3aed);
+        padding: 0.8rem 0.9rem;
+      }
+      @media (max-width: 900px) {
+        body.mob-answered #mob-next {
+          display: flex;
+        }
+        body.mob-answered #screen-practice {
+          padding-bottom: 4.5rem;
+        }
+      }
       .nb-toc-num {
         color: #9ca3af;
         font-weight: 700;
@@ -6103,8 +6273,8 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.1.0/style.css"
     />
-      <script src="../skin.js?v=v658"></script>
-    <link rel="stylesheet" href="../skin.css?v=v658" />
+      <script src="../skin.js?v=v661"></script>
+    <link rel="stylesheet" href="../skin.css?v=v661" />
   </head>
   <body>
     <!-- HEADER -->
@@ -8784,6 +8954,16 @@
 
     <!-- SETTINGS MODAL -->
 
+    <!-- v660-mobile:手機答完題之後,底部固定「下一題」(詳解很長,不用往回捲) -->
+
+    <div id="mob-next">
+
+      <button type="button" class="mn-top" onclick="document.getElementById('screen-practice').scrollIntoView({behavior:'smooth',block:'start'})" title="回到題目">↑ 題目</button>
+
+      <button type="button" class="mn-next" onclick="nextQ()">下一題 →</button>
+
+    </div>
+
     <div class="toast" id="toast"></div>
 
     <!-- v657: 題庫切成一科一檔 (萬人審計 #1)。重產一科詳解時,使用者只重抓那一科 (約 3 MB),
@@ -8801,7 +8981,7 @@
         } catch (e) {}
         if (!codes || !codes.length) codes = SITE.SUBJ_CODES;
         for (var i = 0; i < codes.length; i++)
-          document.write('<script src="q-' + codes[i] + '.js?v=v658"><\/script>');
+          document.write('<script src="q-' + codes[i] + '.js?v=v661"><\/script>');
       })();
     </script>
     <script>
@@ -10019,23 +10199,36 @@
         if (existing) existing.remove();
         const wrap = document.createElement("div");
         wrap.id = "similar-modal";
-        wrap.style.cssText =
-          "position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:.5rem";
+        wrap.className = "sim-modal";
         wrap.onclick = (e) => {
-          if (e.target === wrap) wrap.remove();
+          if (e.target === wrap) closeSimilarModal();
         };
         wrap.innerHTML = `
-                      <div style="background:#f8fafc;border-radius:14px;max-width:680px;width:100%;max-height:92vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)">
-                        <div style="padding:.9rem 1.1rem;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#0d9488,#14b8a6);color:white;border-radius:14px 14px 0 0">
+                      <div class="sim-box">
+                        <div class="sim-head" style="padding:.9rem 1.1rem;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#0d9488,#14b8a6);color:white;border-radius:14px 14px 0 0">
                           <div>
                             <div style="font-size:1rem;font-weight:700">🔗 相似題 (${sims.length})</div>
                             <div style="font-size:.72rem;opacity:.85;margin-top:.15rem">來自 ${srcQ.meta || qid}・${srcQ.topic || ""}</div>
                           </div>
-                          <button type="button" onclick="document.getElementById('similar-modal').remove()" style="background:rgba(255,255,255,.2);border:none;color:white;width:34px;height:34px;border-radius:50%;font-size:1.1rem;cursor:pointer;font-weight:700">✕</button>
+                          <button type="button" class="sim-x" onclick="closeSimilarModal()" style="background:rgba(255,255,255,.2);border:none;color:white;width:34px;height:34px;border-radius:50%;font-size:1.1rem;cursor:pointer;font-weight:700">✕</button>
                         </div>
-                        <div style="padding:.75rem;overflow-y:auto;flex:1">${items}</div>
+                        <div class="sim-scroll">${items}</div>
                       </div>`;
         document.body.appendChild(wrap);
+        document.documentElement.classList.add("sim-open");
+        document.body.classList.add("sim-open");
+        document.addEventListener("keydown", _simEsc);
+      }
+      // v661:關閉相似題視窗 (要一起解除背景鎖定)
+      function closeSimilarModal() {
+        const m = document.getElementById("similar-modal");
+        if (m) m.remove();
+        document.documentElement.classList.remove("sim-open");
+        document.body.classList.remove("sim-open");
+        document.removeEventListener("keydown", _simEsc);
+      }
+      function _simEsc(e) {
+        if (e.key === "Escape") closeSimilarModal();
       }
       function _simPickOpt(btn, oi, ansIdx) {
         const card = btn.closest(".sim-card");
@@ -10068,7 +10261,7 @@
         const wrap = document.createElement("div");
         wrap.id = "sim-lightbox";
         wrap.style.cssText =
-          "position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:10001;display:flex;align-items:center;justify-content:center;padding:1rem;cursor:zoom-out";
+          "position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:12900;display:flex;align-items:center;justify-content:center;padding:1rem;cursor:zoom-out";
         wrap.onclick = () => wrap.remove();
         wrap.innerHTML = `<img src="${src}" style="max-width:96vw;max-height:92vh;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.5)">`;
         document.body.appendChild(wrap);
@@ -11259,6 +11452,7 @@ ${SITE.ai.explExamples}
         } catch (e) {}
       }
       function showHome() {
+        try { document.body.classList.remove("mob-answered"); } catch (e) {}
         closeAllOverlays();
         // v509: 移除 boot 時注入的 !important hide (避免 showHome 被蓋)
         const _boot = document.getElementById("boot-hide-screens");
@@ -12103,6 +12297,8 @@ ${SITE.ai.explExamples}
       async function answerQ(idx) {
         // 試卷模式答題後仍可改答案，直到「下一題」/「交卷」為止
         if (answered && !examMode) return;
+        // v660-mobile: 答完就把底部固定的「下一題」秀出來 (手機詳解很長,不用往回捲)
+        try { document.body.classList.add("mob-answered"); } catch (e) {}
         const q = practiceList[practiceIdx];
 
         // ── Exam mode: 記錄答案 + 顯示「你選的」+ 露出標記/加筆記 UI(不告訴對錯) ──
@@ -12298,14 +12494,17 @@ ${SITE.ai.explExamples}
       }
 
       function nextQ() {
+        try { document.body.classList.remove("mob-answered"); } catch (e) {}
         practiceIdx++;
         loadPracticeQ();
       }
       function skipQ() {
+        try { document.body.classList.remove("mob-answered"); } catch (e) {}
         practiceIdx++;
         loadPracticeQ();
       }
       function prevQ() {
+        try { document.body.classList.remove("mob-answered"); } catch (e) {}
         if (practiceIdx > 0) {
           practiceIdx--;
           loadPracticeQ();
@@ -29156,14 +29355,14 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-    <script src="../visitor-log.js?v=v658"></script>
+    <script src="../visitor-log.js?v=v661"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-    <script src="../sync.js?v=v658"></script>
-    <script src="comment-system.js?v=v658"></script>
-    <script src="../auth.js?v=v658"></script>
-    <script src="../migration.js?v=v658"></script>
-    <script src="../subscription.js?v=v658"></script>
-    <script src="../device-guard.js?v=v658"></script>
+    <script src="../sync.js?v=v661"></script>
+    <script src="comment-system.js?v=v661"></script>
+    <script src="../auth.js?v=v661"></script>
+    <script src="../migration.js?v=v661"></script>
+    <script src="../subscription.js?v=v661"></script>
+    <script src="../device-guard.js?v=v661"></script>
     <script>
       if (typeof DentalSync !== "undefined") {
         // v413:等 loadState 從 IDB hydrate 完才 init sync,不然 sync 拉 remote 寫進 qState 後會被 loadState 用 IDB 舊版蓋掉
@@ -29666,7 +29865,7 @@ ${markBtn("learning", "❓", "一知半解", "#fef9c3", "#eab308")}
       © 2026 <span data-site="fullName"></span> · <strong>版權所有翻印必究</strong> ·
       未經授權禁止轉載、複製、爬取內容
     </footer>
-      <script src="../tour.js?v=v658" defer></script>
-    <script src="../update.js?v=v658" defer></script>
+      <script src="../tour.js?v=v661" defer></script>
+    <script src="../update.js?v=v661" defer></script>
 </body>
 </html>

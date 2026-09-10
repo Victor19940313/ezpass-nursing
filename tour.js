@@ -375,6 +375,47 @@
       localStorage.setItem(KEY + id, "1");
     } catch (e) {}
   }
+  // v661:「已經不是第一次使用就不用每次都跳出教學」(HUA)
+  //   看過 2 組以上、或第一次來超過 3 天 → 當作老手,不再自動跳;左下角 ❓ 隨時能看
+  var FIRST_KEY = "tour_first_seen";
+  var SESS_KEY = "tour_auto_session";
+  function firstSeen() {
+    try {
+      var v = +localStorage.getItem(FIRST_KEY) || 0;
+      if (!v) {
+        v = Date.now();
+        localStorage.setItem(FIRST_KEY, String(v));
+      }
+      return v;
+    } catch (e) {
+      return Date.now();
+    }
+  }
+  function doneCount() {
+    try {
+      var c = 0;
+      for (var i = 0; i < localStorage.length; i++)
+        if ((localStorage.key(i) || "").indexOf(KEY) === 0) c++;
+      return c;
+    } catch (e) {
+      return 0;
+    }
+  }
+  function isVeteran() {
+    return doneCount() >= 2 || Date.now() - firstSeen() > 3 * 86400000;
+  }
+  function autoUsedThisSession() {
+    try {
+      return sessionStorage.getItem(SESS_KEY) === "1";
+    } catch (e) {
+      return false;
+    }
+  }
+  function markAutoUsed() {
+    try {
+      sessionStorage.setItem(SESS_KEY, "1");
+    } catch (e) {}
+  }
   function visible(el) {
     if (!el) return false;
     var r = el.getBoundingClientRect();
@@ -637,6 +678,11 @@
       return;
     } // 3 分鐘後不再自動
     if (active || blocked()) return;
+    // v661: 老手 / 這次已經自動跳過一組 → 不再自動跳
+    if (isVeteran() || autoUsedThisSession()) {
+      clearInterval(poll);
+      return;
+    }
     for (var i = 0; i < mine.length; i++) {
       var k = mine[i];
       if (done(k) || TOURS[k].auto === false) continue;
@@ -645,8 +691,17 @@
       setTimeout(
         (function (kk) {
           return function () {
-            if (!active && !done(kk) && q(TOURS[kk].trigger) && !blocked())
+            if (
+              !active &&
+              !done(kk) &&
+              q(TOURS[kk].trigger) &&
+              !blocked() &&
+              !isVeteran() &&
+              !autoUsedThisSession()
+            ) {
+              markAutoUsed();
               start(kk);
+            }
           };
         })(k),
         900,
@@ -705,6 +760,9 @@
           Object.keys(TOURS).forEach(function (k) {
             localStorage.removeItem(KEY + k);
           });
+        // v661: 重看教學時把「老手」判斷一起歸零
+        localStorage.removeItem(FIRST_KEY);
+        sessionStorage.removeItem(SESS_KEY);
       } catch (e) {}
     },
     list: function () {

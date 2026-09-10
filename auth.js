@@ -442,7 +442,7 @@
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          from: "dental",
+          from: (window.SITE && window.SITE.id) || "dental",
           to: targetSite,
           idToken: idToken,
         }),
@@ -458,6 +458,38 @@
     } catch (e) {
       return url;
     }
+  }
+
+  // v661: 從各站點「🏠 首頁」等連結回入口網站時,把身份一起帶回去。
+  //   入口網站跟牙醫站是同一個 Firebase 專案,所以要一張 to:"dental" 的通行證就行。
+  //   (不然使用者在護理師站登入,回首頁右上角還是叫他登入)
+  if (location.hostname !== "ezpass-exam.com") {
+    document.addEventListener(
+      "click",
+      function (e) {
+        try {
+          if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button)
+            return;
+          var a = e.target && e.target.closest && e.target.closest("a[href]");
+          if (!a || a.hostname !== "ezpass-exam.com") return;
+          if (a.target && a.target !== "_self") return;
+          if (!currentUser || currentUser.isAnonymous) return;
+          if (a.getAttribute("data-sso-going")) return;
+          var url = a.href;
+          if (url.indexOf("sso=") >= 0) return;
+          e.preventDefault();
+          a.setAttribute("data-sso-going", "1");
+          ssoLink("dental", url)
+            .then(function (u) {
+              location.href = u;
+            })
+            .catch(function () {
+              location.href = url;
+            });
+        } catch (err) {}
+      },
+      true,
+    );
   }
 
   async function signOutFn() {
