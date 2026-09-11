@@ -8,11 +8,11 @@
     />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title data-site-title="訂閱方案 - {name}"></title>
-    <script src="site-config.js?v=v674"></script>
-    <script src="site.js?v=v674"></script>
+    <script src="site-config.js?v=v675"></script>
+    <script src="site.js?v=v675"></script>
     <link rel="icon" href="icons/icon-192.png" />
-    <script src="version.js?v=v674"></script>
-    <script src="site-config.js?v=v674" onerror="this.remove()"></script>
+    <script src="version.js?v=v675"></script>
+    <script src="site-config.js?v=v675" onerror="this.remove()"></script>
     <script>
       // v651: 訂閱集中化 — 牙醫以外的站,付款 / 序號都在入口網站做 (同一個帳號),這頁只做轉址
       // v652: 付款 / 序號一律在入口網站做 (一份訂閱通全站),各站訂閱頁只做轉址
@@ -20,7 +20,7 @@
           "https://ezpass-exam.com/subscribe.html" + location.search,
         );
     </script>
-    <script src="skin.js?v=v674"></script>
+    <script src="skin.js?v=v675"></script>
     <style>
       * {
         box-sizing: border-box;
@@ -466,6 +466,32 @@
       .pub-box p {
         margin: 0 0 0.6rem;
       }
+      .buy-notes > details > summary {
+        font-size: 1.02rem;
+        color: #1f2937;
+        font-weight: 800;
+        cursor: pointer;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .buy-notes > details > summary::-webkit-details-marker {
+        display: none;
+      }
+      .buy-notes > details > summary::after {
+        content: attr(data-hint);
+        margin-left: auto;
+        font-weight: 600;
+        font-size: 0.82rem;
+        color: #7c3aed;
+      }
+      .buy-notes > details[open] > summary {
+        margin-bottom: 0.6rem;
+      }
+      .buy-notes > details[open] > summary::after {
+        content: "收起 ▴";
+      }
       .pub-box p:last-child {
         margin-bottom: 0;
       }
@@ -640,7 +666,7 @@
         }
       }
     </style>
-    <link rel="stylesheet" href="skin.css?v=v674" />
+    <link rel="stylesheet" href="skin.css?v=v675" />
   </head>
   <body>
     <div class="wrap">
@@ -1073,7 +1099,8 @@
 
       <!-- v642: 購買須知 — 付款方式 / 開通時間 / 退款 / 客服 / 賣家資訊 (綠界收款審核要求) -->
       <section class="pub-box buy-notes" id="buy-notes">
-        <h2>購買須知</h2>
+        <details>
+          <summary data-hint="展開 ▾">購買須知</summary>
         <dl>
           <dt>商品內容</dt>
           <dd>
@@ -1139,9 +1166,10 @@
           </dd>
         </dl>
         <div class="seller-card">
-          賣家：ezpassdental（個人賣家）· 客服信箱 ezpassdental@gmail.com<br />
+          賣家：ezpassdental · 客服信箱 ezpassdental@gmail.com<br />
           線上付款服務由綠界科技股份有限公司提供。
         </div>
+        </details>
       </section>
 
       <footer style="position: sticky; top: 100vh">
@@ -1157,8 +1185,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-    <script src="auth.js?v=v674"></script>
-    <script src="subscription.js?v=v674"></script>
+    <script src="auth.js?v=v675"></script>
+    <script src="subscription.js?v=v675"></script>
 
     <script>
       let selectedPlan = null;
@@ -1694,6 +1722,6 @@
       © 2026 <span data-site="fullName"></span> · <strong>版權所有翻印必究</strong> ·
       未經授權禁止轉載、複製、爬取內容
     </footer>
-    <script src="tour.js?v=v674" defer></script>
+    <script src="tour.js?v=v675" defer></script>
   </body>
 </html>

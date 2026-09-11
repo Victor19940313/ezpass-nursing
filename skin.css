@@ -586,7 +586,7 @@ html[data-skin="night"] body .ts-errhelp > summary { color: var(--sk-accent) !im
 
 /* v642 訂閱頁公開說明 (夜讀) */
 html[data-skin="night"] body :is(.pub-box, .seller-card) { background-color: #22242b !important; color: var(--sk-ink) !important; border-color: #44465a !important; }
-html[data-skin="night"] body :is(.pub-box h2, .buy-notes dt) { color: var(--sk-ink) !important; }
+html[data-skin="night"] body :is(.pub-box h2, .buy-notes summary, .buy-notes dt) { color: var(--sk-ink) !important; }
 html[data-skin="night"] body :is(.pub-box p, .pub-feat li, .buy-notes dd, .seller-card) { color: #c9c6c0 !important; }
 html[data-skin="night"] body .buy-notes a { color: var(--sk-accent) !important; }
 
