@@ -31,7 +31,7 @@ html[data-skin="notebook"] {
 }
 html[data-skin="stationery"] {
   --sk-bg: #f4eee6; --sk-bg-img: none; --sk-bg-size: auto;
-  --sk-card: #ffffff; --sk-ink: #4b3f39; --sk-ink2: #8c7b72; --sk-mute: #a69a91; --sk-line: #e7dcd1;
+  --sk-card: #ffffff; --sk-ink: #4b3f39; --sk-ink2: #776861; --sk-mute: #a69a91; --sk-line: #e7dcd1;
   --sk-accent: #a67c6d; --sk-accent-d: #8a6455; --sk-accent-soft: #f3e4da; --sk-accent-ink: #ffffff;
   --sk-radius: 18px; --sk-radius-s: 12px; --sk-bw: 1px;
   --sk-shadow: none; --sk-shadow-lift: 0 6px 16px rgba(75, 63, 57, 0.1); --sk-btn-shadow: none;
@@ -57,7 +57,7 @@ html[data-skin="night"] {
 }
 html[data-skin="watercolor"] {
   --sk-bg: #fcfbf8; --sk-bg-img: none; --sk-bg-size: auto;
-  --sk-card: rgba(255, 255, 255, 0.9); --sk-ink: #3a3a45; --sk-ink2: #7a7a88; --sk-mute: #9a9aa8; --sk-line: rgba(58, 58, 69, 0.12);
+  --sk-card: rgba(255, 255, 255, 0.9); --sk-ink: #3a3a45; --sk-ink2: #72727e; --sk-mute: #9a9aa8; --sk-line: rgba(58, 58, 69, 0.12);
   --sk-accent: #c48a9b; --sk-accent-d: #a66c7e; --sk-accent-soft: #f9e1e7; --sk-accent-ink: #ffffff;
   --sk-radius: 20px; --sk-radius-s: 14px; --sk-bw: 1px;
   --sk-shadow: 0 1px 3px rgba(58, 58, 69, 0.05); --sk-shadow-lift: 0 8px 20px rgba(58, 58, 69, 0.1); --sk-btn-shadow: none;
@@ -355,7 +355,9 @@ html[data-skin] .foot { color: var(--sk-ink2) !important; background: transparen
   html[data-skin="watercolor"] .expl-box { backdrop-filter: blur(8px); }
 }
 /* v669: 原本的立體字陰影會讓標題看起來像兩層疊在一起 (HUA 不喜歡),改成純色 */
-html[data-skin="toon"] h1 { color: var(--sk-accent); text-shadow: none; }
+/* v680:動畫風的標題原本用主色 #2f8ef5,壓在淺藍底 #eaf6ff 上只有 2.6 的反差(大字要 3 以上)。
+   改用深一階的 --sk-accent-text,顏色看起來一樣,但讀得清楚。*/
+html[data-skin="toon"] h1 { color: var(--sk-accent-text, var(--sk-accent)); text-shadow: none; }
 html[data-skin="notebook"] body { font-size: 16px; }
 html[data-skin="kawaii"] .chip,
 html[data-skin="kawaii"] .ts-chip { box-shadow: 2px 2px 0 #4a3b4b !important; }
@@ -695,4 +697,84 @@ html[data-skin="night"] .topbar {
 html[data-skin="watercolor"] .topbar {
   background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
     linear-gradient(135deg, var(--sk-accent-d), var(--sk-accent)) !important;
+}
+
+/* ═══ v679:夜讀「按鈕都不見了」總修 (HUA 回報 + 截圖像素實測) ═══
+   毛病一:可以點的東西底色是 #22242b,只比頁面底 #17181d 亮 1.13 倍 →
+          字看得到,但「這是一顆可以按的東西」的形狀整個消失。
+          統一提到 #30333d + 邊框 #565a6b (對頁面底 1.38 倍、邊框對自己 1.76 倍)。
+   毛病二:skin.css 是靠一長串選擇器一個一個改色,沒被列到的就維持亮色 →
+          .ans-row (A~D 外面那個白框)、.btn-exit (← 返回,淺紫字配白底)、
+          .badge (題號標籤) 三個都漏掉了。*/
+html[data-skin="night"] body
+  :is(
+    .ans-btn, .btn-skip, .qgrid-toggle, .btn-mode, .nb-tb-btn, .nb-nav-btn,
+    .chip, .ts-chip, .bf-chip, .wb-chip, .how-opt, .back, .more,
+    .expl-actions > button, .mark-row button, .wb2-qmarks button
+  ):not(.sel):not(.active):not(.on) {
+  background-color: #30333d !important;
+  border-color: #565a6b !important;
+  color: var(--sk-ink) !important;
+}
+html[data-skin="night"] body :is(.ans-row, .badge, .btn-exit) {
+  background-color: #22242b !important;
+  border-color: #44465a !important;
+  color: var(--sk-ink) !important;
+}
+html[data-skin="night"] body .btn-exit {
+  color: var(--sk-accent) !important;
+  border-color: var(--sk-accent-d) !important;
+}
+/* A/B/C/D 是這一頁最重要的按鈕,夜讀底下要明顯浮起來 (只加邊框還是太平) */
+html[data-skin="night"] body .ans-btn:not(.sel):not(.show-correct):not(.show-wrong) {
+  background-color: #3b3f4d !important;
+  border-color: #7a8099 !important;
+  color: #f2f0ea !important;
+  font-weight: 800 !important;
+}
+html[data-skin="night"] body .ans-btn:not(.sel):not(.show-correct):not(.show-wrong):hover {
+  background-color: #4a4f61 !important;
+  border-color: var(--sk-accent) !important;
+}
+
+/* ═══ v680:主色太淺造成的兩種看不清楚 (光學實測抓到) ═══
+   量過八種風格:
+   (1) 白字壓在主色按鈕上 — 水彩 2.8、夜讀 2.4、可愛 3.2、動畫 3.3 (要 4.5)
+   (2) 主色拿來當文字 (標題、價格) 壓在頁面底色上 — 水彩 2.7、動畫 3.0、可愛 3.1
+   解法:各風格算出兩個「夠深」的版本 —
+   實心按鈕用 --sk-accent-solid,主色文字用 --sk-accent-text,色調維持原樣。*/
+html[data-skin="kawaii"] {
+  --sk-accent-solid: #c34a71;
+  --sk-accent-text: #c0486f;
+}
+html[data-skin="toon"] {
+  --sk-accent-solid: #2776cb;
+  --sk-accent-text: #2571c3;
+}
+html[data-skin="notebook"] {
+  --sk-accent-solid: #d04343;
+  --sk-accent-text: #cb4242;
+}
+html[data-skin="stationery"] {
+  --sk-accent-solid: #916c5f;
+  --sk-accent-text: #876559;
+}
+html[data-skin="clinic"] {
+  --sk-accent-solid: #1a7abc;
+  --sk-accent-text: #1977b8;
+}
+html[data-skin="night"] {
+  --sk-accent-solid: #7d6e99;
+}
+html[data-skin="watercolor"] {
+  --sk-accent-solid: #956976;
+  --sk-accent-text: #946875;
+}
+:root { --sk-accent-solid: var(--sk-accent, #7c3aed); --sk-accent-text: var(--sk-accent, #7c3aed); }
+html[data-skin="night"] { --sk-accent-text: var(--sk-accent); }
+/* 填滿主色 + 白字的按鈕 */
+html[data-skin] body :is(.btn.primary, .go-login, .submit-btn, .btn-primary, .primary-btn, .buy-btn, .cta, .btn.lg.primary, button.primary) {
+  background-color: var(--sk-accent-solid) !important;
+  border-color: var(--sk-accent-solid) !important;
+  color: #fff !important;
 }

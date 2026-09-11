@@ -94,7 +94,7 @@
       em: "✏️",
       fonts: "LXGW+WenKai+TC:wght@400;700",
     },
-    { id: "stationery", name: "韓系文具", em: "🧸", fonts: "Gowun+Dodum" },
+    { id: "stationery", name: "韓系奶油", em: "🧸", fonts: "Gowun+Dodum" },
     { id: "clinic", name: "診所清爽", em: "🩺", fonts: "" },
     { id: "night", name: "夜讀暗色", em: "🌙", fonts: "" },
     {
