@@ -333,7 +333,7 @@ html[data-skin] textarea:focus { border-color: var(--sk-accent) !important; outl
 
 /* ───────── 頁尾 / 小字 ───────── */
 html[data-skin] footer,
-html[data-skin] .foot { color: var(--sk-mute) !important; background: transparent !important; }
+html[data-skin] .foot { color: var(--sk-ink2) !important; background: transparent !important; }
 
 /* ───────── 風格專屬小裝飾 ───────── */
 #skin-deco { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
@@ -662,4 +662,37 @@ html[data-skin="night"] .browser-note * {
 /* 5. 入口網站考試卡片右邊那個「→」:水彩風的主題色太淺,配白底幾乎看不見 */
 html[data-skin] .site-go {
   color: var(--sk-accent-d, #4c1d95) !important;
+}
+
+/* ═══ v675:招牌白字太淡的修正 ═══
+   量過:白字壓在招牌漸層上,夜讀只有 2.4:1、水彩 2.8:1、可愛風 3.2:1 (小字要 4.5:1 才夠)。
+   做法:在原本的漸層上面壓一層很淡的深色,每個風格壓的量不一樣,色調維持原樣。
+   壓完每一個風格的白字都 ≥ 4.5:1。classic 本來就 5.7:1,不動。 */
+html[data-skin="kawaii"] .topbar {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
+    linear-gradient(135deg, var(--sk-accent-d), var(--sk-accent)) !important;
+}
+html[data-skin="toon"] .topbar {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
+    linear-gradient(135deg, var(--sk-accent-d), var(--sk-accent)) !important;
+}
+html[data-skin="notebook"] .topbar {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)),
+    linear-gradient(135deg, var(--sk-accent-d), var(--sk-accent)) !important;
+}
+html[data-skin="stationery"] .topbar {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.14), rgba(0, 0, 0, 0.14)),
+    linear-gradient(135deg, var(--sk-accent-d), var(--sk-accent)) !important;
+}
+html[data-skin="clinic"] .topbar {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06)),
+    linear-gradient(135deg, var(--sk-accent-d), var(--sk-accent)) !important;
+}
+html[data-skin="night"] .topbar {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.32)),
+    linear-gradient(135deg, var(--sk-accent-d), var(--sk-accent)) !important;
+}
+html[data-skin="watercolor"] .topbar {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
+    linear-gradient(135deg, var(--sk-accent-d), var(--sk-accent)) !important;
 }
