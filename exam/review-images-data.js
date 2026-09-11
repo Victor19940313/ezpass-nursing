@@ -1,1 +1,0 @@
-const REVIEW_IMAGES = [];

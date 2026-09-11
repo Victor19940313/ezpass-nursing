@@ -1,1 +1,0 @@
-const FLASHCARDS_DATA = [];

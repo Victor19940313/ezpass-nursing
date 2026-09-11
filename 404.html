@@ -1,0 +1,45 @@
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
+<title>護理師國考互動筆記已搬家</title>
+<link rel="canonical" href="https://ezpass-exam.com/nursing/" />
+<meta http-equiv="refresh" content="3; url=https://ezpass-exam.com/nursing/" />
+<style>
+  body{font-family:system-ui,"Noto Sans TC",sans-serif;background:#f8f7f0;color:#3b3a36;
+       display:flex;min-height:90vh;align-items:center;justify-content:center;text-align:center;padding:1.5rem}
+  .box{max-width:32rem}
+  h1{font-size:1.3rem;margin:0 0 .8rem}
+  p{line-height:1.8;margin:.5rem 0}
+  a.go{display:inline-block;margin-top:1.2rem;padding:.7rem 1.4rem;border-radius:999px;
+       background:#7c3aed;color:#fff;text-decoration:none;font-weight:700}
+</style>
+<div class="box">
+  <h1>護理師國考互動筆記搬到新家了</h1>
+  <p>新網址是 <b>ezpass-exam.com/nursing</b>，所有題目、筆記、錯題本都在，用同一個 Google 帳號登入就看得到。</p>
+  <p>畫面沒有自動跳過去的話，請按下面的按鈕。手機桌面的舊捷徑請刪掉，到新網址重新加一次。</p>
+  <a class="go" href="https://ezpass-exam.com/nursing/">前往新網址 →</a>
+</div>
+<script>
+  // 深層連結 (例:/exam/) 也帶過去
+  var rest = location.pathname.replace(/^\/+/, "") + location.search + location.hash;
+  var target = "https://ezpass-exam.com/nursing/" + rest;
+  var went = false;
+  function go() { if (!went) { went = true; location.replace(target); } }
+  // 先把舊的離線快取和 Service Worker 清掉,不然舊畫面會一直被端出來。
+  // 清完才跳,最多等 1.5 秒就不等了。
+  var jobs = [];
+  try {
+    if ("serviceWorker" in navigator) {
+      jobs.push(navigator.serviceWorker.getRegistrations().then(function (rs) {
+        return Promise.all(rs.map(function (r) { return r.unregister(); }));
+      }));
+    }
+    if (window.caches && caches.keys) {
+      jobs.push(caches.keys().then(function (ns) {
+        return Promise.all(ns.map(function (n) { return caches.delete(n); }));
+      }));
+    }
+  } catch (e) {}
+  setTimeout(go, 1500);
+  Promise.all(jobs).catch(function () {}).then(go);
+</script>

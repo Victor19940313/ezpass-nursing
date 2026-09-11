@@ -1,1 +1,0 @@
-const COMPARISON_TABLES = [];

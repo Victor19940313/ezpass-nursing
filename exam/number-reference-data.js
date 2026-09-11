@@ -1,1 +1,0 @@
-const NUMBER_REFERENCE = [];
